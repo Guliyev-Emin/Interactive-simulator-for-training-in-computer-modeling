@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{C02EF2EB-04F7-4485-AB97-87EF38161630}</ProjectGuid>
+        <OutputType>WinExe</OutputType>
+        <RootNamespace>GraduationProject</RootNamespace>
+        <AssemblyName>GraduationProject</AssemblyName>
+        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <Deterministic>true</Deterministic>
+        <LangVersion>9</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="PDMWorks.Interop.pdmworks, Version=21.5.0.76, Culture=neutral, PublicKeyToken=c961ea6576798d6c">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\PDMWorks.Interop.pdmworks.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.cosworks, Version=21.5.0.76, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.cosworks.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.dsgnchk, Version=21.5.0.76, Culture=neutral, PublicKeyToken=336b272b7fcc45a2">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.dsgnchk.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.fworks, Version=21.5.0.76, Culture=neutral, PublicKeyToken=da42f2b0aa1f359c">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.fworks.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.gtswutilities, Version=21.5.0.76, Culture=neutral, PublicKeyToken=202d263d35fdeb6c">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.gtswutilities.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.sldcostingapi, Version=21.5.0.76, Culture=neutral, PublicKeyToken=381ff916234d2da9">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.sldcostingapi.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.sldtoolboxconfigureaddin, Version=21.5.0.76, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.sldtoolboxconfigureaddin.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.sldworks, Version=21.5.0.76, Culture=neutral, PublicKeyToken=7c4797c3e4eeac03">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.sldworks.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.sustainability, Version=21.5.0.76, Culture=neutral, PublicKeyToken=b2e9fe204ff795a7">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.sustainability.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.sw3dprinter, Version=21.5.0.76, Culture=neutral, PublicKeyToken=752e44715eff0bce">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.sw3dprinter.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.swbrowser, Version=21.5.0.76, Culture=neutral, PublicKeyToken=d59304b732795699">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.swbrowser.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.swcommands, Version=21.5.0.76, Culture=neutral, PublicKeyToken=0fda92720ba7919f">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.swcommands.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.swconst, Version=21.5.0.76, Culture=neutral, PublicKeyToken=19f43e188e4269d8">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.swconst.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.swdimxpert, Version=21.5.0.76, Culture=neutral, PublicKeyToken=5e9cf5ab4ebec26a">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.swdimxpert.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.swdocumentmgr, Version=21.5.0.76, Culture=neutral, PublicKeyToken=e52dfa2d3a1e978a">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.swdocumentmgr.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.swmotionstudy, Version=21.5.0.76, Culture=neutral, PublicKeyToken=034d56e16c5ef330">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.swmotionstudy.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.swpublished, Version=21.5.0.76, Culture=neutral, PublicKeyToken=89a97bdc5284e6d8">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.swpublished.dll</HintPath>
+        </Reference>
+        <Reference Include="SolidWorks.Interop.SWRoutingLib, Version=21.5.0.76, Culture=neutral, PublicKeyToken=1439c4c051169f7b">
+          <HintPath>..\..\..\Диплом\1_ApiSw_Dll\SolidWorks.Interop.SWRoutingLib.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Deployment" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Net.Http" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Xml" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Connection.cs" />
+        <Compile Include="Drawing.cs">
+            <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="Drawing.Designer.cs">
+            <DependentUpon>Drawing.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Program.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Reader.cs" />
+        <Compile Include="Remove.cs" />
+        <Compile Include="StepDrawing.cs" />
+        <EmbeddedResource Include="Drawing.resx">
+          <DependentUpon>Drawing.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Properties\Resources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+            <SubType>Designer</SubType>
+        </EmbeddedResource>
+        <Compile Include="Properties\Resources.Designer.cs">
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+        <None Include="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+        <Compile Include="Properties\Settings.Designer.cs">
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="App.config" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="Image\ImageTask.png" />
+      <Content Include="Resources\ImageTask.png" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

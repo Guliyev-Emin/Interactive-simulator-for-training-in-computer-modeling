@@ -1,0 +1,29 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CPDMWorks_002EInterop_002Epdmworks_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Ecosworks_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Edsgnchk_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Efworks_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Egtswutilities_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Esldcostingapi_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Esldtoolboxconfigureaddin_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Esldworks_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Esustainability_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Esw3dprinter_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Eswbrowser_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Eswcommands_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Eswconst_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Eswdimxpert_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Eswdocumentmgr_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Eswmotionstudy_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002Eswpublished_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005C_0414_0438_043F_043B_043E_043C_005C1_005FApiSw_005FDll_005CSolidWorks_002EInterop_002ESWRoutingLib_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">G:\JetBrains\JetBrains Rider 2021.3.2\tools\MSBuild\Current\Bin\MSBuild.exe</s:String>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=GraduationProject_002FDrawing/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=GraduationProject_002FProperties_002FResources/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=BODYFEATURE/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=boolstatus/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=_0421_0432_0435_0440_0445_0443/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=_0421_043B_0435_0432_0430/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=_0421_043F_0435_0440_0435_0434_0438/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=_0421_043F_0440_0430_0432_0430/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
