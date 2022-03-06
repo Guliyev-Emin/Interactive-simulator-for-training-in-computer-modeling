@@ -85,7 +85,17 @@ namespace GraduationProject
         {
             Connection.ConnectionTest();
             Remove.RemoveFeature();
-            //Remove.RemoveSketch();
+        }
+        
+        private void remove_step_button_Click(object sender, EventArgs eventArgs)
+        {
+            Connection.ConnectionTest();
+            Remove.StepRemove();
+        }
+
+        private void read_button_Click(object sender, EventArgs eventArgs)
+        {
+            
         }
     }
 }

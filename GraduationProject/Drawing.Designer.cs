@@ -37,6 +37,8 @@ namespace GraduationProject
             this.immediately_button = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.remove_button = new System.Windows.Forms.Button();
+            this.step_remove_button = new System.Windows.Forms.Button();
+            this.read_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,7 +78,7 @@ namespace GraduationProject
             // pictureBox1
             // 
             this.pictureBox1.Image = global::GraduationProject.Properties.Resources.ImageTask;
-            this.pictureBox1.Location = new System.Drawing.Point(75, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(252, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(341, 369);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -94,11 +96,35 @@ namespace GraduationProject
             this.remove_button.UseVisualStyleBackColor = true;
             this.remove_button.Click += new System.EventHandler(this.remove_button_Click);
             // 
+            // step_remove_button
+            // 
+            this.step_remove_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+            this.step_remove_button.Location = new System.Drawing.Point(636, 377);
+            this.step_remove_button.Name = "step_remove_button";
+            this.step_remove_button.Size = new System.Drawing.Size(150, 61);
+            this.step_remove_button.TabIndex = 5;
+            this.step_remove_button.Text = "Поэтапное удаление";
+            this.step_remove_button.UseVisualStyleBackColor = true;
+            this.step_remove_button.Click += new System.EventHandler(this.remove_step_button_Click);
+            // 
+            // read_button
+            // 
+            this.read_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+            this.read_button.Location = new System.Drawing.Point(792, 388);
+            this.read_button.Name = "read_button";
+            this.read_button.Size = new System.Drawing.Size(150, 50);
+            this.read_button.TabIndex = 6;
+            this.read_button.Text = "Чтение";
+            this.read_button.UseVisualStyleBackColor = true;
+            this.read_button.Click += new EventHandler(this.read_button_Click);
+            // 
             // Drawing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(643, 451);
+            this.ClientSize = new System.Drawing.Size(1014, 451);
+            this.Controls.Add(this.read_button);
+            this.Controls.Add(this.step_remove_button);
             this.Controls.Add(this.remove_button);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.immediately_button);
@@ -111,8 +137,9 @@ namespace GraduationProject
             this.PerformLayout();
         }
 
+        private System.Windows.Forms.Button read_button;
+        private System.Windows.Forms.Button step_remove_button;
         private System.Windows.Forms.Button remove_button;
-
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button step_button;
         private System.Windows.Forms.Button immediately_button;
