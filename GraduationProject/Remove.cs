@@ -10,7 +10,7 @@ namespace GraduationProject
         private static Feature _feature;
         private static Feature _featureForSketch;
         private static int _step = 0;
-        private static object[] _sketchContours = null;
+        private static object[] _sketchContours;
         private static int _nbrSketchContours = 0;
         private static Sketch _swSketch = default(Sketch);
 
