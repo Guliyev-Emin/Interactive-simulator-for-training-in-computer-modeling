@@ -59,10 +59,15 @@ namespace GraduationProject
             }
         }
 
-        public static void ConnectionTest()
+        public static bool ConnectionTest()
         {
             if (_modelDoc2 is null)
+            {
                 MessageBox.Show("Документ не найден!");
+                return false;
+            }
+
+            return true;
         }
     }
 }

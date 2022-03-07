@@ -6,6 +6,9 @@ namespace GraduationProject
 {
     public class Reader
     {
-        
+        public static void Read()
+        {
+            
+        }
     }
 }
