@@ -30,7 +30,7 @@ namespace GraduationProject
             _modelDoc2.Extension.SelectByID2(name, obj, 0, 0, 0, false, 0, null, 0);
         }
 
-        // Легче научиться танком упровлять!
+        //
         private static void FeatureCut(double deepth, bool flip = false,
             swEndConditions_e mode = swEndConditions_e.swEndCondBlind)
         {
@@ -49,7 +49,7 @@ namespace GraduationProject
             _sketchManager.CreateCenterRectangle(0, 0, 0, 0.055, 0.085 / 2, 0);
             _firstFeature = FeatureExtrusion(0.11/2);
             _modelDoc2.ClearSelection();
-            _modelDoc2.ClearSelection2(true);
+            _modelDoc2.ClearSelection2(false);
             
         }
 
@@ -57,7 +57,7 @@ namespace GraduationProject
         {
             SelectPlane("Справа");
             _sketchManager.InsertSketch(false);
-            // *Цензура*
+            // 
             _sketchManager.CreateCornerRectangle((0.085/2), 0.055, 0, (0.085/2) - 0.04, 0.105, 0.04);
             //вытягивание в две стороны
             _secondFeature = FeatureExtrusion(0.11/2, false);
@@ -66,15 +66,15 @@ namespace GraduationProject
 
         public static void Step3()
         {
-            // Конченный GetFaces?! Про него даже в документации не написано!
+            // Про него даже в документации не написано!
             _faces = (dynamic[]) _firstFeature.GetFaces();
             _entity = _faces[3] as Entity;
             _entity!.Select(true);
             _sketchManager.InsertSketch(true);
             _sketchManager.CreateLine(-(0.085 / 2) + 0.04, 0.085, 0, (0.085 / 2) - 0.025, 0.055, 0);
             // создаем ребро (rib)
-            // P.S. спустя 3 дня перестал работать!! Так что, тоже фиг знает как работает!
-            // P.S. 5 дней спустя: *Цензура*
+            // P.S. 
+            // P.S.
             _modelDoc2.FeatureManager.InsertRib(false, true, 0.01, 
                  0, false, false, true, 
                  0, false, false);
@@ -84,11 +84,11 @@ namespace GraduationProject
             //
             // _modelDoc2.ClearSelection2(true);
             
-            // КОНЧЕННЫЙ ВЫБОР ПЛОСКОСТИ И ФИГУРЫ!!!!! *Цензура*
+            // 
             _modelDoc2.Extension.SelectByID2("Справа", "PLANE", 0, 0, 0, false, 2, null, 0);
-            // ОБЯЗАТЕЛЬНО!!! SOLIDBODY!!!! *Цензура*
+            // ОБЯЗАТЕЛЬНО!!! SOLIDBODY!!!! 
             _modelDoc2.Extension.SelectByID2("Ребро1", "SOLIDBODY", 0, 0, 0, true, 256, null, 0);
-            // С*ка! Как оно РАБОТАЕТ!!!!!!
+            // 
             _feature = (Feature) _featureManager.InsertMirrorFeature2(true, true, true, false,
                 (int) swFeatureScope_e.swFeatureScope_AllBodies);
             

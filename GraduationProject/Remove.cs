@@ -1,4 +1,6 @@
-﻿using SolidWorks.Interop.sldworks;
+﻿using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using SolidWorks.Interop.sldworks;
 
 namespace GraduationProject
 {
@@ -23,9 +25,20 @@ namespace GraduationProject
                     _swSketch = (Sketch) _featureForSketch.GetSpecificFeature2();
                     if (_feature != null)
                     {
-                        _boolstatus = _modelDoc2.Extension.SelectByID2(_feature.Name, "BODYFEATURE", 0, 0, 0, false, 0,
-                            null, 0);
-                        _modelDoc2.EditDelete();
+                        MessageBox.Show(_feature.Name + "-----" + _feature.GetTypeName() + "------" + _feature.GetTypeName2());
+                        
+                        if (new Regex(@"Эскиз(\w*)").Match(_feature.Name).Success)
+                        {
+                            _boolstatus = _modelDoc2.Extension.SelectByID2(_feature.Name, "SKETCH", 0, 0, 0,
+                                false, 0, null, 0);
+                            _modelDoc2.EditDelete();
+                        }
+                        else
+                        {
+                            _boolstatus = _modelDoc2.Extension.SelectByID2(_feature.Name, "BODYFEATURE", 0, 0, 0, false, 0,
+                                null, 0);
+                            _modelDoc2.EditDelete();
+                        }
 
                         if (_swSketch != null)
                         {
@@ -69,6 +82,7 @@ namespace GraduationProject
                     _boolstatus = _modelDoc2.Extension.SelectByID2(_featureForSketch.Name, "SKETCH", 0, 0, 0, false, 0,
                         null, 0);
                     _modelDoc2.EditDelete();
+                    MessageBox.Show(@"Элемент: " + _feature.Name + @" ,типа: " + _feature.GetTypeName() + @" был успешно удален!");
                     Drawing.Step--;
                 }
             }

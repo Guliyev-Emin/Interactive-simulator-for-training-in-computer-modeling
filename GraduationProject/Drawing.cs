@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
+using SolidWorks.Interop.swconst;
 
 namespace GraduationProject
 {
@@ -83,8 +86,14 @@ namespace GraduationProject
 
         private void read_button_Click(object sender, EventArgs eventArgs)
         {
+
             if (Connection.ConnectionTest())
-                Reader.Read();
+            {
+                ReadForm readForm = new ReadForm();
+                readForm.Show();
+                readForm.Forms();
+                
+            }
         }
     }
 }
