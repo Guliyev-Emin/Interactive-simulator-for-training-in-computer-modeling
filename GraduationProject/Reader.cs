@@ -121,15 +121,7 @@ namespace GraduationProject
                 
                 for (var i = 0; i < splineCount; i++)
                 {
-                    TreeNode.LastNode.Nodes.Add("Сплайн");
-                    
-                    for (var j = 1; j < spline[2] - 1; j++)
-                    {
-                        
-                        var splinePoint = "Точка: x = " + spline[6 * j * 4] * 1000 + ", y = " + spline[6 * j + 2] * 1000 + ", z = " + spline[6 * j + 3] * 1000 + ";";
-            
-                        TreeNode.LastNode.LastNode.Nodes.Add(splinePoint);
-                    }
+
                 }
             }
 

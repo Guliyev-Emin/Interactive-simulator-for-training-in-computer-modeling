@@ -45,7 +45,7 @@ namespace GraduationProject
             SelectPlane("Сверху");
             _sketchManager.InsertSketch(true);
             //_sketchManager.CreateCornerRectangle(0, 0.055, 0, 0.085, 0, 0); 
-            // Лучше промолчать!!!
+            // 
             _sketchManager.CreateCenterRectangle(0, 0, 0, 0.055, 0.085 / 2, 0);
             _firstFeature = FeatureExtrusion(0.11/2);
             _modelDoc2.ClearSelection();
@@ -66,7 +66,7 @@ namespace GraduationProject
 
         public static void Step3()
         {
-            // Про него даже в документации не написано!
+            // Про него даже в документации не написано
             _faces = (dynamic[]) _firstFeature.GetFaces();
             _entity = _faces[3] as Entity;
             _entity!.Select(true);

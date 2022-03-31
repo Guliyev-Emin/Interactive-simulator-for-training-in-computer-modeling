@@ -56,12 +56,7 @@ namespace GraduationProject
                 // ignored
             }
         }
-
-        /// <summary>
-        /// Боже, как это удаление меня за*б!
-        /// Крч. потом надо написать проверку для всех остальныйх тел!
-        /// P.S. Как работает перечесление эскизов? Ответ: ФИГ ЕГО ЗНАЕТ!
-        /// </summary>
+        
         public static void StepRemove()
         {
             _feature = (Feature) _modelDoc2.FeatureByPositionReverse(_step);
