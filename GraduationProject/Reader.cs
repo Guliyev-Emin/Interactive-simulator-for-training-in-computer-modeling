@@ -53,17 +53,24 @@ namespace GraduationProject
             return TreeNode;
         }
 
+        public static int LineCount;
+        public static int ArcCount;
+        public static int SplineCount;
+        public static int EllipseCount;
+        public static int ParabolaCount;
+        public static int PointCount;
+
         private static void LineListener(string sketch)
         {
-            _modelDoc2.Extension.SelectByID2(sketch, "SKETCH", 0, 0, 0, false, 0, null, 0);
+            ModelDoc2.Extension.SelectByID2(sketch, "SKETCH", 0, 0, 0, false, 0, null, 0);
             var selectedSketch = (Sketch) _featureNode.GetSpecificFeature2();
             
-            var lineCount = selectedSketch.GetLineCount();
-            var arcCount = selectedSketch.GetArcCount();
-            var splineCount = selectedSketch.GetSplineCount(0);
-            var ellipseCount = selectedSketch.GetEllipseCount();
-            var parabolaCount = selectedSketch.GetParabolaCount();
-            var pointCount = selectedSketch.GetUserPointsCount();
+            LineCount = selectedSketch.GetLineCount();
+            ArcCount = selectedSketch.GetArcCount();
+            SplineCount = selectedSketch.GetSplineCount(0);
+            EllipseCount = selectedSketch.GetEllipseCount();
+            ParabolaCount = selectedSketch.GetParabolaCount();
+            PointCount = selectedSketch.GetUserPointsCount();
 
             var getLinesProperties = selectedSketch.GetLines2(1);
             var getArcsProperties = selectedSketch.GetArcs2();
@@ -71,17 +78,17 @@ namespace GraduationProject
             
             //SplineParamData splineParamData = (SplineParamData) selectedSketch.GetSplineParams4(true);
 
-            _modelDoc2.DeSelectByID(sketch, "SKETCH", 0, 0, 0);
+            ModelDoc2.DeSelectByID(sketch, "SKETCH", 0, 0, 0);
 
             if (getLinesProperties is IEnumerable lineEnumerable)
             {
                 var line = lineEnumerable.Cast<double>().ToArray();
 
-                for (var i = 0; i < lineCount; i++)
+                for (var i = 0; i < LineCount; i++)
                 {
-                    TreeNode.LastNode.LastNode.Nodes.Add("Линия");
+                    TreeNode.LastNode.LastNode.Nodes.Add("Отрезок");
 
-                    if (i == lineCount) continue;
+                    if (i == LineCount) continue;
                     var start = "Начало: x = " + line[12 * i + 6] * 1000 + ", y = " + line[12 * i + 7] * 1000 +
                                 ", z = " + line[12 * i + 8] * 1000 + ";";
                     var end = "Конец: x = " + line[12 * i + 9] * 1000 + ", y = " + line[12 * i + 10] * 1000 + ", z = " +
@@ -96,11 +103,11 @@ namespace GraduationProject
             {
                 var arcs = arcsEnumerable.Cast<double>().ToArray();
 
-                for (var i = 0; i < arcCount; i++)
+                for (var i = 0; i < ArcCount; i++)
                 {
                     TreeNode.LastNode.LastNode.Nodes.Add("Дуга");
 
-                    if (i == arcCount) continue;
+                    if (i == ArcCount) continue;
                     var start = "Начало: x = " + arcs[16 * i + 6] * 1000 + ", y = " + arcs[16 * i + 7] * 1000 +
                                 ", z = " + arcs[16 * i + 8] * 1000 + ";";
                     var end = "Конец: x = " + arcs[16 * i + 9] * 1000 + ", y = " + arcs[16 * i + 10] * 1000 + ", z = " +
@@ -118,18 +125,13 @@ namespace GraduationProject
             {
             
                 var spline = splineEnumerable.Cast<double>().ToArray();
-                
-                for (var i = 0; i < splineCount; i++)
-                {
-
-                }
             }
 
-            for (var i = 0; i < ellipseCount; i++) TreeNode.LastNode.LastNode.Nodes.Add("Эллипс");
+            for (var i = 0; i < EllipseCount; i++) TreeNode.LastNode.LastNode.Nodes.Add("Эллипс");
 
-            for (var i = 0; i < parabolaCount; i++) TreeNode.LastNode.LastNode.Nodes.Add("Парабола");
+            for (var i = 0; i < ParabolaCount; i++) TreeNode.LastNode.LastNode.Nodes.Add("Парабола");
 
-            for (var i = 0; i < pointCount; i++) TreeNode.LastNode.LastNode.Nodes.Add("Точка");
+            for (var i = 0; i < PointCount; i++) TreeNode.LastNode.LastNode.Nodes.Add("Точка");
         }
     }
 }

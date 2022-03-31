@@ -102,6 +102,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Connection.cs" />
+        <Compile Include="Controller\Controller.cs" />
         <Compile Include="Drawing.cs">
             <SubType>Form</SubType>
         </Compile>
@@ -148,7 +149,6 @@
         <None Include="App.config" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="Image\ImageTask.png" />
       <Content Include="Resources\ImageTask.png" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

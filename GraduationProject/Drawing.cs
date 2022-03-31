@@ -15,85 +15,88 @@ namespace GraduationProject
 
         public static int Step;
 
-        private void connect_button_Click(object sender, EventArgs eventArgs)
+        private void ConnectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Connection.AppConnection();
         }
 
-        private void step_button_Click(object sender, EventArgs eventArgs)
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Connection.ConnectionTest())
+            throw new System.NotImplementedException();
+        }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void StepDrawingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!Connection.ConnectionTest()) return;
+            switch (Step)
             {
-                switch (Step)
+                case 0:
                 {
-                    case 0:
-                    {
-                        StepDrawing.Step1();
-                        Step++;
-                        break;
-                    }
-                    case 1:
-                    {
-                        StepDrawing.Step2();
-                        Step++;
-                        break;
-                    }
-                    case 2:
-                    {
-                        StepDrawing.Step3();
-                        Step++;
-                        break;
-                    }
-                    case 3:
-                    {
-                        StepDrawing.Step4();
-                        Step++;
-                        break;
-                    }
-                    case 4:
-                    {
-                        StepDrawing.Step5();
-                        Step++;
-                        break;
-                    }
+                    StepDrawing.Step1();
+                    Step++;
+                    break;
+                }
+                case 1:
+                {
+                    StepDrawing.Step2();
+                    Step++;
+                    break;
+                }
+                case 2:
+                {
+                    StepDrawing.Step3();
+                    Step++;
+                    break;
+                }
+                case 3:
+                {
+                    StepDrawing.Step4();
+                    Step++;
+                    break;
+                }
+                case 4:
+                {
+                    StepDrawing.Step5();
+                    Step++;
+                    break;
                 }
             }
         }
 
-        private void immediately_button_Click(object sender, EventArgs eventArgs)
+        private void FullDrawingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Connection.ConnectionTest())
-            {
-                StepDrawing.Step1();
-                StepDrawing.Step2();
-                StepDrawing.Step3();
-                StepDrawing.Step4();
-                StepDrawing.Step5();
-            }
+            if (!Connection.ConnectionTest()) return;
+            StepDrawing.Step1();
+            StepDrawing.Step2();
+            StepDrawing.Step3();
+            StepDrawing.Step4();
+            StepDrawing.Step5();
         }
 
-        private void remove_button_Click(object sender, EventArgs eventArgs)
-        {
-            if (Connection.ConnectionTest())
-                Remove.RemoveFeature();
-        }
-        
-        private void remove_step_button_Click(object sender, EventArgs eventArgs)
+        private void StepDeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (Connection.ConnectionTest())
                 Remove.StepRemove();
         }
 
-        private void read_button_Click(object sender, EventArgs eventArgs)
+        private void FullDeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             if (Connection.ConnectionTest())
-            {
-                ReadForm readForm = new ReadForm();
-                readForm.Show();
-                readForm.Forms();
-                
-            }
+                Remove.RemoveFeature();
+        }
+
+        private void TreeReadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!Connection.ConnectionTest()) return;
+            var readForm = new ReadForm();
+            readForm.Show();
+            readForm.Forms();
         }
     }
 }

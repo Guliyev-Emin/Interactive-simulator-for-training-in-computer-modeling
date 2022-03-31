@@ -16,7 +16,7 @@ namespace GraduationProject
             treeView1.BeginUpdate();
             Reader.TreeNode = new TreeNode("Открыть дерево проекта");
             var treeNode = Reader.ProjectReading(
-                Connection._featureManager.GetFeatureTreeRootItem2((int) swFeatMgrPane_e.swFeatMgrPaneBottom));
+                Connection.FeatureManager.GetFeatureTreeRootItem2((int) swFeatMgrPane_e.swFeatMgrPaneBottom));
             
             treeView1.Nodes.Add(treeNode);
             treeView1.EndUpdate();

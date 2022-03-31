@@ -7,15 +7,15 @@ namespace GraduationProject
 {
     public class Connection
     {
-        public static ModelDoc2 _modelDoc2;
-        public static SketchManager _sketchManager;
-        public static FeatureManager _featureManager;
-        public static SldWorks _app;
+        protected static ModelDoc2 ModelDoc2;
+        protected static SketchManager SketchManager;
+        public static FeatureManager FeatureManager;
+        private static SldWorks _app;
 
         public static void AppConnection()
         {
             _app = null;
-            _modelDoc2 = null;
+            ModelDoc2 = null;
 
             try
             {
@@ -30,40 +30,40 @@ namespace GraduationProject
             {
                 try
                 {
-                    _modelDoc2 = (ModelDoc2) _app.GetFirstDocument();
+                    ModelDoc2 = (ModelDoc2) _app.GetFirstDocument();
                 }
                 catch
                 {
                     // ignored
                 }
 
-                if (_modelDoc2 != null)
+                if (ModelDoc2 != null)
                 {
-                    MessageBox.Show("Подключение выполнено. Документ найден.");
+                    MessageBox.Show(@"Подключение выполнено. Документ найден.");
 
                     var pref_toggle = (int) swUserPreferenceToggle_e.swInputDimValOnCreate;
 
                     _app.SetUserPreferenceToggle(pref_toggle, false);
 
-                    _sketchManager = _modelDoc2.SketchManager;
-                    _featureManager = _modelDoc2.FeatureManager;
+                    SketchManager = ModelDoc2.SketchManager;
+                    FeatureManager = ModelDoc2.FeatureManager;
                 }
                 else
                 {
-                    MessageBox.Show("Документ не найден");
+                    MessageBox.Show(@"Документ не найден");
                 }
             }
             else
             {
-                MessageBox.Show("Не удалось подключиться");
+                MessageBox.Show(@"Не удалось подключиться");
             }
         }
 
         public static bool ConnectionTest()
         {
-            if (_modelDoc2 is null)
+            if (ModelDoc2 is null)
             {
-                MessageBox.Show("Документ не найден!");
+                MessageBox.Show(@"Документ не найден!");
                 return false;
             }
 

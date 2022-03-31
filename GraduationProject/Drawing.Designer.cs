@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace GraduationProject
 {
@@ -32,118 +33,159 @@ namespace GraduationProject
         /// </summary>
         private void InitializeComponent()
         {
-            this.connect_button = new System.Windows.Forms.Button();
-            this.step_button = new System.Windows.Forms.Button();
-            this.immediately_button = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.FileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.EditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.StepDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.FullDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.StepDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.FullDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TreeReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.remove_button = new System.Windows.Forms.Button();
-            this.step_remove_button = new System.Windows.Forms.Button();
-            this.read_button = new System.Windows.Forms.Button();
+            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // connect_button
+            // menuStrip1
             // 
-            this.connect_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-            this.connect_button.Location = new System.Drawing.Point(12, 388);
-            this.connect_button.Name = "connect_button";
-            this.connect_button.Size = new System.Drawing.Size(150, 50);
-            this.connect_button.TabIndex = 0;
-            this.connect_button.Text = "Подключиться";
-            this.connect_button.UseVisualStyleBackColor = true;
-            this.connect_button.Click += new System.EventHandler(this.connect_button_Click);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.FileToolStripMenuItem, this.EditorToolStripMenuItem, this.ReadToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(521, 24);
+            this.menuStrip1.TabIndex = 7;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // step_button
+            // FileToolStripMenuItem
             // 
-            this.step_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-            this.step_button.Location = new System.Drawing.Point(168, 388);
-            this.step_button.Name = "step_button";
-            this.step_button.Size = new System.Drawing.Size(150, 50);
-            this.step_button.TabIndex = 1;
-            this.step_button.Text = "По шагам";
-            this.step_button.UseVisualStyleBackColor = true;
-            this.step_button.Click += new System.EventHandler(this.step_button_Click);
+            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.ConnectionToolStripMenuItem, this.OpenToolStripMenuItem, this.SaveToolStripMenuItem});
+            this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
+            this.FileToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.FileToolStripMenuItem.Text = "Файл";
             // 
-            // immediately_button
+            // ConnectionToolStripMenuItem
             // 
-            this.immediately_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-            this.immediately_button.Location = new System.Drawing.Point(324, 388);
-            this.immediately_button.Name = "immediately_button";
-            this.immediately_button.Size = new System.Drawing.Size(150, 50);
-            this.immediately_button.TabIndex = 2;
-            this.immediately_button.Text = "Полностью";
-            this.immediately_button.UseVisualStyleBackColor = true;
-            this.immediately_button.Click += new System.EventHandler(this.immediately_button_Click);
+            this.ConnectionToolStripMenuItem.Name = "ConnectionToolStripMenuItem";
+            this.ConnectionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys) (((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) | System.Windows.Forms.Keys.C)));
+            this.ConnectionToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.ConnectionToolStripMenuItem.Text = "Подключиться";
+            this.ConnectionToolStripMenuItem.Click += new System.EventHandler(this.ConnectionToolStripMenuItem_Click);
+            // 
+            // OpenToolStripMenuItem
+            // 
+            this.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
+            this.OpenToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.OpenToolStripMenuItem.Text = "Открыть";
+            this.OpenToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
+            // 
+            // SaveToolStripMenuItem
+            // 
+            this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
+            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.SaveToolStripMenuItem.Text = "Сохранить";
+            this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            // 
+            // EditorToolStripMenuItem
+            // 
+            this.EditorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.StepDrawingToolStripMenuItem, this.FullDrawingToolStripMenuItem, this.StepDeleteToolStripMenuItem, this.FullDeleteToolStripMenuItem});
+            this.EditorToolStripMenuItem.Name = "EditorToolStripMenuItem";
+            this.EditorToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
+            this.EditorToolStripMenuItem.Text = "Редактор";
+            // 
+            // StepDrawingToolStripMenuItem
+            // 
+            this.StepDrawingToolStripMenuItem.Name = "StepDrawingToolStripMenuItem";
+            this.StepDrawingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys) (((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) | System.Windows.Forms.Keys.W)));
+            this.StepDrawingToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.StepDrawingToolStripMenuItem.Text = "Поэтапное черчение";
+            this.StepDrawingToolStripMenuItem.Click += new System.EventHandler(this.StepDrawingToolStripMenuItem_Click);
+            // 
+            // FullDrawingToolStripMenuItem
+            // 
+            this.FullDrawingToolStripMenuItem.Name = "FullDrawingToolStripMenuItem";
+            this.FullDrawingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys) (((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) | System.Windows.Forms.Keys.F)));
+            this.FullDrawingToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.FullDrawingToolStripMenuItem.Text = "Начертить полностью";
+            this.FullDrawingToolStripMenuItem.Click += new System.EventHandler(this.FullDrawingToolStripMenuItem_Click);
+            // 
+            // StepDeleteToolStripMenuItem
+            // 
+            this.StepDeleteToolStripMenuItem.Name = "StepDeleteToolStripMenuItem";
+            this.StepDeleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys) (((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) | System.Windows.Forms.Keys.S)));
+            this.StepDeleteToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.StepDeleteToolStripMenuItem.Text = "Поэтапное удаление";
+            this.StepDeleteToolStripMenuItem.Click += new System.EventHandler(this.StepDeleteToolStripMenuItem_Click);
+            // 
+            // FullDeleteToolStripMenuItem
+            // 
+            this.FullDeleteToolStripMenuItem.Name = "FullDeleteToolStripMenuItem";
+            this.FullDeleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys) (((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) | System.Windows.Forms.Keys.V)));
+            this.FullDeleteToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.FullDeleteToolStripMenuItem.Text = "Полностью удалить";
+            this.FullDeleteToolStripMenuItem.Click += new System.EventHandler(this.FullDeleteToolStripMenuItem_Click);
+            // 
+            // ReadToolStripMenuItem
+            // 
+            this.ReadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.TreeReadToolStripMenuItem});
+            this.ReadToolStripMenuItem.Name = "ReadToolStripMenuItem";
+            this.ReadToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.ReadToolStripMenuItem.Text = "Чтение";
+            // 
+            // TreeReadToolStripMenuItem
+            // 
+            this.TreeReadToolStripMenuItem.Name = "TreeReadToolStripMenuItem";
+            this.TreeReadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys) (((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) | System.Windows.Forms.Keys.R)));
+            this.TreeReadToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.TreeReadToolStripMenuItem.Text = "Чтение дерева";
+            this.TreeReadToolStripMenuItem.Click += new System.EventHandler(this.TreeReadToolStripMenuItem_Click);
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::GraduationProject.Properties.Resources.ImageTask;
-            this.pictureBox1.Location = new System.Drawing.Point(252, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(85, 59);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(341, 369);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
-            // remove_button
-            // 
-            this.remove_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-            this.remove_button.Location = new System.Drawing.Point(480, 388);
-            this.remove_button.Name = "remove_button";
-            this.remove_button.Size = new System.Drawing.Size(150, 50);
-            this.remove_button.TabIndex = 4;
-            this.remove_button.Text = "Удалить";
-            this.remove_button.UseVisualStyleBackColor = true;
-            this.remove_button.Click += new System.EventHandler(this.remove_button_Click);
-            // 
-            // step_remove_button
-            // 
-            this.step_remove_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-            this.step_remove_button.Location = new System.Drawing.Point(636, 377);
-            this.step_remove_button.Name = "step_remove_button";
-            this.step_remove_button.Size = new System.Drawing.Size(150, 61);
-            this.step_remove_button.TabIndex = 5;
-            this.step_remove_button.Text = "Поэтапное удаление";
-            this.step_remove_button.UseVisualStyleBackColor = true;
-            this.step_remove_button.Click += new System.EventHandler(this.remove_step_button_Click);
-            // 
-            // read_button
-            // 
-            this.read_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-            this.read_button.Location = new System.Drawing.Point(792, 388);
-            this.read_button.Name = "read_button";
-            this.read_button.Size = new System.Drawing.Size(150, 50);
-            this.read_button.TabIndex = 6;
-            this.read_button.Text = "Чтение";
-            this.read_button.UseVisualStyleBackColor = true;
-            this.read_button.Click += new EventHandler(this.read_button_Click);
-            // 
             // Drawing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1014, 451);
-            this.Controls.Add(this.read_button);
-            this.Controls.Add(this.step_remove_button);
-            this.Controls.Add(this.remove_button);
+            this.ClientSize = new System.Drawing.Size(521, 474);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.immediately_button);
-            this.Controls.Add(this.step_button);
-            this.Controls.Add(this.connect_button);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Drawing";
             this.Text = "Drawing";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
-        private System.Windows.Forms.Button read_button;
-        private System.Windows.Forms.Button step_remove_button;
-        private System.Windows.Forms.Button remove_button;
+        private System.Windows.Forms.ToolStripMenuItem StepDeleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem EditorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem FullDeleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ReadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem TreeReadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ConnectionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem OpenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SaveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem FullDrawingToolStripMenuItem;
+
+        private System.Windows.Forms.ToolStripMenuItem StepDrawingToolStripMenuItem;
+
+        private System.Windows.Forms.ToolStripMenuItem FileToolStripMenuItem;
+
+        private System.Windows.Forms.MenuStrip menuStrip1;
+
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button step_button;
-        private System.Windows.Forms.Button immediately_button;
-        private System.Windows.Forms.Button connect_button;
 
         #endregion
     }
