@@ -24,8 +24,7 @@ namespace GraduationProject
                 deepth, deepth, false, false, false, false, 0, 0, false, false, false, false, true,
                 true, true, 0, 0, false);
         }
-
-        // Тут все понятно!
+        
         private static void SelectPlane(string name, string obj = "PLANE")
         {
             ModelDoc2.Extension.SelectByID2(name, obj, 0, 0, 0, false, 0, null, 0);
@@ -38,8 +37,7 @@ namespace GraduationProject
                 deepth, 0, false, false, false, false, 0, 0, false, false, false, false, false,
                 false, false, false, false, false);
         }
-
-        // первый прямоуголник
+        
         public static void Step1()
         {
             SelectPlane("Сверху");
