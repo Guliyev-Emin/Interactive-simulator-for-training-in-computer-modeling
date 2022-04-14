@@ -102,7 +102,7 @@ namespace GraduationProject
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(924, 497);
+            this.ClientSize = new System.Drawing.Size(849, 497);
             this.Controls.Add(this.lineGroupBox);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.exit_button);

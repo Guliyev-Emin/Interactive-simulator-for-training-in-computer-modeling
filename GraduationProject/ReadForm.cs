@@ -22,7 +22,6 @@ namespace GraduationProject
                 Connection.FeatureManager.GetFeatureTreeRootItem2((int) swFeatMgrPane_e.swFeatMgrPaneBottom));
             treeNode.Expand();
             treeView1.Nodes.Add(treeNode);
-            
             treeView1.EndUpdate();
 
             foreach (var sketchName in Reader.SketchNames)
@@ -42,6 +41,7 @@ namespace GraduationProject
             if ((sketchNameComboBox.SelectedItem is null) || lineCountTextBox.Text == "") return;
             var selectedState = sketchNameComboBox.SelectedItem?.ToString();
             var lineCount = lineCountTextBox.Text;
+
             var line = Controller.Controller.ControllerLineLength(int.Parse(lineCount));
             MessageBox.Show(line);
             var controller = Controller.Controller.ControllerLinePosition(selectedState);
