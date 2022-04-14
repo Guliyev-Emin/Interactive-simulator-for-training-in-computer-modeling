@@ -19,7 +19,7 @@ namespace GraduationProject
         private static List<string> _startEndArc;
         private static List<string> _startEndEllipse;
         private static List<string> _startEndParabola;
-        
+
         public static TreeNode ProjectReading(TreeControlItem rootNode)
         {
             var nodeObjectType = rootNode.ObjectType;

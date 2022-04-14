@@ -8,12 +8,9 @@ namespace GraduationProject
 
         public static void RemoveFeature()
         {
-            while (ModelDoc2.GetFeatureCount() > 12)
-            {
-                StepRemove();
-            }
+            while (ModelDoc2.GetFeatureCount() > 12) StepRemove();
         }
-        
+
         public static void StepRemove()
         {
             _feature = (Feature) ModelDoc2.FeatureByPositionReverse(0);
@@ -24,6 +21,7 @@ namespace GraduationProject
                 ModelDoc2.Extension.SelectByID2(_feature.Name, "BODYFEATURE", 0, 0, 0, false, 0, null, 0);
                 ModelDoc2.EditDelete();
             }
+
             _feature = (Feature) ModelDoc2.FeatureByPositionReverse(0);
             if (_feature == null || !_feature.GetTypeName().Equals("ProfileFeature")) return;
             ModelDoc2.Extension.SelectByID2(_feature.Name, "SKETCH", 0, 0, 0, false, 0, null, 0);

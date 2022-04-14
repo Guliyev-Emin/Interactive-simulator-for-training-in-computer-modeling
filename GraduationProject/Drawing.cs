@@ -27,12 +27,13 @@ namespace GraduationProject
         {
             throw new NotImplementedException();
         }
-        
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Close(); 
+            Close();
             Environment.Exit(0);
         }
+
         private void StepDrawingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!Connection.ConnectionTest()) return;
@@ -100,6 +101,5 @@ namespace GraduationProject
             readForm.Show();
             readForm.Forms();
         }
-        
     }
 }
