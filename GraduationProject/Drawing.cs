@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
-using SolidWorks.Interop.swconst;
 
 namespace GraduationProject
 {
@@ -23,14 +20,19 @@ namespace GraduationProject
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
-
+        
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close(); 
+            Environment.Exit(0);
+        }
         private void StepDrawingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!Connection.ConnectionTest()) return;
@@ -98,5 +100,6 @@ namespace GraduationProject
             readForm.Show();
             readForm.Forms();
         }
+        
     }
 }

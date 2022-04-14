@@ -38,6 +38,7 @@ namespace GraduationProject
             this.ConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StepDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FullDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,13 +56,13 @@ namespace GraduationProject
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.FileToolStripMenuItem, this.EditorToolStripMenuItem, this.ReadToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(521, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(415, 24);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // FileToolStripMenuItem
             // 
-            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.ConnectionToolStripMenuItem, this.OpenToolStripMenuItem, this.SaveToolStripMenuItem});
+            this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.ConnectionToolStripMenuItem, this.OpenToolStripMenuItem, this.SaveToolStripMenuItem, this.exitToolStripMenuItem});
             this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
             this.FileToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.FileToolStripMenuItem.Text = "Файл";
@@ -87,6 +88,13 @@ namespace GraduationProject
             this.SaveToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.SaveToolStripMenuItem.Text = "Сохранить";
             this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.exitToolStripMenuItem.Text = "Выход";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // EditorToolStripMenuItem
             // 
@@ -145,7 +153,7 @@ namespace GraduationProject
             // pictureBox1
             // 
             this.pictureBox1.Image = global::GraduationProject.Properties.Resources.ImageTask;
-            this.pictureBox1.Location = new System.Drawing.Point(85, 59);
+            this.pictureBox1.Location = new System.Drawing.Point(34, 44);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(341, 369);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -156,7 +164,7 @@ namespace GraduationProject
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(521, 474);
+            this.ClientSize = new System.Drawing.Size(415, 434);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -168,6 +176,8 @@ namespace GraduationProject
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 
         private System.Windows.Forms.ToolStripMenuItem StepDeleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem EditorToolStripMenuItem;
