@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace GraduationProject
 {
-    public partial class Drawing : Form
+    public partial class MainForm : Form
     {
-        public Drawing()
+        public MainForm()
         {
             InitializeComponent();
         }

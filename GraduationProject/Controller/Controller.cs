@@ -2,34 +2,33 @@
 {
     public class Controller : Connection
     {
-        public static string ControllerLineLength(int lineCount)
+        public static string ControllerLineLength(string sketchName, int lineCount)
         {
             var message = "";
 
-            if (Reader.SketchNames == null) return message;
-            foreach (var sketchInfo in Reader.SketchNames)
-            {
-                message = sketchInfo.SketchName + "\n";
+            if (Reader.SketchInfos == null) return message;
+            var sketchInfo = Reader.SketchInfos[Reader.SketchInfos.FindIndex(name => name.SketchName == sketchName)];
+            message = sketchInfo.SketchName + "\n";
 
-                if (lineCount == sketchInfo.LineCount)
-                {
-                    message += "\nСодержит " + lineCount + " отрезков.";
-                }
-                else
-                {
-                    var i = lineCount > sketchInfo.LineCount
-                        ? lineCount - sketchInfo.LineCount
-                        : sketchInfo.LineCount - lineCount;
-                    message += @"Не содержит " + lineCount + " отрезков.\n" + "Не хватает " + i + " отрезков!";
-                }
+            if (lineCount == sketchInfo.LineCount)
+            {
+                message += "\nСодержит " + lineCount + " отрезков.";
+            }
+            else
+            {
+                var i = lineCount > sketchInfo.LineCount
+                    ? lineCount - sketchInfo.LineCount
+                    : sketchInfo.LineCount - lineCount;
+                message += @"Не содержит " + lineCount + " отрезков.\n" + "Не хватает " + i + " отрезков!";
             }
 
             return message;
         }
 
+
         public static string ControllerLinePosition(string sketchName)
         {
-            var info = Reader.SketchNames[Reader.SketchNames.FindIndex(name => name.SketchName == sketchName)];
+            var info = Reader.SketchInfos[Reader.SketchInfos.FindIndex(name => name.SketchName == sketchName)];
             var lineCoordinates = info.LineCoordinates;
             var count = info.LineCoordinates.Count;
             var result = "";
@@ -59,7 +58,7 @@
                 else if (xStart != xEnd && yStart == yEnd)
                     result += "Отрезок горизонтальный.\n";
                 else
-                    result += "Отрезок кривой.\n";
+                    result += "Отрезок наклонный.\n";
             }
 
             return result;

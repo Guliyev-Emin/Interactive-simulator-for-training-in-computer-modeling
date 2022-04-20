@@ -104,11 +104,11 @@
         <Compile Include="Connection.cs" />
         <Compile Include="Controller\Controller.cs" />
         <Compile Include="Controller\SketchInfo.cs" />
-        <Compile Include="Drawing.cs">
+        <Compile Include="MainForm.cs">
             <SubType>Form</SubType>
         </Compile>
-        <Compile Include="Drawing.Designer.cs">
-            <DependentUpon>Drawing.cs</DependentUpon>
+        <Compile Include="MainForm.Designer.cs">
+            <DependentUpon>MainForm.cs</DependentUpon>
         </Compile>
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
@@ -121,8 +121,8 @@
         </Compile>
         <Compile Include="Remove.cs" />
         <Compile Include="StepDrawing.cs" />
-        <EmbeddedResource Include="Drawing.resx">
-          <DependentUpon>Drawing.cs</DependentUpon>
+        <EmbeddedResource Include="MainForm.resx">
+          <DependentUpon>MainForm.cs</DependentUpon>
         </EmbeddedResource>
         <EmbeddedResource Include="Properties\Resources.resx">
             <Generator>ResXFileCodeGenerator</Generator>
@@ -151,6 +151,7 @@
     </ItemGroup>
     <ItemGroup>
       <Content Include="Resources\ImageTask.png" />
+      <Content Include="task.txt" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

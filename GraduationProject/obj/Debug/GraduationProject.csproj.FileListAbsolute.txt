@@ -27,5 +27,5 @@ G:\RiderProjects\GraduationProject\GraduationProject\bin\Debug\SolidWorks.Intero
 G:\RiderProjects\GraduationProject\GraduationProject\bin\Debug\SolidWorks.Interop.swpublished.dll
 G:\RiderProjects\GraduationProject\GraduationProject\bin\Debug\SolidWorks.Interop.SWRoutingLib.dll
 G:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.csproj.CopyComplete
-G:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.Drawing.resources
 G:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.ReadForm.resources
+G:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.MainForm.resources

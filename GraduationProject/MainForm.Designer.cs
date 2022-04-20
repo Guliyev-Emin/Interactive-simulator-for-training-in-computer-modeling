@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace GraduationProject
 {
-    partial class Drawing
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -168,7 +168,7 @@ namespace GraduationProject
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Drawing";
+            this.Name = "MainForm";
             this.Text = "Drawing";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

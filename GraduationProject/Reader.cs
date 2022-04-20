@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using GraduationProject.Controller;
 using SolidWorks.Interop.sldworks;
@@ -13,7 +14,7 @@ namespace GraduationProject
         private static Feature _featureNode;
         public static TreeNode TreeNode;
         private static bool _check;
-        public static List<SketchInfo> SketchNames;
+        public static List<SketchInfo> SketchInfos;
         private static List<string> _startEndPoint;
         private static List<string> _startEndLine;
         private static List<string> _startEndArc;
@@ -194,7 +195,7 @@ namespace GraduationProject
 
             for (var i = 0; i < pointCount; i++) TreeNode.LastNode.LastNode.Nodes.Add("Точка");
 
-            SketchNames.Add(new SketchInfo
+            SketchInfos.Add(new SketchInfo
             {
                 SketchName = sketch,
                 PointStatus = pointCount != 0, PointCount = pointCount, PointCoordinates = _startEndPoint,
@@ -204,6 +205,87 @@ namespace GraduationProject
                 ParabolaStatus = parabolaCount != 0, ParabolaCount = parabolaCount,
                 ParabolaCoordinates = _startEndParabola
             });
+        }
+
+        public static string FindingPolygon(string sketchName)
+        {
+            var info = SketchInfos[SketchInfos.FindIndex(name => name.SketchName == sketchName)];
+            var lineCoordinates = info.LineCoordinates;
+            var result = "";
+            var line1X = lineCoordinates[0].Split('\n')[1].Split(' ')[3];
+            var line1Y = lineCoordinates[0].Split('\n')[1].Split(' ')[6];
+            var startPointXFirstLine = lineCoordinates[0].Split('\n')[0].Split(' ')[3];
+            var startPointYFirstLine = lineCoordinates[0].Split('\n')[0].Split(' ')[6];
+            var switchStartEnd = false;
+            var countFigure = 1;
+            var ind = 0;
+            var i = 0;
+            lineCoordinates.RemoveAt(0);
+            var isolation = false;
+            
+            while (lineCoordinates.Count != 0)
+            {
+                // от конца точки линии ищем начало из этой точки новую линию
+                string line2X;
+                string line2Y;
+                if (!switchStartEnd)
+                {
+                    line2X = lineCoordinates[i].Split('\n')[0].Split(' ')[3];
+                    line2Y = lineCoordinates[i].Split('\n')[0].Split(' ')[6];
+                    if (line1X == line2X && line1Y == line2Y)
+                    {
+                        line1X = lineCoordinates[i].Split('\n')[1].Split(' ')[3];
+                        line1Y = lineCoordinates[i].Split('\n')[1].Split(' ')[6];
+                        countFigure++;
+                        lineCoordinates.RemoveAt(i);
+                    }
+                
+                    if (i >= lineCoordinates.Count - 1)
+                    {
+                        switchStartEnd = true;
+                        i = 0;
+                        continue;
+                    }
+                }
+
+                // тут от начало точки линии до конца новой точки линии
+                if (switchStartEnd)
+                {
+                    line2X = lineCoordinates[i].Split('\n')[1].Split(' ')[3];
+                    line2Y = lineCoordinates[i].Split('\n')[1].Split(' ')[6];
+                    if (line1X == line2X && line1Y == line2Y)
+                    {
+                        line1X = lineCoordinates[i].Split('\n')[0].Split(' ')[3];
+                        line1Y = lineCoordinates[i].Split('\n')[0].Split(' ')[6];
+                        countFigure++;
+                        lineCoordinates.RemoveAt(i);
+                    }
+
+                    if (lineCoordinates.Count == 0)
+                    {
+                        if (line1X == startPointXFirstLine && line1Y == startPointYFirstLine)
+                            isolation = true;
+                    }
+                    
+                    if (i >= lineCoordinates.Count - 1)
+                    {
+                        switchStartEnd = false;
+                        i = 0;
+                        continue;
+                    }
+                }
+
+                ind++;
+                i++;
+                if (ind != 30) continue;
+                MessageBox.Show(@"Много итераций");
+                break;
+            }
+
+            if (isolation)
+                MessageBox.Show(countFigure.ToString());
+            
+            return result;
         }
     }
 }

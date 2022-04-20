@@ -11,20 +11,26 @@ namespace GraduationProject
         public ReadForm()
         {
             InitializeComponent();
+            
+            var toolTip = new ToolTip();
+            toolTip.AutoPopDelay = 5000;
+            toolTip.InitialDelay = 1000;
+            toolTip.ReshowDelay = 500;
+            toolTip.ShowAlways = true;
+            toolTip.SetToolTip(this.lineCountTextBox, "Количество отрезков в эскизе");
         }
 
         public void Forms()
         {
             treeView1.BeginUpdate();
             Reader.TreeNode = new TreeNode("Открыть дерево проекта");
-            Reader.SketchNames = new List<SketchInfo>();
+            Reader.SketchInfos = new List<SketchInfo>();
             var treeNode = Reader.ProjectReading(
                 Connection.FeatureManager.GetFeatureTreeRootItem2((int) swFeatMgrPane_e.swFeatMgrPaneBottom));
             treeNode.Expand();
             treeView1.Nodes.Add(treeNode);
             treeView1.EndUpdate();
-
-            foreach (var sketchName in Reader.SketchNames)
+            foreach (var sketchName in Reader.SketchInfos)
             {
                 sketchNameComboBox.Items.Add(sketchName.SketchName);
             }
@@ -42,7 +48,7 @@ namespace GraduationProject
             var selectedState = sketchNameComboBox.SelectedItem?.ToString();
             var lineCount = lineCountTextBox.Text;
 
-            var line = Controller.Controller.ControllerLineLength(int.Parse(lineCount));
+            var line = Controller.Controller.ControllerLineLength(selectedState, int.Parse(lineCount));
             MessageBox.Show(line);
             var controller = Controller.Controller.ControllerLinePosition(selectedState);
             MessageBox.Show(controller);
