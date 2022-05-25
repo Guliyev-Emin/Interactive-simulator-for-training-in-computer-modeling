@@ -1,6 +1,6 @@
 ﻿using SolidWorks.Interop.sldworks;
 
-namespace GraduationProject
+namespace GraduationProject.Construction
 {
     public class Remove : Connection
     {

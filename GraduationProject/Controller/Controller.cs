@@ -1,4 +1,7 @@
-﻿namespace GraduationProject.Controller
+﻿using System.IO;
+using GraduationProject.Construction;
+
+namespace GraduationProject.Controller
 {
     public class Controller : Connection
     {
@@ -28,6 +31,7 @@
 
         public static string ControllerLinePosition(string sketchName)
         {
+            //var path = "C:\\Users\\eming\\Desktop\\Свойства модели.txt";
             var info = Reader.SketchInfos[Reader.SketchInfos.FindIndex(name => name.SketchName == sketchName)];
             var lineCoordinates = info.LineCoordinates;
             var count = info.LineCoordinates.Count;

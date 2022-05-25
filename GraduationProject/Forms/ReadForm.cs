@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using GraduationProject.Construction;
 using GraduationProject.Controller;
 using SolidWorks.Interop.swconst;
 
@@ -17,7 +18,7 @@ namespace GraduationProject
             toolTip.InitialDelay = 1000;
             toolTip.ReshowDelay = 500;
             toolTip.ShowAlways = true;
-            toolTip.SetToolTip(this.lineCountTextBox, "Количество отрезков в эскизе");
+            toolTip.SetToolTip(lineCountTextBox, "Количество отрезков в эскизе");
         }
 
         public void Forms()
@@ -41,17 +42,29 @@ namespace GraduationProject
             Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void checkLine_Click(object sender, EventArgs e)
         {
             if (!Connection.ConnectionTest()) return;
             if ((sketchNameComboBox.SelectedItem is null) || lineCountTextBox.Text == "") return;
             var selectedState = sketchNameComboBox.SelectedItem?.ToString();
             var lineCount = lineCountTextBox.Text;
-
             var line = Controller.Controller.ControllerLineLength(selectedState, int.Parse(lineCount));
             MessageBox.Show(line);
             var controller = Controller.Controller.ControllerLinePosition(selectedState);
             MessageBox.Show(controller);
+        }
+
+        private void reReading_Click(object sender, EventArgs e)
+        {
+            treeView1.Nodes.Clear();
+            Forms();
+        }
+
+        private void checkButtonModel_Click(object sender, EventArgs e)
+        {
+            var qualityControl = new QualityControl();
+            qualityControl.Show();
+            
         }
     }
 }

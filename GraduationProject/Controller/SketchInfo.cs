@@ -9,9 +9,10 @@ namespace GraduationProject.Controller
         public bool PointStatus { get; set; }
         public int PointCount { get; set; }
         public List<string> PointCoordinates { get; set; }
-
+        
         public bool LineStatus { get; set; }
         public int LineCount { get; set; }
+        public List<short> LineType { get; set; }
         public List<string> LineCoordinates { get; set; }
 
         public bool ArcStatus { get; set; }

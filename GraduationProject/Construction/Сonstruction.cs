@@ -1,20 +1,20 @@
 ﻿using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
-namespace GraduationProject
+namespace GraduationProject.Construction
 {
-    public class StepDrawing : Connection
+    public class Сonstruction : Connection
     {
         private static Feature _firstFeature, _secondFeature, _feature;
         private static dynamic _faces;
         private static Entity _entity;
 
-        private static Feature FeatureExtrusion(double deepth, bool Sd = true, bool dir = false)
+        private static Feature FeatureExtrusion(double deepth, bool sd = true, bool dir = false)
         {
             // если Sd = true, то вытягивание в одну сторону, если ложь, тогда в обе стороны!
             // НЕ ТРОГАТЬ!!!!!
-            if (Sd)
-                return ModelDoc2.FeatureManager.FeatureExtrusion2(Sd, false, dir,
+            if (sd)
+                return ModelDoc2.FeatureManager.FeatureExtrusion2(sd, false, dir,
                     (int) swEndConditions_e.swEndCondBlind, (int) swEndConditions_e.swEndCondBlind,
                     deepth, 0, false, false, false, false, 0, 0, false, false, false, false, true,
                     true, true, 0, 0, false);
