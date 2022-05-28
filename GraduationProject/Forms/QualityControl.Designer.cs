@@ -33,7 +33,8 @@ namespace GraduationProject
         private void InitializeComponent()
         {
             this.benchmarkData = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.userDataRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // benchmarkData
@@ -41,27 +42,38 @@ namespace GraduationProject
             this.benchmarkData.Location = new System.Drawing.Point(12, 12);
             this.benchmarkData.Multiline = true;
             this.benchmarkData.Name = "benchmarkData";
+            this.benchmarkData.ReadOnly = true;
             this.benchmarkData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.benchmarkData.Size = new System.Drawing.Size(360, 437);
             this.benchmarkData.TabIndex = 0;
             this.benchmarkData.WordWrap = false;
             // 
-            // textBox2
+            // richTextBox1
             // 
-            this.textBox2.Location = new System.Drawing.Point(412, 12);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(360, 437);
-            this.textBox2.TabIndex = 1;
-            this.textBox2.WordWrap = false;
+            this.userDataRichTextBox.Location = new System.Drawing.Point(412, 12);
+            this.userDataRichTextBox.Name = "userDataRichTextBox";
+            this.userDataRichTextBox.ReadOnly = true;
+            this.userDataRichTextBox.Size = new System.Drawing.Size(359, 437);
+            this.userDataRichTextBox.TabIndex = 1;
+            this.userDataRichTextBox.Text = "";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(777, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // QualityControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 461);
-            this.Controls.Add(this.textBox2);
+            this.ClientSize = new System.Drawing.Size(919, 461);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.userDataRichTextBox);
             this.Controls.Add(this.benchmarkData);
             this.Name = "QualityControl";
             this.Text = "QualityControl";
@@ -69,8 +81,11 @@ namespace GraduationProject
             this.PerformLayout();
         }
 
+        private System.Windows.Forms.Button button1;
+
+        private System.Windows.Forms.RichTextBox userDataRichTextBox;
+
         private System.Windows.Forms.TextBox benchmarkData;
-        private System.Windows.Forms.TextBox textBox2;
 
         #endregion
     }

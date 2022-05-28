@@ -14,10 +14,13 @@ namespace GraduationProject.Construction
         public static TreeNode TreeNode;
         private static bool _check;
         public static List<SketchInfo> SketchInfos;
+        private static double _deepth;
         private static List<string> _pointCoordinates;
         private static List<string> _lineCoordinates;
-        private static List<short> _lineType;
+        private static List<short> _lineTypes;
+        private static List<double> _lineLengths;
         private static List<string> _arcCoordinates;
+        private static List<double> _arcRadius;
         private static List<string> _ellipseCoordinates;
         private static List<string> _parabolaCoordinates;
 
@@ -72,42 +75,34 @@ namespace GraduationProject.Construction
         private static void SketchListener(string sketch)
         {
             var selectedSketch = (Sketch) _featureNode.GetSpecificFeature2();
-            /*
-             * TODO На будущее реализовать чтение через SketchSegment, если это возможно.
-             */
-            // var vSketchSeg = selectedSketch.GetSketchSegments();
-            // var sketchSegEnum = (IEnumerable) vSketchSeg;
-            // var sketchSegments = sketchSegEnum.Cast<SketchSegment>().ToArray();
-            // foreach (var VARIABLE in sketchSegments)
-            // {
-            //     MessageBox.Show(VARIABLE.GetType().ToString());
-            // }
 
-            /*
-             * TODO Получение глубины фигуры, нужно много тестов.
-             */
-            var featureName = TreeNode.LastNode.Text;
-            var dimension = (Dimension) ModelDoc2.Parameter("D1@" + featureName);
-
-            if (dimension != null)
-            {
-                var deepth = (double[]) dimension.GetSystemValue3((int) swInConfigurationOpts_e.swAllConfiguration, featureName);
-                TreeNode.LastNode.Nodes.Insert(0, "Глубина выдавливания: " + deepth[0]);
-
-            }
-            
             var lineCount = selectedSketch.GetLineCount();
             var arcCount = selectedSketch.GetArcCount();
             var ellipseCount = selectedSketch.GetEllipseCount();
             var parabolaCount = selectedSketch.GetParabolaCount();
             var pointCount = selectedSketch.GetUserPointsCount();
+            _deepth = new double();
             _pointCoordinates = new List<string>();
             _lineCoordinates = new List<string>();
-            _lineType = new List<short>();
+            _lineTypes = new List<short>();
+            _lineLengths = new List<double>();
             _arcCoordinates = new List<string>();
+            _arcRadius = new List<double>();
             _ellipseCoordinates = new List<string>();
             _parabolaCoordinates = new List<string>();
 
+            /*
+            * Получение глубины фигуры, нужно много тестов.
+            */
+            var featureName = TreeNode.LastNode.Text;
+            var dimension = (Dimension) ModelDoc2.Parameter("D1@" + featureName);
+            if (dimension != null)
+            {
+                var deepth = (double[]) dimension.GetSystemValue3((int) swInConfigurationOpts_e.swAllConfiguration, featureName);
+                TreeNode.LastNode.Nodes.Insert(0, "Глубина: " + deepth[0] * 1000 + @" мм");
+                _deepth = deepth[0] * 1000;
+            }
+            
             if (lineCount != 0)
                 LineListener(selectedSketch, lineCount);
 
@@ -124,10 +119,10 @@ namespace GraduationProject.Construction
 
             SketchInfos.Add(new SketchInfo
             {
-                SketchName = sketch,
+                SketchName = sketch, Deepth = _deepth,
                 PointStatus = pointCount != 0, PointCount = pointCount, PointCoordinates = _pointCoordinates,
-                LineStatus = lineCount != 0, LineCount = lineCount, LineCoordinates = _lineCoordinates, LineType = _lineType,
-                ArcStatus = arcCount != 0, ArcCount = arcCount, ArcCoordinates = _arcCoordinates,
+                LineStatus = lineCount != 0, LineCount = lineCount, LineCoordinates = _lineCoordinates, LineTypes = _lineTypes, LineLengths = _lineLengths,
+                ArcStatus = arcCount != 0, ArcCount = arcCount, ArcCoordinates = _arcCoordinates, ArcRadius = _arcRadius,
                 EllipseStatus = ellipseCount != 0, EllipseCount = ellipseCount,
                 EllipseCoordinates = _ellipseCoordinates,
                 ParabolaStatus = parabolaCount != 0, ParabolaCount = parabolaCount,
@@ -178,9 +173,13 @@ namespace GraduationProject.Construction
             var getArcsProperties = sketch.GetArcs2();
             if (getArcsProperties is not IEnumerable arcsEnumerable) return;
             var arcs = arcsEnumerable.Cast<double>().ToArray();
+            var vSketchSeg = sketch.GetSketchSegments();
+            var sketchSegEnum = (IEnumerable) vSketchSeg;
+            var sketchSegments = sketchSegEnum.Cast<SketchSegment>().ToArray();
             for (var i = 0; i < arcCount; i++)
             {
                 TreeNode.LastNode.LastNode.Nodes.Add("Дуга");
+                var j = i;
                 if (i == arcCount) continue;
                 var start = "Начало: x = " + arcs[16 * i + 6] * 1000 + ", y = " + arcs[16 * i + 7] * 1000 +
                             ", z = " + arcs[16 * i + 8] * 1000 + ";";
@@ -188,10 +187,24 @@ namespace GraduationProject.Construction
                           arcs[16 * i + 11] * 1000 + ";";
                 var center = "Центр: x = " + arcs[16 * i + 12] * 1000 + ", y = " + arcs[16 * i + 13] * 1000 +
                              ", z = " + arcs[16 * i + 14] * 1000 + ";";
+                
+                var sketchSegment = sketchSegments[j];
+                
+                while (sketchSegment.GetType() != (int) swSketchSegments_e.swSketchARC)
+                {
+                    j++;
+                    sketchSegment = sketchSegments[j];
+                }
+
+                var arcSketch = (SketchArc) sketchSegment;
+                var radius = arcSketch.GetRadius() * 1000;
+
+                _arcRadius.Add(radius);
                 _arcCoordinates.Add(start + "\n" + end + "\n" + center);
                 TreeNode.LastNode.LastNode.LastNode.Nodes.Add(center);
                 TreeNode.LastNode.LastNode.LastNode.Nodes.Add(start);
                 TreeNode.LastNode.LastNode.LastNode.Nodes.Add(end);
+                TreeNode.LastNode.LastNode.LastNode.Nodes.Add("Радиус: " + radius + "мм");
             }
         }
 
@@ -218,23 +231,19 @@ namespace GraduationProject.Construction
                             ", z = " + line[12 * i + 8] * 1000 + ";";
                 var end = "Конец: x = " + line[12 * i + 9] * 1000 + ", y = " + line[12 * i + 10] * 1000 + ", z = " +
                           line[12 * i + 11] * 1000 + ";";
-                _lineType.Add(lineStyle);
-                _lineCoordinates.Add(start + "\n" + end);
                 var sketchSegment = sketchSegments[j];
-
-                /*
-                 * TODO если sketchSegment не равняется линии, то переходим на
-                 * TODO следующий элемент. Работает 1 раз, на будущее нужно
-                 * TODO реализовать проверку только для линии в этой процедуре.
-                 */
-
+                
                 while (sketchSegment.GetType() != (int) swSketchSegments_e.swSketchLINE)
                 {
                     j++;
                     sketchSegment = sketchSegments[j];
                 }
+                var lineLength = sketchSegment.GetLength() * 1000.0;
 
-                TreeNode.LastNode.LastNode.LastNode.Nodes.Add("Длина: " + sketchSegments[j].GetLength() * 1000 + " мм");
+                _lineTypes.Add(lineStyle);
+                _lineCoordinates.Add(start + "\n" + end);
+                _lineLengths.Add(lineLength);
+                TreeNode.LastNode.LastNode.LastNode.Nodes.Add("Длина: " + lineLength + " мм");
                 TreeNode.LastNode.LastNode.LastNode.Nodes.Add(start);
                 TreeNode.LastNode.LastNode.LastNode.Nodes.Add(end);
             }
@@ -284,8 +293,9 @@ namespace GraduationProject.Construction
         /// <returns>Возвращает количество углов.</returns>
         public static string FindingPolygon(string sketchName)
         {
-            var info = SketchInfos[SketchInfos.FindIndex(name => name.SketchName == sketchName)];
-            var lineCoordinates = info.LineCoordinates;
+            var sketchInfo = SketchInfos[SketchInfos.FindIndex(name => name.SketchName == sketchName)];
+            var lineType = sketchInfo.LineTypes;
+            var lineCoordinates = sketchInfo.LineCoordinates;
             var result = "";
             var line1X = lineCoordinates[0].Split('\n')[1].Split(' ')[3];
             var line1Y = lineCoordinates[0].Split('\n')[1].Split(' ')[6];

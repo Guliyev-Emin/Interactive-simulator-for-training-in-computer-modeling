@@ -64,7 +64,6 @@ namespace GraduationProject
         {
             var qualityControl = new QualityControl();
             qualityControl.Show();
-            
         }
     }
 }

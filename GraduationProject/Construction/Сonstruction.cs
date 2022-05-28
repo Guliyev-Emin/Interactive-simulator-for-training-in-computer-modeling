@@ -49,12 +49,10 @@ namespace GraduationProject.Construction
 
         public static void Step2()
         {
-            SelectPlane("Справа");
-            SketchManager.InsertSketch(false);
-
-            SketchManager.CreateCornerRectangle(0.085 / 2, 0.055, 0, 0.085 / 2 - 0.04, 0.105, 0.04);
-            //вытягивание в две стороны
-            _secondFeature = FeatureExtrusion(0.11 / 2, false);
+            SelectPlane("Сверху");
+            SketchManager.InsertSketch(true);
+            SketchManager.CreateCornerRectangle(-0.11/2, 0.085/2, 0, 0.11/2, 0.0025, 0);
+            _secondFeature = FeatureExtrusion(0.105);
             ModelDoc2.ClearSelection();
         }
 
@@ -97,7 +95,7 @@ namespace GraduationProject.Construction
         public static void Step5()
         {
             _faces = (dynamic[]) _firstFeature.GetFaces();
-            _entity = _faces[2] as Entity;
+            _entity = _faces[0] as Entity;
             _entity!.Select(true);
             SketchManager.InsertSketch(false);
             SketchManager.CreateCornerRectangle(-0.03, 0.055, 0, 0.03, 0, 0);
