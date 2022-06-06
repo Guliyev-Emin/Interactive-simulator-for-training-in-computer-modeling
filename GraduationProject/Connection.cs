@@ -39,7 +39,7 @@ namespace GraduationProject
 
                 if (ModelDoc2 != null)
                 {
-                    MessageBox.Show(@"Подключение выполнено. Документ найден.");
+                    MessageBox.Show(@"Подключение выполнено. Документ найден.", @"Уведомление");
 
                     const int prefToggle = (int) swUserPreferenceToggle_e.swInputDimValOnCreate;
 
@@ -49,18 +49,17 @@ namespace GraduationProject
                     FeatureManager = ModelDoc2.FeatureManager;
                 }
                 else
-                    MessageBox.Show(@"Документ не найден");
+                    MessageBox.Show(@"Документ не найден", @"Уведомление");
             }
             else
-                MessageBox.Show(@"Не удалось подключиться");
+                MessageBox.Show(@"Не удалось подключиться", @"Уведомление");
         }
 
         public static bool ConnectionTest()
         {
             if (ModelDoc2 is not null) return true;
-            MessageBox.Show(@"Документ не найден!");
+            MessageBox.Show(@"Документ не найден!", @"Уведомление");
             return false;
-
         }
     }
 }

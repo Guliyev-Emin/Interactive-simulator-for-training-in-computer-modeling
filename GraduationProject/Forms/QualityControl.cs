@@ -11,14 +11,12 @@ namespace GraduationProject
     public partial class QualityControl : Form
     {
         private int _numberOfCorrectResults;
-        private int _numberOfIncorrectResults;
 
         public QualityControl()
         {
             InitializeComponent();
             benchmarkData.Clear();
             userDataRichTextBox.Clear();
-
             AddingInitialData(@"..\..\Files\Свойства модели.txt");
             AddingUserData();
         }
@@ -100,7 +98,6 @@ namespace GraduationProject
                             {
                                 userDataRichTextBox.Select(match.Index, value.Length);
                                 if (userDataRichTextBox.SelectionBackColor.Name is "Green" or "White") continue;
-                                _numberOfIncorrectResults++;
                                 userDataRichTextBox.SelectionBackColor = Color.Red;
                             }
                         }
@@ -110,7 +107,7 @@ namespace GraduationProject
                         break;
                     }
                 }
-
+                
                 index++;
             }
         }
@@ -119,7 +116,6 @@ namespace GraduationProject
         {
             userDataRichTextBox.Clear();
             _numberOfCorrectResults = 0;
-            _numberOfIncorrectResults = 0;
             AddingUserData();
             Checking();
             CorrectMessage();

@@ -48,7 +48,7 @@ namespace GraduationProject
             this.benchmarkData.TabIndex = 0;
             this.benchmarkData.WordWrap = false;
             // 
-            // richTextBox1
+            // userDataRichTextBox
             // 
             this.userDataRichTextBox.Location = new System.Drawing.Point(412, 12);
             this.userDataRichTextBox.Name = "userDataRichTextBox";

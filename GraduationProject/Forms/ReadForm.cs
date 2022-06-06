@@ -65,5 +65,10 @@ namespace GraduationProject
             var qualityControl = new QualityControl();
             qualityControl.Show();
         }
+
+        private void writeToFile_Click(object sender, EventArgs e)
+        {
+            Reader.SavingModelPropertiesToAFile();
+        }
     }
 }

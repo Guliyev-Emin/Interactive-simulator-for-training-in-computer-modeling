@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using GraduationProject.Controller;
 using SolidWorks.Interop.sldworks;
@@ -47,7 +49,8 @@ namespace GraduationProject.Construction
                         break;
                 }
 
-                if (_check & !nodeType.Equals("DetailCabinet") & !nodeType.Equals("MaterialFolder") & !nodeType.Equals("HistoryFolder") & !nodeType.Equals("SensorFolder"))
+                if (_check & !nodeType.Equals("DetailCabinet") & !nodeType.Equals("MaterialFolder") &
+                    !nodeType.Equals("HistoryFolder") & !nodeType.Equals("SensorFolder"))
                     TreeNode.LastNode.Nodes.Add(nodeName);
                 else
                     TreeNode.Nodes.Add(nodeName);
@@ -75,7 +78,6 @@ namespace GraduationProject.Construction
         private static void SketchListener(string sketch)
         {
             var selectedSketch = (Sketch) _featureNode.GetSpecificFeature2();
-
             var lineCount = selectedSketch.GetLineCount();
             var arcCount = selectedSketch.GetArcCount();
             var ellipseCount = selectedSketch.GetEllipseCount();
@@ -94,15 +96,15 @@ namespace GraduationProject.Construction
             /*
             * Получение глубины фигуры, нужно много тестов.
             */
-            var featureName = TreeNode.LastNode.Text;
-            var dimension = (Dimension) ModelDoc2.Parameter("D1@" + featureName);
+            var dimension = (Dimension) ModelDoc2.Parameter("D1@" + _featureNode.GetOwnerFeature().Name);
             if (dimension != null)
             {
-                var deepth = (double[]) dimension.GetSystemValue3((int) swInConfigurationOpts_e.swAllConfiguration, featureName);
-                TreeNode.LastNode.Nodes.Insert(0, "Глубина: " + deepth[0] * 1000 + @" мм");
+                var deepth =
+                    (double[]) dimension.GetSystemValue3((int) swInConfigurationOpts_e.swAllConfiguration, _featureNode.GetOwnerFeature().Name);
+                TreeNode.LastNode.Nodes.Insert(0, "Выдавливание: " + deepth[0] * 1000 + @" мм");
                 _deepth = deepth[0] * 1000;
             }
-            
+
             if (lineCount != 0)
                 LineListener(selectedSketch, lineCount);
 
@@ -121,8 +123,10 @@ namespace GraduationProject.Construction
             {
                 SketchName = sketch, Deepth = _deepth,
                 PointStatus = pointCount != 0, PointCount = pointCount, PointCoordinates = _pointCoordinates,
-                LineStatus = lineCount != 0, LineCount = lineCount, LineCoordinates = _lineCoordinates, LineTypes = _lineTypes, LineLengths = _lineLengths,
-                ArcStatus = arcCount != 0, ArcCount = arcCount, ArcCoordinates = _arcCoordinates, ArcRadius = _arcRadius,
+                LineStatus = lineCount != 0, LineCount = lineCount, LineCoordinates = _lineCoordinates,
+                LineTypes = _lineTypes, LineLengths = _lineLengths,
+                ArcStatus = arcCount != 0, ArcCount = arcCount, ArcCoordinates = _arcCoordinates,
+                ArcRadius = _arcRadius,
                 EllipseStatus = ellipseCount != 0, EllipseCount = ellipseCount,
                 EllipseCoordinates = _ellipseCoordinates,
                 ParabolaStatus = parabolaCount != 0, ParabolaCount = parabolaCount,
@@ -187,15 +191,16 @@ namespace GraduationProject.Construction
                           arcs[16 * i + 11] * 1000 + ";";
                 var center = "Центр: x = " + arcs[16 * i + 12] * 1000 + ", y = " + arcs[16 * i + 13] * 1000 +
                              ", z = " + arcs[16 * i + 14] * 1000 + ";";
-                
+
                 var sketchSegment = sketchSegments[j];
-                
+
                 while (sketchSegment.GetType() != (int) swSketchSegments_e.swSketchARC)
                 {
                     j++;
                     sketchSegment = sketchSegments[j];
                 }
 
+                // ReSharper disable once SuspiciousTypeConversion.Global
                 var arcSketch = (SketchArc) sketchSegment;
                 var radius = arcSketch.GetRadius() * 1000;
 
@@ -232,12 +237,13 @@ namespace GraduationProject.Construction
                 var end = "Конец: x = " + line[12 * i + 9] * 1000 + ", y = " + line[12 * i + 10] * 1000 + ", z = " +
                           line[12 * i + 11] * 1000 + ";";
                 var sketchSegment = sketchSegments[j];
-                
+
                 while (sketchSegment.GetType() != (int) swSketchSegments_e.swSketchLINE)
                 {
                     j++;
                     sketchSegment = sketchSegments[j];
                 }
+
                 var lineLength = sketchSegment.GetLength() * 1000.0;
 
                 _lineTypes.Add(lineStyle);
@@ -294,7 +300,7 @@ namespace GraduationProject.Construction
         public static string FindingPolygon(string sketchName)
         {
             var sketchInfo = SketchInfos[SketchInfos.FindIndex(name => name.SketchName == sketchName)];
-            var lineType = sketchInfo.LineTypes;
+            //var lineType = sketchInfo.LineTypes;
             var lineCoordinates = sketchInfo.LineCoordinates;
             var result = "";
             var line1X = lineCoordinates[0].Split('\n')[1].Split(' ')[3];
@@ -368,6 +374,68 @@ namespace GraduationProject.Construction
                 MessageBox.Show(countFigure.ToString());
 
             return result;
+        }
+
+        /// <summary>
+        /// Процедура по записи свойств модели в файл.
+        /// </summary>
+        public static async void SavingModelPropertiesToAFile()
+        {
+            var template = new StringBuilder();
+            if (SketchInfos is null) return;
+            foreach (var sketch in SketchInfos)
+            {
+                template.Append("Имя эскиза: " + sketch.SketchName + "\n");
+                template.Append("Количество точек: " + sketch.PointCount + "\n");
+                template.Append("Количество отрезков: " + sketch.LineCount + "\n");
+                template.Append("Количество вспомогательных линий: " + sketch.LineTypes.Count(type => type == 4) +
+                                "\n");
+                template.Append("Количество дуг: " + sketch.ArcCount + "\n");
+                template.Append("Количество эллипсов: " + sketch.EllipseCount + "\n");
+                template.Append("Количество парабол: " + sketch.ParabolaCount + "\n");
+                
+                if (sketch.PointStatus)
+                {
+                    // ignored
+                }
+                
+                if (sketch.LineStatus)
+                {
+                    var index = 0;
+                    foreach (var line in sketch.LineCoordinates)
+                        if (sketch.LineTypes[index] != 4)
+                        {
+                            template.Append("Отрезок: \n\t" + line.Replace("\n", "\n\t") + "\n\t");
+                            template.Append("Длина: " + sketch.LineLengths[index++] + " мм\n");
+                        }
+                        else
+                            index++;
+                }
+                
+                if (sketch.ArcStatus)
+                {
+                    var index = 0;
+                    foreach (var arc in sketch.ArcCoordinates)
+                    {
+                        template.Append("Дуга: \n\t" + arc.Replace("\n", "\n\t") + "\n\t");
+                        template.Append("Радиус: " + sketch.ArcRadius[index++] + " мм\n");
+                    }
+                }
+                
+                if (sketch.EllipseStatus)
+                    foreach (var ellipse in sketch.EllipseCoordinates)
+                        template.Append("Эллипс: \n\t" + ellipse.Replace("\n", "\n\t") + "\n\t");
+
+                if (sketch.ParabolaStatus)
+                    foreach (var parabola in sketch.ParabolaCoordinates)
+                        template.Append("Парабола: \n\t" + parabola.Replace("\n", "\n\t") + "\n\t");
+
+                template.Append("Выдавливание: " + sketch.Deepth + " мм\n\n");
+            }
+
+            const string path = @"..\..\Files/Свойства модели.txt";
+            using var writer = new StreamWriter(path, false);
+            await writer.WriteLineAsync(template.ToString());
         }
     }
 }

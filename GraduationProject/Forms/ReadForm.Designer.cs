@@ -44,6 +44,7 @@ namespace GraduationProject
             this.checkButtonModel = new System.Windows.Forms.Button();
             this.reReading = new System.Windows.Forms.Button();
             this.LinePage = new System.Windows.Forms.TabPage();
+            this.writeToFile = new System.Windows.Forms.Button();
             this.lineGroupBox.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.ProjectTreePage.SuspendLayout();
@@ -118,6 +119,7 @@ namespace GraduationProject
             // 
             // ProjectTreePage
             // 
+            this.ProjectTreePage.Controls.Add(this.writeToFile);
             this.ProjectTreePage.Controls.Add(this.checkButtonModel);
             this.ProjectTreePage.Controls.Add(this.reReading);
             this.ProjectTreePage.Controls.Add(this.exit_button);
@@ -162,6 +164,16 @@ namespace GraduationProject
             this.LinePage.Text = "Отрезок";
             this.LinePage.UseVisualStyleBackColor = true;
             // 
+            // writeToFile
+            // 
+            this.writeToFile.Location = new System.Drawing.Point(25, 432);
+            this.writeToFile.Name = "writeToFile";
+            this.writeToFile.Size = new System.Drawing.Size(115, 40);
+            this.writeToFile.TabIndex = 5;
+            this.writeToFile.Text = "Записать в файл";
+            this.writeToFile.UseVisualStyleBackColor = true;
+            this.writeToFile.Click += new System.EventHandler(this.writeToFile_Click);
+            // 
             // ReadForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -177,6 +189,8 @@ namespace GraduationProject
             this.LinePage.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Button writeToFile;
 
         private System.Windows.Forms.Button checkButtonModel;
 
