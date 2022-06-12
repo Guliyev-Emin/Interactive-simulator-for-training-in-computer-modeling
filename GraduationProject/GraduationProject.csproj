@@ -34,6 +34,9 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="JetBrains.Annotations, Version=4242.42.42.42, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+          <HintPath>..\packages\JetBrains.Annotations.2022.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+        </Reference>
         <Reference Include="PDMWorks.Interop.pdmworks, Version=21.5.0.76, Culture=neutral, PublicKeyToken=c961ea6576798d6c">
           <HintPath>..\..\..\Диплом\1_ApiSw_Dll\PDMWorks.Interop.pdmworks.dll</HintPath>
         </Reference>
@@ -145,6 +148,7 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
+        <None Include="packages.config" />
         <None Include="Properties\Settings.settings">
             <Generator>SettingsSingleFileGenerator</Generator>
             <LastGenOutput>Settings.Designer.cs</LastGenOutput>

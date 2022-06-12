@@ -1,8 +1,10 @@
-﻿using SolidWorks.Interop.sldworks;
+﻿using JetBrains.Annotations;
+using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
 namespace GraduationProject.Construction
 {
+    [UsedImplicitly]
     public class Сonstruction : Connection
     {
         private static Feature _firstFeature, _secondFeature, _feature;
@@ -96,7 +98,7 @@ namespace GraduationProject.Construction
             FeatureCut(0.015);
             ModelDoc2.ClearSelection();
         }
-        //
+        
         // public static void Step2()
         // {
         //     SelectPlane("Справа");

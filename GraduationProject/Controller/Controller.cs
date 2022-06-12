@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using GraduationProject.Construction;
+using JetBrains.Annotations;
 
 namespace GraduationProject.Controller
 {
+    [UsedImplicitly]
     public class Controller : Connection
     {
         public static string ControllerLineLength(string sketchName, int lineCount)

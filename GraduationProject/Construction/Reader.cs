@@ -5,18 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GraduationProject.Controller;
+using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
 namespace GraduationProject.Construction
 {
+    [UsedImplicitly]
     public class Reader : Connection
     {
-        private static Feature _featureNode;
-        public static TreeNode TreeNode;
-        private static bool _check;
         public static List<SketchInfo> SketchInfos;
+        public static TreeNode TreeNode;
+        public static string ModelProperties;
+        private static bool _check;
         private static double _deepth;
+        private static Feature _featureNode;
         private static List<string> _pointCoordinates;
         private static List<string> _lineCoordinates;
         private static List<short> _lineTypes;
@@ -100,7 +103,8 @@ namespace GraduationProject.Construction
             if (dimension != null)
             {
                 var deepth =
-                    (double[]) dimension.GetSystemValue3((int) swInConfigurationOpts_e.swAllConfiguration, _featureNode.GetOwnerFeature().Name);
+                    (double[]) dimension.GetSystemValue3((int) swInConfigurationOpts_e.swAllConfiguration,
+                        _featureNode.GetOwnerFeature().Name);
                 TreeNode.LastNode.Nodes.Insert(0, "Выдавливание: " + deepth[0] * 1000 + @" мм");
                 _deepth = deepth[0] * 1000;
             }
@@ -177,6 +181,7 @@ namespace GraduationProject.Construction
             var getArcsProperties = sketch.GetArcs2();
             if (getArcsProperties is not IEnumerable arcsEnumerable) return;
             var arcs = arcsEnumerable.Cast<double>().ToArray();
+
             var vSketchSeg = sketch.GetSketchSegments();
             var sketchSegEnum = (IEnumerable) vSketchSeg;
             var sketchSegments = sketchSegEnum.Cast<SketchSegment>().ToArray();
@@ -223,9 +228,11 @@ namespace GraduationProject.Construction
             var getLinesProperties = sketch.GetLines2(4);
             if (getLinesProperties is not IEnumerable lineEnumerable) return;
             var line = lineEnumerable.Cast<double>().ToArray();
+
             var vSketchSeg = sketch.GetSketchSegments();
             var sketchSegEnum = (IEnumerable) vSketchSeg;
             var sketchSegments = sketchSegEnum.Cast<SketchSegment>().ToArray();
+
             for (var i = 0; i < lineCount; i++)
             {
                 TreeNode.LastNode.LastNode.Nodes.Add("Отрезок");
@@ -237,7 +244,6 @@ namespace GraduationProject.Construction
                 var end = "Конец: x = " + line[12 * i + 9] * 1000 + ", y = " + line[12 * i + 10] * 1000 + ", z = " +
                           line[12 * i + 11] * 1000 + ";";
                 var sketchSegment = sketchSegments[j];
-
                 while (sketchSegment.GetType() != (int) swSketchSegments_e.swSketchLINE)
                 {
                     j++;
@@ -245,7 +251,6 @@ namespace GraduationProject.Construction
                 }
 
                 var lineLength = sketchSegment.GetLength() * 1000.0;
-
                 _lineTypes.Add(lineStyle);
                 _lineCoordinates.Add(start + "\n" + end);
                 _lineLengths.Add(lineLength);
@@ -377,9 +382,9 @@ namespace GraduationProject.Construction
         }
 
         /// <summary>
-        /// Процедура по записи свойств модели в файл.
+        ///     Процедура по записи свойств модели в файл.
         /// </summary>
-        public static async void SavingModelPropertiesToAFile()
+        public static void CreateTemplateModelProperties()
         {
             var template = new StringBuilder();
             if (SketchInfos is null) return;
@@ -393,12 +398,12 @@ namespace GraduationProject.Construction
                 template.Append("Количество дуг: " + sketch.ArcCount + "\n");
                 template.Append("Количество эллипсов: " + sketch.EllipseCount + "\n");
                 template.Append("Количество парабол: " + sketch.ParabolaCount + "\n");
-                
+
                 if (sketch.PointStatus)
                 {
                     // ignored
                 }
-                
+
                 if (sketch.LineStatus)
                 {
                     var index = 0;
@@ -409,9 +414,11 @@ namespace GraduationProject.Construction
                             template.Append("Длина: " + sketch.LineLengths[index++] + " мм\n");
                         }
                         else
+                        {
                             index++;
+                        }
                 }
-                
+
                 if (sketch.ArcStatus)
                 {
                     var index = 0;
@@ -421,7 +428,7 @@ namespace GraduationProject.Construction
                         template.Append("Радиус: " + sketch.ArcRadius[index++] + " мм\n");
                     }
                 }
-                
+
                 if (sketch.EllipseStatus)
                     foreach (var ellipse in sketch.EllipseCoordinates)
                         template.Append("Эллипс: \n\t" + ellipse.Replace("\n", "\n\t") + "\n\t");
@@ -433,9 +440,14 @@ namespace GraduationProject.Construction
                 template.Append("Выдавливание: " + sketch.Deepth + " мм\n\n");
             }
 
+            ModelProperties = template.ToString();
+        }
+
+        public static async void SavingModelPropertiesToAFile(string template)
+        {
             const string path = @"..\..\Files/Свойства модели.txt";
             using var writer = new StreamWriter(path, false);
-            await writer.WriteLineAsync(template.ToString());
+            await writer.WriteLineAsync(template);
         }
     }
 }

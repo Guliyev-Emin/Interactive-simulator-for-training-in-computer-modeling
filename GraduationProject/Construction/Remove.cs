@@ -1,7 +1,9 @@
-﻿using SolidWorks.Interop.sldworks;
+﻿using JetBrains.Annotations;
+using SolidWorks.Interop.sldworks;
 
 namespace GraduationProject.Construction
 {
+    [UsedImplicitly]
     public class Remove : Connection
     {
         private static Feature _feature;

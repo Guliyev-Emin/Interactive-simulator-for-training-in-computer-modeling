@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GraduationProject.Construction;
@@ -29,30 +31,10 @@ namespace GraduationProject
 
         private void AddingUserData()
         {
-            foreach (var sketchInfo in Reader.SketchInfos)
-            {
-                if (userDataRichTextBox.Text != "") userDataRichTextBox.Text += Environment.NewLine;
-                userDataRichTextBox.Text += sketchInfo.SketchName + Environment.NewLine;
-                userDataRichTextBox.Text += @"Количество линий: " + sketchInfo.LineCount + Environment.NewLine;
-                var counter = 0;
-                if (sketchInfo.LineStatus)
-                    foreach (var lineLength in sketchInfo.LineLengths)
-                        if (sketchInfo.LineTypes[counter] != 4)
-                        {
-                            userDataRichTextBox.Text += @"Линия: " + lineLength + @" мм" + Environment.NewLine;
-                            counter++;
-                        }
-                        else
-                        {
-                            counter++;
-                        }
-
-                if (sketchInfo.ArcStatus)
-                    foreach (var arcRadius in sketchInfo.ArcRadius)
-                        userDataRichTextBox.Text += @"Радиус: " + arcRadius + @" мм" + Environment.NewLine;
-
-                userDataRichTextBox.Text += @"Глубина: " + sketchInfo.Deepth + @" мм" + Environment.NewLine;
-            }
+            if (Reader.ModelProperties == null)
+                Reader.CreateTemplateModelProperties();
+            if (Reader.ModelProperties != null)
+                userDataRichTextBox.Text = Reader.ModelProperties.Replace("\n", Environment.NewLine);
         }
 
         private void Checking()
@@ -60,8 +42,9 @@ namespace GraduationProject
             var userData = userDataRichTextBox.Text.Split(new[] {"\n\n"}, StringSplitOptions.RemoveEmptyEntries);
             var index = 0;
             var checkBreak = false;
-            foreach (var data in benchmarkData.Text.Split(new[] {"\r\r\n\r\r\n"},
-                         StringSplitOptions.RemoveEmptyEntries))
+            var benchmark = benchmarkData.Text.Split(new[] {"Имя эскиза:"},
+                StringSplitOptions.RemoveEmptyEntries);
+            foreach (var data in benchmark)
             {
                 var userDataInfo = userData[index];
                 var userDataInfoArray = new List<string>(userDataInfo.Split('\n'));
@@ -71,47 +54,42 @@ namespace GraduationProject
                     if (info.IndexOf("Эскиз", StringComparison.Ordinal) != -1) continue;
                     foreach (var value in userDataInfoArray)
                     {
+                        if(value == userDataInfoArray.First()) continue;
+                        var regex = new Regex("" + value);
                         if (info1 == value)
-                        {
-                            var regex = new Regex("" + value);
                             foreach (Match match in regex.Matches(userDataRichTextBox.Text))
                             {
                                 userDataRichTextBox.Select(match.Index, value.Length);
-                                if (userDataRichTextBox.SelectionBackColor.Name == "Green") continue;
-                                userDataRichTextBox.SelectionBackColor = Color.Green;
+                                if (userDataRichTextBox.SelectionBackColor.Name == "LightGreen") continue;
+                                userDataRichTextBox.SelectionBackColor = Color.LightGreen;
                                 checkBreak = true;
                                 _numberOfCorrectResults++;
                                 var indexUserData = userDataInfoArray.FindIndex(x => x.Equals(value));
                                 var newText = "";
-                                for (var i = 0; i < value.Length; i++)
-                                {
-                                    newText += '-';
-                                }
+                                for (var i = 0; i < value.Length; i++) newText += '-';
                                 userDataInfoArray[indexUserData] = newText;
                                 break;
                             }
-                        }
                         else
-                        {
-                            var regex = new Regex("" + value);
                             foreach (Match match in regex.Matches(userDataRichTextBox.Text))
                             {
                                 userDataRichTextBox.Select(match.Index, value.Length);
-                                if (userDataRichTextBox.SelectionBackColor.Name is "Green" or "White") continue;
+                                if (userDataRichTextBox.SelectionBackColor.Name is "LightGreen" or "White") continue;
                                 userDataRichTextBox.SelectionBackColor = Color.Red;
                             }
-                        }
 
                         if (!checkBreak) continue;
                         checkBreak = false;
                         break;
                     }
                 }
-                
+
                 index++;
             }
         }
 
+        [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH",
+            MessageId = "type: System.Byte[]")]
         private void button1_Click(object sender, EventArgs e)
         {
             userDataRichTextBox.Clear();
@@ -123,7 +101,26 @@ namespace GraduationProject
 
         private void CorrectMessage()
         {
-            MessageBox.Show(@"Количество верных результатов: " + _numberOfCorrectResults, @"Информация");
+            var errorIndexes = new List<int>();
+            var errorCounter = 0;
+            foreach (var userData in
+                     userDataRichTextBox.Text.Split(new[] {"\n"}, StringSplitOptions.RemoveEmptyEntries))
+            {
+                var regex = new Regex("" + userData);
+                foreach (Match match in regex.Matches(userDataRichTextBox.Text))
+                {
+                    userDataRichTextBox.Select(match.Index, userData.Length);
+                    if (!(userDataRichTextBox.SelectionBackColor.Name.Equals("Red") &
+                          !errorIndexes.Contains(match.Index))) continue;
+                    errorCounter++;
+                    errorIndexes.Add(match.Index);
+                    break;
+                }
+            }
+
+            MessageBox.Show(
+                @"Количество верных результатов: " + _numberOfCorrectResults + Environment.NewLine +
+                @"Количество неверных результатов: " + errorCounter, @"Информация");
         }
     }
 }

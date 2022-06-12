@@ -12,7 +12,6 @@ namespace GraduationProject
         public ReadForm()
         {
             InitializeComponent();
-            
             var toolTip = new ToolTip();
             toolTip.AutoPopDelay = 5000;
             toolTip.InitialDelay = 1000;
@@ -68,7 +67,8 @@ namespace GraduationProject
 
         private void writeToFile_Click(object sender, EventArgs e)
         {
-            Reader.SavingModelPropertiesToAFile();
+            Reader.CreateTemplateModelProperties();
+            Reader.SavingModelPropertiesToAFile(Reader.ModelProperties);
         }
     }
 }
