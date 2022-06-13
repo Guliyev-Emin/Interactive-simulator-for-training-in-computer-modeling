@@ -30,3 +30,5 @@ G:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject
 G:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.ReadForm.resources
 G:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.MainForm.resources
 G:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.QualityControl.resources
+G:\RiderProjects\GraduationProject\GraduationProject\bin\Debug\JetBrains.Annotations.dll
+G:\RiderProjects\GraduationProject\GraduationProject\bin\Debug\JetBrains.Annotations.xml

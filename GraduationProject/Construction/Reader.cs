@@ -81,6 +81,7 @@ namespace GraduationProject.Construction
         private static void SketchListener(string sketch)
         {
             var selectedSketch = (Sketch) _featureNode.GetSpecificFeature2();
+            var featureName = _featureNode.GetOwnerFeature().Name;
             var lineCount = selectedSketch.GetLineCount();
             var arcCount = selectedSketch.GetArcCount();
             var ellipseCount = selectedSketch.GetEllipseCount();
@@ -99,12 +100,12 @@ namespace GraduationProject.Construction
             /*
             * Получение глубины фигуры, нужно много тестов.
             */
-            var dimension = (Dimension) ModelDoc2.Parameter("D1@" + _featureNode.GetOwnerFeature().Name);
+            var dimension = (Dimension) ModelDoc2.Parameter("D1@" + featureName);
             if (dimension != null)
             {
                 var deepth =
                     (double[]) dimension.GetSystemValue3((int) swInConfigurationOpts_e.swAllConfiguration,
-                        _featureNode.GetOwnerFeature().Name);
+                        featureName);
                 TreeNode.LastNode.Nodes.Insert(0, "Выдавливание: " + deepth[0] * 1000 + @" мм");
                 _deepth = deepth[0] * 1000;
             }

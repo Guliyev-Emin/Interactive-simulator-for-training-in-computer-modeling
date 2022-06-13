@@ -37,6 +37,10 @@ namespace GraduationProject
                 userDataRichTextBox.Text = Reader.ModelProperties.Replace("\n", Environment.NewLine);
         }
 
+        /// <summary>
+        /// Процедура проверки двумерных примитивов эскиза пользователя
+        /// с правильными примитивами.
+        /// </summary>
         private void Checking()
         {
             var userData = userDataRichTextBox.Text.Split(new[] {"\n\n"}, StringSplitOptions.RemoveEmptyEntries);
@@ -60,7 +64,7 @@ namespace GraduationProject
                             foreach (Match match in regex.Matches(userDataRichTextBox.Text))
                             {
                                 userDataRichTextBox.Select(match.Index, value.Length);
-                                if (userDataRichTextBox.SelectionBackColor.Name == "LightGreen") continue;
+                                if (userDataRichTextBox.SelectionBackColor.Name.Equals("LightGreen")) continue;
                                 userDataRichTextBox.SelectionBackColor = Color.LightGreen;
                                 checkBreak = true;
                                 _numberOfCorrectResults++;
@@ -96,10 +100,13 @@ namespace GraduationProject
             _numberOfCorrectResults = 0;
             AddingUserData();
             Checking();
-            CorrectMessage();
+            ResultOfChecking();
         }
 
-        private void CorrectMessage()
+        /// <summary>
+        /// Процедура по вычислению неверных результатов и вывода количества правильных и неправильных
+        /// </summary>
+        private void ResultOfChecking()
         {
             var errorIndexes = new List<int>();
             var errorCounter = 0;
