@@ -108,8 +108,8 @@
         <Compile Include="Construction\Reader.cs" />
         <Compile Include="Construction\Remove.cs" />
         <Compile Include="Construction\Сonstruction.cs" />
-        <Compile Include="Controller\Controller.cs" />
-        <Compile Include="Controller\SketchInfo.cs" />
+        <Compile Include="Controllers\Controller.cs" />
+        <Compile Include="Controllers\SketchInfo.cs" />
         <Compile Include="Forms\MainForm.cs">
           <SubType>Form</SubType>
         </Compile>

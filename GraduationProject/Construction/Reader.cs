@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using GraduationProject.Controller;
+using GraduationProject.Controllers;
 using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
@@ -139,6 +139,20 @@ namespace GraduationProject.Construction
             });
         }
 
+        private static void PointListener(ISketch sketch, int pointCount)
+        {
+            var getPointProperties = sketch.GetUserPoints2();
+            if (getPointProperties is not IEnumerable pointEnumerable) return;
+            var point = pointEnumerable.Cast<double>().ToArray();
+            for (int index = 0; index < pointCount; index++)
+            {
+                TreeNode.LastNode.LastNode.Nodes.Add("Точка");
+                if (index == pointCount) continue;
+                
+            }
+            
+        }
+
         /// <summary>
         ///     Процедура позволяющая извлекать значения координат начальных, конечных, фокусных и вершин точек параболы.
         /// </summary>
@@ -151,7 +165,7 @@ namespace GraduationProject.Construction
             var parabola = parabolaEnumerable.Cast<double>().ToArray();
             for (var i = 0; i < parabolaCount; i++)
             {
-                TreeNode.LastNode.LastNode.LastNode.Nodes.Add("Парабола");
+                TreeNode.LastNode.LastNode.Nodes.Add("Парабола");
                 if (i == parabolaCount) continue;
                 var start = "Начало: x = " + parabola[18 * i + 6] * 1000 + ", y = " + parabola[18 * i + 7] * 1000 +
                             ", z = " + parabola[18 * i + 8] * 1000 + ";";

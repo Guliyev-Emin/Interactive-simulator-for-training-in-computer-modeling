@@ -95,6 +95,7 @@ namespace GraduationProject
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.exitToolStripMenuItem.Text = "Выход";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys) (((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) | System.Windows.Forms.Keys.W)));
             // 
             // EditorToolStripMenuItem
             // 
@@ -106,7 +107,7 @@ namespace GraduationProject
             // StepDrawingToolStripMenuItem
             // 
             this.StepDrawingToolStripMenuItem.Name = "StepDrawingToolStripMenuItem";
-            this.StepDrawingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys) (((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) | System.Windows.Forms.Keys.W)));
+            this.StepDrawingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys) (((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) | System.Windows.Forms.Keys.Y)));
             this.StepDrawingToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
             this.StepDrawingToolStripMenuItem.Text = "Поэтапное черчение";
             this.StepDrawingToolStripMenuItem.Click += new System.EventHandler(this.StepDrawingToolStripMenuItem_Click);

@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using GraduationProject.Construction;
-using GraduationProject.Controller;
+using GraduationProject.Controllers;
 using SolidWorks.Interop.swconst;
 
 namespace GraduationProject
 {
     public partial class ReadForm : Form
     {
+        private Thread _thread;
         public ReadForm()
         {
             InitializeComponent();
@@ -47,9 +49,9 @@ namespace GraduationProject
             if ((sketchNameComboBox.SelectedItem is null) || lineCountTextBox.Text == "") return;
             var selectedState = sketchNameComboBox.SelectedItem?.ToString();
             var lineCount = lineCountTextBox.Text;
-            var line = Controller.Controller.ControllerLineLength(selectedState, int.Parse(lineCount));
+            var line = Controller.ControllerLineLength(selectedState, int.Parse(lineCount));
             MessageBox.Show(line);
-            var controller = Controller.Controller.ControllerLinePosition(selectedState);
+            var controller = Controller.ControllerLinePosition(selectedState);
             MessageBox.Show(controller);
         }
 

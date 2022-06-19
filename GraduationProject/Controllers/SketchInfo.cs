@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GraduationProject.Controller
+namespace GraduationProject.Controllers
 {
     public class SketchInfo
     {
