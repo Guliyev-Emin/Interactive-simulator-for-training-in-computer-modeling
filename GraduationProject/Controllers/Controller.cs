@@ -80,14 +80,14 @@ namespace GraduationProject.Controllers
         ///     с правильными примитивами.
         /// </summary>
         /// <param name="initialInformationOfTheModel">Исходная информация модели</param>
-        /// <param name="initialInformationOfTheUserModel">Исходная информация пользовательской модели</param>
+        /// <param name="initialInformationOfTheUserModel">Ссылка на исходную информацию пользовательской модели</param>
         /// <param name="numberOfCorrectResults">Ссылка на количество верных результатов</param>
         public static void Comparison(TextBox initialInformationOfTheModel,
             ref RichTextBox initialInformationOfTheUserModel, ref int numberOfCorrectResults)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-
+            var lastIndex = 0;
             var initialInformationOfTheUserModelArray =
                 initialInformationOfTheUserModel.Text.Split(new[] {"Имя эскиза:"},
                     StringSplitOptions.RemoveEmptyEntries);
@@ -105,7 +105,6 @@ namespace GraduationProject.Controllers
                     if (sketchPropertiesInitialModel.IndexOf("Эскиз", StringComparison.Ordinal) != -1) continue;
                     foreach (var sketchPropertiesInitialUserModel in sketchPropertiesFromInitialUserModelInformation)
                     {
-                        //MessageBox.Show(sketchPropertiesInitialUserModel);
                         if (sketchPropertiesInitialUserModel.Equals(sketchPropertiesFromInitialUserModelInformation
                                 .First())) continue;
                         var regex = new Regex(sketchPropertiesInitialUserModel);
@@ -122,12 +121,10 @@ namespace GraduationProject.Controllers
                                 numberOfCorrectResults++;
                                 break;
                             }
-
                             if (initialInformationOfTheUserModel.SelectionBackColor.Name is "LightGreen" or "White")
                                 continue;
                             initialInformationOfTheUserModel.SelectionBackColor = Color.Red;
                         }
-
                         if (!checkBreak) continue;
                         checkBreak = false;
                         break;
