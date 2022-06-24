@@ -87,7 +87,7 @@ namespace GraduationProject.Controllers
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            var lastIndex = 0;
+            
             var initialInformationOfTheUserModelArray =
                 initialInformationOfTheUserModel.Text.Split(new[] {"Имя эскиза:"},
                     StringSplitOptions.RemoveEmptyEntries);
