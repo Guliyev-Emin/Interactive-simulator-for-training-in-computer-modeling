@@ -8,6 +8,7 @@ using GraduationProject.Controllers;
 using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using Environment = System.Environment;
 
 namespace GraduationProject.Construction
 {
@@ -81,7 +82,7 @@ namespace GraduationProject.Construction
         private static void SketchListener(string sketch)
         {
             var selectedSketch = (Sketch) _featureNode.GetSpecificFeature2();
-            var featureName = _featureNode.GetOwnerFeature().Name;
+            var feature = _featureNode.GetOwnerFeature();
             var lineCount = selectedSketch.GetLineCount();
             var arcCount = selectedSketch.GetArcCount();
             var ellipseCount = selectedSketch.GetEllipseCount();
@@ -97,18 +98,8 @@ namespace GraduationProject.Construction
             _ellipseCoordinates = new List<string>();
             _parabolaCoordinates = new List<string>();
 
-            /*
-            * Получение глубины фигуры, нужно много тестов.
-            */
-            var dimension = (Dimension) ModelDoc2.Parameter("D1@" + featureName);
-            if (dimension != null)
-            {
-                var deepth =
-                    (double[]) dimension.GetSystemValue3((int) swInConfigurationOpts_e.swAllConfiguration,
-                        featureName);
-                TreeNode.LastNode.Nodes.Insert(0, "Выдавливание: " + deepth[0] * 1000 + @" мм");
-                _deepth = deepth[0] * 1000;
-            }
+            DeepthListener(feature);
+            GetPlanesAndFaces(selectedSketch);
 
             if (lineCount != 0)
                 LineListener(selectedSketch, lineCount);
@@ -122,7 +113,8 @@ namespace GraduationProject.Construction
             if (parabolaCount != 0)
                 ParabolaListener(selectedSketch, parabolaCount);
 
-            for (var i = 0; i < pointCount; i++) TreeNode.LastNode.LastNode.Nodes.Add("Точка");
+            if (pointCount != 0)
+                PointListener(selectedSketch, pointCount);
 
             SketchInfos.Add(new SketchInfo
             {
@@ -139,18 +131,44 @@ namespace GraduationProject.Construction
             });
         }
 
+        private static void DeepthListener(IFeature feature)
+        {
+            var featureName = feature.Name;
+            var deDimension = (Dimension) ModelDoc2.Parameter("D1@" + featureName);
+            if (deDimension is null) return;
+            var deepth =
+                (double[]) deDimension.GetSystemValue3((int) swInConfigurationOpts_e.swAllConfiguration,
+                    featureName);
+            _deepth = deepth[0] * 1000;
+            TreeNode.LastNode.Nodes.Insert(0, @"Выдавливание: " + _deepth + @" мм");
+        }
+
+        private static void GetPlanesAndFaces(ISketch sketch)
+        {
+            var transformationMatrix = sketch.ModelToSketchTransform;
+            var transformationMatrixData = transformationMatrix.ArrayData;
+            
+        }
+
+        /// <summary>
+        /// Процедура позволяющая извлекать значения координат точек. 
+        /// </summary>
+        /// <param name="sketch">Объект типа Sketch.</param>
+        /// <param name="pointCount">Количество точек в эскизе</param>
         private static void PointListener(ISketch sketch, int pointCount)
         {
             var getPointProperties = sketch.GetUserPoints2();
             if (getPointProperties is not IEnumerable pointEnumerable) return;
             var point = pointEnumerable.Cast<double>().ToArray();
-            for (int index = 0; index < pointCount; index++)
+            for (var index = 0; index < pointCount; index++)
             {
                 TreeNode.LastNode.LastNode.Nodes.Add("Точка");
                 if (index == pointCount) continue;
-                
+                var pointCoordinate = "Координаты: x = " + point[8 * index + 5] * 1000 + ", y = " +
+                                      point[8 * index + 6] * 1000 + ", z = " + point[8 * index + 7] * 1000 + ";";
+                _pointCoordinates.Add(pointCoordinate);
+                TreeNode.LastNode.LastNode.LastNode.Nodes.Add(pointCoordinate);
             }
-            
         }
 
         /// <summary>

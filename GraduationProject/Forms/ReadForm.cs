@@ -10,7 +10,6 @@ namespace GraduationProject
 {
     public partial class ReadForm : Form
     {
-        private Thread _thread;
         public ReadForm()
         {
             InitializeComponent();

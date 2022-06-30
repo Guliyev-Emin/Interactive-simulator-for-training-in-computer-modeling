@@ -12,7 +12,8 @@
         <FileAlignment>512</FileAlignment>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <Deterministic>true</Deterministic>
-        <LangVersion>9</LangVersion>
+        <LangVersion>10</LangVersion>
+        <ApplicationIcon>Resources\EngineerDegre.ico</ApplicationIcon>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -164,6 +165,7 @@
     </ItemGroup>
     <ItemGroup>
       <Content Include="Files\Свойства модели.txt" />
+      <Content Include="Resources\EngineerDegre.ico" />
       <Content Include="Resources\ImageTask.png" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
