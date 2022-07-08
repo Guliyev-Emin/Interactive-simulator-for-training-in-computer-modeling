@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -128,6 +127,89 @@ namespace GraduationProject.Controllers
                     }
                 }
             }
+        }
+        
+        /// <summary>
+        ///     Функция по определению количество углов в фигуре.
+        /// </summary>
+        /// <param name="sketchName">Название эскиза.</param>
+        /// <returns>Возвращает количество углов.</returns>
+        public static string FindingPolygon(string sketchName)
+        {
+            var sketchInfo = Reader.SketchInfos[Reader.SketchInfos.FindIndex(name => name.SketchName == sketchName)];
+            var lineTypes = sketchInfo.LineTypes;
+            var lineCoordinates = sketchInfo.LineCoordinates;
+            var result = "";
+            var line1X = lineCoordinates[0].Split('\n')[1].Split(' ')[3];
+            var line1Y = lineCoordinates[0].Split('\n')[1].Split(' ')[6];
+            var startPointXFirstLine = lineCoordinates[0].Split('\n')[0].Split(' ')[3];
+            var startPointYFirstLine = lineCoordinates[0].Split('\n')[0].Split(' ')[6];
+            var switchStartEnd = false;
+            var countFigure = 1;
+            var ind = 0;
+            var i = 0;
+            lineCoordinates.RemoveAt(0);
+            var isolation = false;
+            while (lineCoordinates.Count != 0)
+            {
+                // от конца точки линии ищем начало из этой точки новую линию
+                string line2X;
+                string line2Y;
+                if (!switchStartEnd)
+                {
+                    line2X = lineCoordinates[i].Split('\n')[0].Split(' ')[3];
+                    line2Y = lineCoordinates[i].Split('\n')[0].Split(' ')[6];
+                    if (line1X == line2X && line1Y == line2Y)
+                    {
+                        line1X = lineCoordinates[i].Split('\n')[1].Split(' ')[3];
+                        line1Y = lineCoordinates[i].Split('\n')[1].Split(' ')[6];
+                        countFigure++;
+                        lineCoordinates.RemoveAt(i);
+                    }
+
+                    if (i >= lineCoordinates.Count - 1)
+                    {
+                        switchStartEnd = true;
+                        i = 0;
+                        continue;
+                    }
+                }
+
+                // тут от начало точки линии до конца новой точки линии
+                if (switchStartEnd)
+                {
+                    line2X = lineCoordinates[i].Split('\n')[1].Split(' ')[3];
+                    line2Y = lineCoordinates[i].Split('\n')[1].Split(' ')[6];
+                    if (line1X == line2X && line1Y == line2Y)
+                    {
+                        line1X = lineCoordinates[i].Split('\n')[0].Split(' ')[3];
+                        line1Y = lineCoordinates[i].Split('\n')[0].Split(' ')[6];
+                        countFigure++;
+                        lineCoordinates.RemoveAt(i);
+                    }
+
+                    if (lineCoordinates.Count == 0)
+                        if (line1X == startPointXFirstLine && line1Y == startPointYFirstLine)
+                            isolation = true;
+
+                    if (i >= lineCoordinates.Count - 1)
+                    {
+                        switchStartEnd = false;
+                        i = 0;
+                        continue;
+                    }
+                }
+
+                ind++;
+                i++;
+                if (ind != 30) continue;
+                MessageBox.Show(@"Много итераций");
+                break;
+            }
+
+            if (isolation)
+                MessageBox.Show(countFigure.ToString());
+            return result;
         }
     }
 }

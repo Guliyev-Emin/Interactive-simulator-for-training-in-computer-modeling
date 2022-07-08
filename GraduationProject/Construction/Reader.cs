@@ -8,7 +8,6 @@ using GraduationProject.Controllers;
 using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-using Environment = System.Environment;
 
 namespace GraduationProject.Construction
 {
@@ -132,9 +131,9 @@ namespace GraduationProject.Construction
         }
 
         /// <summary>
-        /// 
+        /// Процедура позволяющая извлекать значения выдавливания эскиза. 
         /// </summary>
-        /// <param name="feature"></param>
+        /// <param name="feature">Объект типа IFeature</param>
         private static void DeepthListener(IFeature feature)
         {
             var featureName = feature.Name;
@@ -147,10 +146,19 @@ namespace GraduationProject.Construction
             TreeNode.LastNode.Nodes.Insert(0, @"Выдавливание: " + _deepth + @" мм");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sketch"></param>
         private static void GetPlanesAndFaces(ISketch sketch)
         {
             var transformationMatrix = sketch.ModelToSketchTransform;
-            var transformationMatrixData = transformationMatrix.ArrayData;
+            var transformationMatrixData = (double[]) transformationMatrix.ArrayData;
+            var top = new double[] { 1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0 };
+            if (transformationMatrixData.SequenceEqual(top))
+                MessageBox.Show("Сверху");
+            var s = transformationMatrixData.Aggregate("", (current, data) => current + "|" + data);
+            MessageBox.Show(s);
         }
 
         /// <summary>
@@ -332,90 +340,7 @@ namespace GraduationProject.Construction
                 TreeNode.LastNode.LastNode.LastNode.Nodes.Add(minorPoint);
             }
         }
-
-        /// <summary>
-        ///     Функция по определению количество углов в фигуре.
-        /// </summary>
-        /// <param name="sketchName">Название эскиза.</param>
-        /// <returns>Возвращает количество углов.</returns>
-        public static string FindingPolygon(string sketchName)
-        {
-                var sketchInfo = SketchInfos[SketchInfos.FindIndex(name => name.SketchName == sketchName)];
-            var lineTypes = sketchInfo.LineTypes;
-            var lineCoordinates = sketchInfo.LineCoordinates;
-            var result = "";
-            var line1X = lineCoordinates[0].Split('\n')[1].Split(' ')[3];
-            var line1Y = lineCoordinates[0].Split('\n')[1].Split(' ')[6];
-            var startPointXFirstLine = lineCoordinates[0].Split('\n')[0].Split(' ')[3];
-            var startPointYFirstLine = lineCoordinates[0].Split('\n')[0].Split(' ')[6];
-            var switchStartEnd = false;
-            var countFigure = 1;
-            var ind = 0;
-            var i = 0;
-            lineCoordinates.RemoveAt(0);
-            var isolation = false;
-            while (lineCoordinates.Count != 0)
-            {
-                // от конца точки линии ищем начало из этой точки новую линию
-                string line2X;
-                string line2Y;
-                if (!switchStartEnd)
-                {
-                    line2X = lineCoordinates[i].Split('\n')[0].Split(' ')[3];
-                    line2Y = lineCoordinates[i].Split('\n')[0].Split(' ')[6];
-                    if (line1X == line2X && line1Y == line2Y)
-                    {
-                        line1X = lineCoordinates[i].Split('\n')[1].Split(' ')[3];
-                        line1Y = lineCoordinates[i].Split('\n')[1].Split(' ')[6];
-                        countFigure++;
-                        lineCoordinates.RemoveAt(i);
-                    }
-
-                    if (i >= lineCoordinates.Count - 1)
-                    {
-                        switchStartEnd = true;
-                        i = 0;
-                        continue;
-                    }
-                }
-
-                // тут от начало точки линии до конца новой точки линии
-                if (switchStartEnd)
-                {
-                    line2X = lineCoordinates[i].Split('\n')[1].Split(' ')[3];
-                    line2Y = lineCoordinates[i].Split('\n')[1].Split(' ')[6];
-                    if (line1X == line2X && line1Y == line2Y)
-                    {
-                        line1X = lineCoordinates[i].Split('\n')[0].Split(' ')[3];
-                        line1Y = lineCoordinates[i].Split('\n')[0].Split(' ')[6];
-                        countFigure++;
-                        lineCoordinates.RemoveAt(i);
-                    }
-
-                    if (lineCoordinates.Count == 0)
-                        if (line1X == startPointXFirstLine && line1Y == startPointYFirstLine)
-                            isolation = true;
-
-                    if (i >= lineCoordinates.Count - 1)
-                    {
-                        switchStartEnd = false;
-                        i = 0;
-                        continue;
-                    }
-                }
-
-                ind++;
-                i++;
-                if (ind != 30) continue;
-                MessageBox.Show(@"Много итераций");
-                break;
-            }
-
-            if (isolation)
-                MessageBox.Show(countFigure.ToString());
-
-            return result;
-        }
+        
 
         /// <summary>
         ///     Процедура по записи свойств модели в файл.
