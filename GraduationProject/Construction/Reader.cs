@@ -131,6 +131,10 @@ namespace GraduationProject.Construction
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="feature"></param>
         private static void DeepthListener(IFeature feature)
         {
             var featureName = feature.Name;
@@ -147,7 +151,6 @@ namespace GraduationProject.Construction
         {
             var transformationMatrix = sketch.ModelToSketchTransform;
             var transformationMatrixData = transformationMatrix.ArrayData;
-            
         }
 
         /// <summary>
@@ -337,8 +340,8 @@ namespace GraduationProject.Construction
         /// <returns>Возвращает количество углов.</returns>
         public static string FindingPolygon(string sketchName)
         {
-            var sketchInfo = SketchInfos[SketchInfos.FindIndex(name => name.SketchName == sketchName)];
-            //var lineType = sketchInfo.LineTypes;
+                var sketchInfo = SketchInfos[SketchInfos.FindIndex(name => name.SketchName == sketchName)];
+            var lineTypes = sketchInfo.LineTypes;
             var lineCoordinates = sketchInfo.LineCoordinates;
             var result = "";
             var line1X = lineCoordinates[0].Split('\n')[1].Split(' ')[3];

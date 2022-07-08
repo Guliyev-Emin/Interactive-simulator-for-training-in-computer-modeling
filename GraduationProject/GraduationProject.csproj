@@ -110,6 +110,12 @@
         <Compile Include="Construction\Remove.cs" />
         <Compile Include="Construction\Сonstruction.cs" />
         <Compile Include="Controllers\Controller.cs" />
+        <Compile Include="Controllers\IModels\IArc.cs" />
+        <Compile Include="Controllers\IModels\IEllipse.cs" />
+        <Compile Include="Controllers\IModels\ILine.cs" />
+        <Compile Include="Controllers\IModels\IParabola.cs" />
+        <Compile Include="Controllers\IModels\IPoint.cs" />
+        <Compile Include="Controllers\IModels\ISketchInfo.cs" />
         <Compile Include="Controllers\SketchInfo.cs" />
         <Compile Include="Forms\MainForm.cs">
           <SubType>Form</SubType>

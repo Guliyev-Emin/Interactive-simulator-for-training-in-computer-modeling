@@ -85,9 +85,6 @@ namespace GraduationProject.Controllers
         public static void Comparison(TextBox initialInformationOfTheModel,
             ref RichTextBox initialInformationOfTheUserModel, ref int numberOfCorrectResults)
         {
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            
             var initialInformationOfTheUserModelArray =
                 initialInformationOfTheUserModel.Text.Split(new[] {"Имя эскиза:"},
                     StringSplitOptions.RemoveEmptyEntries);
@@ -131,11 +128,6 @@ namespace GraduationProject.Controllers
                     }
                 }
             }
-
-            stopWatch.Stop();
-            var ts = stopWatch.Elapsed;
-            var elapsedTime = $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}.{ts.Milliseconds / 10:00}";
-            MessageBox.Show(@"RunTime " + elapsedTime);
         }
     }
 }

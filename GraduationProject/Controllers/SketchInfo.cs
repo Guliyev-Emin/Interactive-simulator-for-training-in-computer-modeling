@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using GraduationProject.Controllers.IModels;
 
 namespace GraduationProject.Controllers
 {
-    public class SketchInfo
+    public class SketchInfo: ISketchInfo
     {
         public string SketchName { get; set; }
-
         public double Deepth { get; set; }
         
         public bool PointStatus { get; set; }
