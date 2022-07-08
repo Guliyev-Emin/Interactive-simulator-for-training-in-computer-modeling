@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace GraduationProject.Controllers.IModels;
+﻿namespace GraduationProject.Controllers.IModels;
 
 public interface IPoint
 {
-    public bool PointStatus { get; set; }
-    public int PointCount { get; set; }
-    public List<string> PointCoordinates { get; set; }
+    public double X { get; set; }
+    public double Y { get; set; }
+    public double Z { get; set; }
 }

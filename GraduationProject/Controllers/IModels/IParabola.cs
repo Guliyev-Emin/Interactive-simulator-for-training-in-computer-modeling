@@ -2,7 +2,7 @@
 
 namespace GraduationProject.Controllers.IModels;
 
-public interface IParabola
+public interface IParabola: IPoint
 {
     public bool ParabolaStatus { get; set; }
     public int ParabolaCount { get; set; }

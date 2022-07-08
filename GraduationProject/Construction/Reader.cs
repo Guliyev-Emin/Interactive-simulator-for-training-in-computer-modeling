@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GraduationProject.Controllers;
+using GraduationProject.Controllers.Model;
 using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
@@ -155,10 +156,10 @@ namespace GraduationProject.Construction
             var transformationMatrix = sketch.ModelToSketchTransform;
             var transformationMatrixData = (double[]) transformationMatrix.ArrayData;
             var top = new double[] { 1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0 };
-            if (transformationMatrixData.SequenceEqual(top))
-                MessageBox.Show("Сверху");
+            //if (transformationMatrixData.SequenceEqual(top))
+                //MessageBox.Show("Сверху");
             var s = transformationMatrixData.Aggregate("", (current, data) => current + "|" + data);
-            MessageBox.Show(s);
+            //MessageBox.Show(s);
         }
 
         /// <summary>

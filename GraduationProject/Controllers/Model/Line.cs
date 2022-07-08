@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using GraduationProject.Controllers.IModels;
 
-namespace GraduationProject.Controllers.IModels;
+namespace GraduationProject.Controllers.Model;
 
-public interface ILine : IPoint
+public class Line : ILine
 {
+    public double X { get; set; }
+    public double Y { get; set; }
+    public double Z { get; set; }
     public bool LineStatus { get; set; }
     public int LineCount { get; set; }
     public List<short> LineTypes { get; set; }

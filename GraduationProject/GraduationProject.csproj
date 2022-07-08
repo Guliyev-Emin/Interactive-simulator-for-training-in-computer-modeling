@@ -115,7 +115,10 @@
         <Compile Include="Controllers\IModels\ILine.cs" />
         <Compile Include="Controllers\IModels\IParabola.cs" />
         <Compile Include="Controllers\IModels\IPoint.cs" />
+        <Compile Include="Controllers\IModels\IUserPoint.cs" />
         <Compile Include="Controllers\IModels\ISketchInfo.cs" />
+        <Compile Include="Controllers\Model\Arc.cs" />
+        <Compile Include="Controllers\Model\Line.cs" />
         <Compile Include="Controllers\SketchInfo.cs" />
         <Compile Include="Forms\MainForm.cs">
           <SubType>Form</SubType>
