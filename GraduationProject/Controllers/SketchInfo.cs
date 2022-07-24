@@ -5,9 +5,6 @@ namespace GraduationProject.Controllers;
 
 public class SketchInfo : ISketchInfo
 {
-    public double X { get; set; }
-    public double Y { get; set; }
-    public double Z { get; set; }
     public IUserPoint UserPoint { get; set; }
     public ILine Line { get; set; }
     public IArc Arc { get; set; }
@@ -33,4 +30,11 @@ public class SketchInfo : ISketchInfo
     public bool ParabolaStatus { get; set; }
     public int ParabolaCount { get; set; }
     public List<string> ParabolaCoordinates { get; set; }
+    
+    public List<double> XStart { get; set; }
+    public List<double> YStart { get; set; }
+    public List<double> ZStart { get; set; }
+    public List<double> XEnd { get; set; }
+    public List<double> YEnd { get; set; }
+    public List<double> ZEnd { get; set; }
 }

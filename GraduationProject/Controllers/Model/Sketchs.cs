@@ -1,6 +1,9 @@
-﻿namespace GraduationProject.Controllers.IModels;
+﻿using System.Collections.Generic;
+using GraduationProject.Controllers.IModels;
 
-public interface ISketchInfo
+namespace GraduationProject.Controllers.Model;
+
+public class Sketchs : ISketchInfo
 {
     public string SketchName { get; set; }
     public double Deepth { get; set; }

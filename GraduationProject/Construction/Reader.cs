@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GraduationProject.Controllers;
+using GraduationProject.Controllers.IModels;
 using GraduationProject.Controllers.Model;
 using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
@@ -270,6 +271,8 @@ namespace GraduationProject.Construction
         /// <param name="lineCount">Количество линий в эскизе.</param>
         private static void LineListener(ISketch sketch, int lineCount)
         {
+            ILine lines = new Line();
+
             var getLinesProperties = sketch.GetLines2(4);
             if (getLinesProperties is not IEnumerable lineEnumerable) return;
             var line = lineEnumerable.Cast<double>().ToArray();

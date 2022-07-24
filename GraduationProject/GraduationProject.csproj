@@ -119,6 +119,7 @@
         <Compile Include="Controllers\IModels\ISketchInfo.cs" />
         <Compile Include="Controllers\Model\Arc.cs" />
         <Compile Include="Controllers\Model\Line.cs" />
+        <Compile Include="Controllers\Model\Sketchs.cs" />
         <Compile Include="Controllers\SketchInfo.cs" />
         <Compile Include="Forms\MainForm.cs">
           <SubType>Form</SubType>
