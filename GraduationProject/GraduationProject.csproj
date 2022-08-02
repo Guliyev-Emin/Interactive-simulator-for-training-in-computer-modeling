@@ -109,29 +109,13 @@
         <Compile Include="Construction\Reader.cs" />
         <Compile Include="Construction\Remove.cs" />
         <Compile Include="Construction\Сonstruction.cs" />
+        <Compile Include="Controllers\Comparer.cs" />
         <Compile Include="Controllers\Controller.cs" />
-        <Compile Include="Controllers\IModels\IArc.cs" />
-        <Compile Include="Controllers\IModels\IEllipse.cs" />
-        <Compile Include="Controllers\IModels\ILine.cs" />
-        <Compile Include="Controllers\IModels\IParabola.cs" />
-        <Compile Include="Controllers\IModels\IPoint.cs" />
-        <Compile Include="Controllers\IModels\IUserPoint.cs" />
-        <Compile Include="Controllers\IModels\ISketchInfo.cs" />
-        <Compile Include="Controllers\Model\Arc.cs" />
-        <Compile Include="Controllers\Model\Line.cs" />
-        <Compile Include="Controllers\Model\Sketchs.cs" />
-        <Compile Include="Controllers\SketchInfo.cs" />
         <Compile Include="Forms\MainForm.cs">
           <SubType>Form</SubType>
         </Compile>
         <Compile Include="Forms\MainForm.Designer.cs">
           <DependentUpon>MainForm.cs</DependentUpon>
-        </Compile>
-        <Compile Include="Forms\QualityControl.cs">
-          <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="Forms\QualityControl.Designer.cs">
-          <DependentUpon>QualityControl.cs</DependentUpon>
         </Compile>
         <Compile Include="Forms\ReadForm.cs">
           <SubType>Form</SubType>
@@ -139,13 +123,23 @@
         <Compile Include="Forms\ReadForm.Designer.cs">
           <DependentUpon>ReadForm.cs</DependentUpon>
         </Compile>
+        <Compile Include="Model\IModels\IArc.cs" />
+        <Compile Include="Model\IModels\IEllipse.cs" />
+        <Compile Include="Model\IModels\ILine.cs" />
+        <Compile Include="Model\IModels\IParabola.cs" />
+        <Compile Include="Model\IModels\IPoint.cs" />
+        <Compile Include="Model\IModels\ISketchInfo.cs" />
+        <Compile Include="Model\IModels\IUserPoint.cs" />
+        <Compile Include="Model\Models\Arc.cs" />
+        <Compile Include="Model\Models\Ellipse.cs" />
+        <Compile Include="Model\Models\Line.cs" />
+        <Compile Include="Model\Models\Parabola.cs" />
+        <Compile Include="Model\Models\SketchInfo.cs" />
+        <Compile Include="Model\Models\UserPoint.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <EmbeddedResource Include="Forms\MainForm.resx">
           <DependentUpon>MainForm.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Forms\QualityControl.resx">
-          <DependentUpon>QualityControl.cs</DependentUpon>
         </EmbeddedResource>
         <EmbeddedResource Include="Forms\ReadForm.resx">
           <DependentUpon>ReadForm.cs</DependentUpon>
@@ -174,9 +168,13 @@
         <None Include="App.config" />
     </ItemGroup>
     <ItemGroup>
+      <Content Include="Files\Свойства модели.bin" />
       <Content Include="Files\Свойства модели.txt" />
       <Content Include="Resources\EngineerDegre.ico" />
       <Content Include="Resources\ImageTask.png" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Model" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

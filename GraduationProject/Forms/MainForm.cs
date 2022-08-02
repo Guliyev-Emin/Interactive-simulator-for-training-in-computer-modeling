@@ -104,7 +104,7 @@ namespace GraduationProject
             if (!Connection.ConnectionTest()) return;
             var readForm = new ReadForm();
             readForm.Show();
-            readForm.Forms();
+            readForm.SetSolidWorksProjectTree();
         }
     }
 }
