@@ -14,11 +14,11 @@ namespace GraduationProject.Controllers;
 [UsedImplicitly]
 public class Controller : Connection
 {
-    public static IEnumerable<List<(List<string> correct, List<string> error)>> GetLines()
+    public static List<List<(string name, List<(List<string> correct, List<string> error)>)>> GetLines()
     {
         var userSketches = Reader.SketchInfos;
         var correctSketches = GetModelSketchesFromFile();
-        var comparerResults = new List<List<(List<string> correct, List<string> error)>>();
+        var comparerResults = new List<List<(string name, List<(List<string> correct, List<string> error)>)>>();
         var index = 0;
         foreach (var userSketch in userSketches)
         {

@@ -59,14 +59,18 @@ public partial class ReadForm : Form
         {
             comparerResults.ForEach(comparerResult =>
             {
-                comparerResult.correct.ForEach(correct =>
+                comparerResult.Item2.ForEach(c =>
                 {
-                    correctQualityResult.Text += correct.Replace("\n", Environment.NewLine);
+                    c.correct.ForEach(correct =>
+                    {
+                        correctQualityResult.Text += correct.Replace("\n", Environment.NewLine);
+                    });
+                    c.error.ForEach(error =>
+                    {
+                        errorQualityResultTextBox.Text += error.Replace("\n", Environment.NewLine);
+                    });
                 });
-                comparerResult.error.ForEach(error =>
-                {
-                    errorQualityResultTextBox.Text += error.Replace("\n", Environment.NewLine);
-                });
+                
             });
             
         }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using GraduationProject.Model.IModels.IPoints;
 using GraduationProject.Model.Models;
@@ -20,18 +19,17 @@ public class Comparer
     private short _objectIndex;
 
     /// <summary>
-    /// Функция проверки правильных эскизов с пользовательскими эскизами
+    ///     Функция проверки правильных эскизов с пользовательскими эскизами
     /// </summary>
     /// <param name="correctSketch">Правильный эскиз</param>
     /// <param name="userSketch">Пользовательский эскиз</param>
     /// <returns>Возвращает кортеж с правильными и неправильными примитивами в пользовательском эскизе</returns>
-    public List<(List<string> correct, List<string> error)> SketchComparer(SketchInfo correctSketch,
+    public List<(string name, List<(List<string> correct, List<string> error)>)> SketchComparer(
+        SketchInfo correctSketch,
         SketchInfo userSketch)
     {
         _name = userSketch.SketchName;
-        var comparerResults = new List<(List<string> correct, List<string> error)>();
-        
-        //var c = new List<(string name, List<(List<string> correct, List<string> error)>)>();
+        var comparerResults = new List<(string name, List<(List<string> correct, List<string> error)>)>();
 
         if (correctSketch.UserPoints?.Count != 0)
         {
@@ -56,14 +54,15 @@ public class Comparer
     }
 
     /// <summary>
-    /// Процедура определения пользовательского объекта
+    ///     Процедура определения пользовательского объекта
     /// </summary>
     /// <param name="correctParameters">Правильные параметры примитива</param>
     /// <param name="userParameters">Пользовательские параметры примитива</param>
     /// <param name="comparerResults"></param>
     /// <typeparam name="T">Класс примитива</typeparam>
     private void ComparerParameters<T>(ICollection<T> correctParameters,
-        List<T> userParameters, out List<(List<string> correct, List<string> error)> comparerResults)
+        List<T> userParameters,
+        out List<(string name, List<(List<string> correct, List<string> error)>)> comparerResults)
     {
         _objectIndex = 1;
         var arc = typeof(T).Name.Equals("Arc");
@@ -84,7 +83,8 @@ public class Comparer
             }
 
             if (line)
-                comparer.Add(GetProperties(correctParameters as List<Line>, userParameter as Line, "Отрезок ", ++index,
+                comparer.Add(GetProperties(correctParameters as List<Line>, userParameter as Line, "Отрезок ",
+                    ++index,
                     objectIsRight,
                     true));
             if (arc)
@@ -101,7 +101,10 @@ public class Comparer
                     arc, ellipse, true));
         }
 
-        comparerResults = comparer;
+        var g = new List<(string name, List<(List<string> correct, List<string> error)>)>();
+        
+        g.Add((_name, comparer));
+        comparerResults = g;
     }
 
 
@@ -129,7 +132,7 @@ public class Comparer
         {
             if (!comparerResults.correct.Exists(sketchName => sketchName.Equals("\n" + _name)))
                 comparerResults.correct.Add("\n" + _name);
-            
+
             var userCoordinates = userParameters as IPoint;
             comparerResults.correct.Add(GetCorrectProperties(type, index, userCoordinates!.Coordinate));
             return comparerResults;
@@ -199,7 +202,7 @@ public class Comparer
     }
 
     /// <summary>
-    /// Функция вывода информации о правильности пользовательского объекта
+    ///     Функция вывода информации о правильности пользовательского объекта
     /// </summary>
     /// <param name="type">Тип объекта</param>
     /// <param name="index">Номер объекта</param>
@@ -209,7 +212,8 @@ public class Comparer
     {
         return "\n\t" + type + index + " построен верно:" + "\n\t\t" +
                "Координаты: \n\t\t\t" +
-               userCoordinates.Replace("\n", "\n\t\t\t");;
+               userCoordinates.Replace("\n", "\n\t\t\t");
+        ;
     }
 
     /// <summary>
@@ -336,7 +340,7 @@ public class Comparer
     }
 
     /// <summary>
-    /// Функция получения нужных координат из строки с координатами объекта
+    ///     Функция получения нужных координат из строки с координатами объекта
     /// </summary>
     /// <param name="coordinate">Координаты объекта</param>
     /// <param name="index">Индекс нужных координат</param>
