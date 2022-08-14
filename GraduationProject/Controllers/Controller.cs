@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -13,18 +14,16 @@ namespace GraduationProject.Controllers;
 [UsedImplicitly]
 public class Controller : Connection
 {
-    public static void GetLines()
+    public static Tuple<List<string>, List<string>> GetLines(ref Comparer comparer)
     {
         var userSketches = Reader.SketchInfos;
         var correctSketches = GetModelSketchesFromFile();
         var ind = 0;
-       Comparer.ComparerResults = new List<string>();
-       Comparer.ErrorResult = new List<string>();
-        foreach (var userSketch in userSketches)
-        {
-            Comparer.SketchComparer(correctSketches[ind++], userSketch);
-        }
-        
+        comparer.CorrectResults = new List<string>();
+        comparer.ErrorResult = new List<string>();
+        foreach (var userSketch in userSketches) comparer.SketchComparer(correctSketches[ind++], userSketch);
+
+        return new Tuple<List<string>, List<string>>(new List<string>(), new List<string>());
     }
 
     public static string GetLineArrangement(ILine userLine)
@@ -49,9 +48,12 @@ public class Controller : Connection
             template.Append("Имя эскиза: " + sketch.SketchName + "\n");
             template.Append("Количество точек: " + sketch.UserPoints.Count + "\n");
             template.Append("Количество отрезков: " + sketch.Lines.Count + "\n");
-            template.Append("Количество горизонтальных отрезков: " + sketch.Lines.Count(l=> l.LineArrangement.Equals("Горизонтальный")) + "\n");
-            template.Append("Количество вертикальных отрезков: " + sketch.Lines.Count(l=> l.LineArrangement.Equals("Вертикальный")) + "\n");
-            template.Append("Количество наклонных отрезков: " + sketch.Lines.Count(l=> l.LineArrangement.Equals("Наклонный")) + "\n");
+            template.Append("Количество горизонтальных отрезков: " +
+                            sketch.Lines.Count(l => l.LineArrangement.Equals("Горизонтальный")) + "\n");
+            template.Append("Количество вертикальных отрезков: " +
+                            sketch.Lines.Count(l => l.LineArrangement.Equals("Вертикальный")) + "\n");
+            template.Append("Количество наклонных отрезков: " +
+                            sketch.Lines.Count(l => l.LineArrangement.Equals("Наклонный")) + "\n");
             template.Append("Количество вспомогательных линий: " +
                             sketch.Lines.Select(l => l.LineType).Count(type => type == 4) +
                             "\n");
@@ -63,24 +65,24 @@ public class Controller : Connection
                 foreach (var line in sketch.Lines.Where(line => line.LineType != 4))
                 {
                     template.Append("Отрезок: \n\t" + "Расположение отрезка: " + line.LineArrangement +
-                                    "\n\t" + line.LineCoordinate.Replace("\n", "\n\t") + "\n\t");
+                                    "\n\t" + line.Coordinate.Replace("\n", "\n\t") + "\n\t");
                     template.Append("Длина: " + line.LineLength + " мм\n");
                 }
 
             if (sketch.Arcs.Count != 0)
                 foreach (var arc in sketch.Arcs)
                 {
-                    template.Append("Дуга: \n\t" + arc.ArcCoordinate.Replace("\n", "\n\t") + "\n\t");
+                    template.Append("Дуга: \n\t" + arc.Coordinate.Replace("\n", "\n\t") + "\n\t");
                     template.Append("Радиус: " + arc.ArcRadius + " мм\n");
                 }
 
             if (sketch.Ellipses.Count != 0)
                 foreach (var ellipse in sketch.Ellipses)
-                    template.Append("Эллипс: \n\t" + ellipse.EllipseCoordinate.Replace("\n", "\n\t") + "\n\t");
+                    template.Append("Эллипс: \n\t" + ellipse.Coordinate.Replace("\n", "\n\t") + "\n\t");
 
             if (sketch.Parabolas.Count != 0)
                 foreach (var parabola in sketch.Parabolas)
-                    template.Append("Парабола: \n\t" + parabola.ParabolaCoordinate.Replace("\n", "\n\t") + "\n\t");
+                    template.Append("Парабола: \n\t" + parabola.Coordinate.Replace("\n", "\n\t") + "\n\t");
 
             template.Append("Выдавливание: " + sketch.Deepth + " мм\n\n");
         }
@@ -95,7 +97,9 @@ public class Controller : Connection
         await writer.WriteLineAsync(template);
 
         const string pathBin = @"..\..\Files/Свойства модели.bin";
-        Stream saveFileStream = File.Create(pathBin);
+        Stream saveFileStream = File.OpenWrite(pathBin);
+
+
         var serializer = new BinaryFormatter();
         serializer.Serialize(saveFileStream, Reader.SketchInfos);
         saveFileStream.Close();

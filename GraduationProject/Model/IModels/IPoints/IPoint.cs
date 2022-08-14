@@ -1,7 +1,8 @@
-﻿namespace GraduationProject.Model.IModels;
+﻿namespace GraduationProject.Model.IModels.IPoints;
 
 public interface IPoint
 {
+    public string Coordinate { get; set; }
     public double XStart { get; set; }
     public double YStart { get; set; }
     public double ZStart { get; set; }

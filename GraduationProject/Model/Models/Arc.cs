@@ -7,7 +7,7 @@ namespace GraduationProject.Model.Models;
 public record Arc : IArc
 {
     public double ArcRadius { get; set; }
-    public string ArcCoordinate { get; set; }
+    public string Coordinate { get; set; }
     public double XStart { get; set; }
     public double YStart { get; set; }
     public double ZStart { get; set; }

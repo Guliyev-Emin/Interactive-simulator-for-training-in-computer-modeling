@@ -1,6 +1,7 @@
-﻿namespace GraduationProject.Model.IModels;
+﻿using GraduationProject.Model.IModels.IPoints;
 
-public interface IParabola : IPoint
+namespace GraduationProject.Model.IModels;
+
+public interface IParabola : IPoint, IParabolaPoint
 {
-    public string ParabolaCoordinate { get; set; }
 }

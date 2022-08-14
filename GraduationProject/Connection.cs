@@ -3,63 +3,66 @@ using System.Windows.Forms;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
-namespace GraduationProject
+namespace GraduationProject;
+
+public class Connection
 {
-    public class Connection
+    protected static ModelDoc2 ModelDoc2;
+    protected static SketchManager SketchManager;
+    public static FeatureManager FeatureManager;
+    private static SldWorks _app;
+
+    public static void AppConnection()
     {
-        protected static ModelDoc2 ModelDoc2;
-        protected static SketchManager SketchManager;
-        public static FeatureManager FeatureManager;
-        private static SldWorks _app;
+        _app = null;
+        ModelDoc2 = null;
 
-        public static void AppConnection()
+        try
         {
-            _app = null;
-            ModelDoc2 = null;
+            _app = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
+        }
+        catch
+        {
+            // ignored
+        }
 
+        if (_app != null)
+        {
             try
             {
-                _app = (SldWorks) Marshal.GetActiveObject("SldWorks.Application");
+                ModelDoc2 = (ModelDoc2)_app.GetFirstDocument();
             }
             catch
             {
                 // ignored
             }
 
-            if (_app != null)
+            if (ModelDoc2 != null)
             {
-                try
-                {
-                    ModelDoc2 = (ModelDoc2) _app.GetFirstDocument();
-                }
-                catch
-                {
-                    // ignored
-                }
+                MessageBox.Show(@"Подключение выполнено. Документ найден.", @"Уведомление");
 
-                if (ModelDoc2 != null)
-                {
-                    MessageBox.Show(@"Подключение выполнено. Документ найден.", @"Уведомление");
+                const int prefToggle = (int)swUserPreferenceToggle_e.swInputDimValOnCreate;
 
-                    const int prefToggle = (int) swUserPreferenceToggle_e.swInputDimValOnCreate;
+                _app.SetUserPreferenceToggle(prefToggle, false);
 
-                    _app.SetUserPreferenceToggle(prefToggle, false);
-
-                    SketchManager = ModelDoc2.SketchManager;
-                    FeatureManager = ModelDoc2.FeatureManager;
-                }
-                else
-                    MessageBox.Show(@"Документ не найден", @"Уведомление");
+                SketchManager = ModelDoc2.SketchManager;
+                FeatureManager = ModelDoc2.FeatureManager;
             }
             else
-                MessageBox.Show(@"Не удалось подключиться", @"Уведомление");
+            {
+                MessageBox.Show(@"Документ не найден", @"Уведомление");
+            }
         }
-
-        public static bool ConnectionTest()
+        else
         {
-            if (ModelDoc2 is not null) return true;
-            MessageBox.Show(@"Документ не найден!", @"Уведомление");
-            return false;
+            MessageBox.Show(@"Не удалось подключиться", @"Уведомление");
         }
+    }
+
+    public static bool ConnectionTest()
+    {
+        if (ModelDoc2 is not null) return true;
+        MessageBox.Show(@"Документ не найден!", @"Уведомление");
+        return false;
     }
 }

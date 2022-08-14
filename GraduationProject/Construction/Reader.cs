@@ -256,7 +256,7 @@ public class Reader : Connection
             arc.YCenter = yCenter;
             arc.ZCenter = zCenter;
             arc.ArcRadius = radius;
-            arc.ArcCoordinate = start + "\n" + end + "\n" + center;
+            arc.Coordinate = start + "\n" + end + "\n" + center;
 
             SolidWorksProjectTree.LastNode.LastNode.LastNode.Nodes.Add(center);
             SolidWorksProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
@@ -306,7 +306,7 @@ public class Reader : Connection
 
             var lineLength = sketchSegment.GetLength() * 1000.0;
 
-            
+
             line.LineLength = lineLength;
             line.LineType = lineStyle;
             line.XStart = xStart;
@@ -315,7 +315,7 @@ public class Reader : Connection
             line.XEnd = xEnd;
             line.YEnd = yEnd;
             line.ZEnd = zEnd;
-            line.LineCoordinate = start + "\n" + end;
+            line.Coordinate = start + "\n" + end;
             line.LineArrangement = Controller.GetLineArrangement(line);
             _lines.Add(line);
 

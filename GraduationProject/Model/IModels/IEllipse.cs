@@ -1,6 +1,7 @@
-﻿namespace GraduationProject.Model.IModels;
+﻿using GraduationProject.Model.IModels.IPoints;
 
-public interface IEllipse : IPoint
+namespace GraduationProject.Model.IModels;
+
+public interface IEllipse : IPoint, IEllipsePoint
 {
-    public string EllipseCoordinate { get; set; }
 }

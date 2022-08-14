@@ -1,11 +1,8 @@
-﻿namespace GraduationProject.Model.IModels;
+﻿using GraduationProject.Model.IModels.IPoints;
 
-public interface IArc : IPoint
+namespace GraduationProject.Model.IModels;
+
+public interface IArc : ICenterPoint, IPoint
 {
     public double ArcRadius { get; set; }
-    public string ArcCoordinate { get; set; }
-
-    public double XCenter { get; set; }
-    public double YCenter { get; set; }
-    public double ZCenter { get; set; }
 }

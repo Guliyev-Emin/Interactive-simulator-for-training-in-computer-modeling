@@ -41,6 +41,7 @@ namespace GraduationProject
             this.checkButtonModel = new System.Windows.Forms.Button();
             this.reReading = new System.Windows.Forms.Button();
             this.QualityControllPage = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.initialModelPropertiesGroupBox = new System.Windows.Forms.GroupBox();
             this.initialModelPropertiesTextBox = new System.Windows.Forms.TextBox();
@@ -66,7 +67,7 @@ namespace GraduationProject
             // 
             this.exit_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.exit_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.exit_button.Location = new System.Drawing.Point(411, 450);
+            this.exit_button.Location = new System.Drawing.Point(411, 348);
             this.exit_button.Name = "exit_button";
             this.exit_button.Size = new System.Drawing.Size(105, 40);
             this.exit_button.TabIndex = 1;
@@ -79,7 +80,7 @@ namespace GraduationProject
             this.SolidWorksProjectTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.SolidWorksProjectTree.Location = new System.Drawing.Point(8, 6);
             this.SolidWorksProjectTree.Name = "SolidWorksProjectTree";
-            this.SolidWorksProjectTree.Size = new System.Drawing.Size(909, 438);
+            this.SolidWorksProjectTree.Size = new System.Drawing.Size(722, 336);
             this.SolidWorksProjectTree.TabIndex = 2;
             // 
             // modelControllerTab
@@ -90,7 +91,7 @@ namespace GraduationProject
             this.modelControllerTab.Location = new System.Drawing.Point(0, 0);
             this.modelControllerTab.Name = "modelControllerTab";
             this.modelControllerTab.SelectedIndex = 0;
-            this.modelControllerTab.Size = new System.Drawing.Size(933, 522);
+            this.modelControllerTab.Size = new System.Drawing.Size(746, 420);
             this.modelControllerTab.TabIndex = 7;
             // 
             // ProjectTreePage
@@ -103,7 +104,7 @@ namespace GraduationProject
             this.ProjectTreePage.Location = new System.Drawing.Point(4, 22);
             this.ProjectTreePage.Name = "ProjectTreePage";
             this.ProjectTreePage.Padding = new System.Windows.Forms.Padding(3);
-            this.ProjectTreePage.Size = new System.Drawing.Size(925, 496);
+            this.ProjectTreePage.Size = new System.Drawing.Size(738, 394);
             this.ProjectTreePage.TabIndex = 0;
             this.ProjectTreePage.Text = "Дерево проекта";
             this.ProjectTreePage.UseVisualStyleBackColor = true;
@@ -111,7 +112,7 @@ namespace GraduationProject
             // writeToFile
             // 
             this.writeToFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.writeToFile.Location = new System.Drawing.Point(8, 450);
+            this.writeToFile.Location = new System.Drawing.Point(8, 348);
             this.writeToFile.Name = "writeToFile";
             this.writeToFile.Size = new System.Drawing.Size(115, 40);
             this.writeToFile.TabIndex = 5;
@@ -122,7 +123,7 @@ namespace GraduationProject
             // checkButtonModel
             // 
             this.checkButtonModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkButtonModel.Location = new System.Drawing.Point(129, 450);
+            this.checkButtonModel.Location = new System.Drawing.Point(129, 348);
             this.checkButtonModel.Name = "checkButtonModel";
             this.checkButtonModel.Size = new System.Drawing.Size(136, 40);
             this.checkButtonModel.TabIndex = 4;
@@ -134,7 +135,7 @@ namespace GraduationProject
             // 
             this.reReading.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.reReading.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.reReading.Location = new System.Drawing.Point(271, 450);
+            this.reReading.Location = new System.Drawing.Point(271, 348);
             this.reReading.Name = "reReading";
             this.reReading.Size = new System.Drawing.Size(134, 40);
             this.reReading.TabIndex = 3;
@@ -145,13 +146,25 @@ namespace GraduationProject
             // QualityControllPage
             // 
             this.QualityControllPage.AutoScroll = true;
+            this.QualityControllPage.Controls.Add(this.button1);
             this.QualityControllPage.Controls.Add(this.tableLayoutPanel1);
             this.QualityControllPage.Location = new System.Drawing.Point(4, 22);
             this.QualityControllPage.Name = "QualityControllPage";
-            this.QualityControllPage.Size = new System.Drawing.Size(925, 496);
+            this.QualityControllPage.Size = new System.Drawing.Size(738, 394);
             this.QualityControllPage.TabIndex = 1;
             this.QualityControllPage.Text = "Контроль качества";
             this.QualityControllPage.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(658, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(72, 24);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Проверка";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -167,8 +180,8 @@ namespace GraduationProject
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 485F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(909, 485);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 383F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(644, 383);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // initialModelPropertiesGroupBox
@@ -177,7 +190,7 @@ namespace GraduationProject
             this.initialModelPropertiesGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.initialModelPropertiesGroupBox.Location = new System.Drawing.Point(3, 3);
             this.initialModelPropertiesGroupBox.Name = "initialModelPropertiesGroupBox";
-            this.initialModelPropertiesGroupBox.Size = new System.Drawing.Size(297, 479);
+            this.initialModelPropertiesGroupBox.Size = new System.Drawing.Size(208, 377);
             this.initialModelPropertiesGroupBox.TabIndex = 0;
             this.initialModelPropertiesGroupBox.TabStop = false;
             this.initialModelPropertiesGroupBox.Text = "Параметры правильной модели";
@@ -190,16 +203,16 @@ namespace GraduationProject
             this.initialModelPropertiesTextBox.Name = "initialModelPropertiesTextBox";
             this.initialModelPropertiesTextBox.ReadOnly = true;
             this.initialModelPropertiesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.initialModelPropertiesTextBox.Size = new System.Drawing.Size(291, 460);
+            this.initialModelPropertiesTextBox.Size = new System.Drawing.Size(202, 358);
             this.initialModelPropertiesTextBox.TabIndex = 0;
             // 
             // userModelProperties
             // 
             this.userModelProperties.Controls.Add(this.userModelPropertiesTextBox);
             this.userModelProperties.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.userModelProperties.Location = new System.Drawing.Point(306, 3);
+            this.userModelProperties.Location = new System.Drawing.Point(217, 3);
             this.userModelProperties.Name = "userModelProperties";
-            this.userModelProperties.Size = new System.Drawing.Size(297, 479);
+            this.userModelProperties.Size = new System.Drawing.Size(208, 377);
             this.userModelProperties.TabIndex = 1;
             this.userModelProperties.TabStop = false;
             this.userModelProperties.Text = "Параметры пользовательской модели";
@@ -212,7 +225,7 @@ namespace GraduationProject
             this.userModelPropertiesTextBox.Name = "userModelPropertiesTextBox";
             this.userModelPropertiesTextBox.ReadOnly = true;
             this.userModelPropertiesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.userModelPropertiesTextBox.Size = new System.Drawing.Size(291, 460);
+            this.userModelPropertiesTextBox.Size = new System.Drawing.Size(202, 358);
             this.userModelPropertiesTextBox.TabIndex = 0;
             // 
             // correctQualityTablePanel
@@ -223,12 +236,12 @@ namespace GraduationProject
             this.correctQualityTablePanel.Controls.Add(this.correctQualityResultGroupBox, 0, 0);
             this.correctQualityTablePanel.Controls.Add(this.errorQualityResultGroupBox, 0, 1);
             this.correctQualityTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.correctQualityTablePanel.Location = new System.Drawing.Point(609, 3);
+            this.correctQualityTablePanel.Location = new System.Drawing.Point(431, 3);
             this.correctQualityTablePanel.Name = "correctQualityTablePanel";
             this.correctQualityTablePanel.RowCount = 2;
             this.correctQualityTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.correctQualityTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.correctQualityTablePanel.Size = new System.Drawing.Size(297, 479);
+            this.correctQualityTablePanel.Size = new System.Drawing.Size(210, 377);
             this.correctQualityTablePanel.TabIndex = 2;
             // 
             // correctQualityResultGroupBox
@@ -237,7 +250,7 @@ namespace GraduationProject
             this.correctQualityResultGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.correctQualityResultGroupBox.Location = new System.Drawing.Point(3, 3);
             this.correctQualityResultGroupBox.Name = "correctQualityResultGroupBox";
-            this.correctQualityResultGroupBox.Size = new System.Drawing.Size(291, 233);
+            this.correctQualityResultGroupBox.Size = new System.Drawing.Size(204, 182);
             this.correctQualityResultGroupBox.TabIndex = 0;
             this.correctQualityResultGroupBox.TabStop = false;
             this.correctQualityResultGroupBox.Text = "Правильные элементы";
@@ -250,16 +263,16 @@ namespace GraduationProject
             this.correctQualityResult.Name = "correctQualityResult";
             this.correctQualityResult.ReadOnly = true;
             this.correctQualityResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.correctQualityResult.Size = new System.Drawing.Size(285, 214);
+            this.correctQualityResult.Size = new System.Drawing.Size(198, 163);
             this.correctQualityResult.TabIndex = 0;
             // 
             // errorQualityResultGroupBox
             // 
             this.errorQualityResultGroupBox.Controls.Add(this.errorQualityResultTextBox);
             this.errorQualityResultGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.errorQualityResultGroupBox.Location = new System.Drawing.Point(3, 242);
+            this.errorQualityResultGroupBox.Location = new System.Drawing.Point(3, 191);
             this.errorQualityResultGroupBox.Name = "errorQualityResultGroupBox";
-            this.errorQualityResultGroupBox.Size = new System.Drawing.Size(291, 234);
+            this.errorQualityResultGroupBox.Size = new System.Drawing.Size(204, 183);
             this.errorQualityResultGroupBox.TabIndex = 1;
             this.errorQualityResultGroupBox.TabStop = false;
             this.errorQualityResultGroupBox.Text = "Неверные элементы";
@@ -272,14 +285,14 @@ namespace GraduationProject
             this.errorQualityResultTextBox.Name = "errorQualityResultTextBox";
             this.errorQualityResultTextBox.ReadOnly = true;
             this.errorQualityResultTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.errorQualityResultTextBox.Size = new System.Drawing.Size(285, 215);
+            this.errorQualityResultTextBox.Size = new System.Drawing.Size(198, 164);
             this.errorQualityResultTextBox.TabIndex = 0;
             // 
             // ReadForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(933, 522);
+            this.ClientSize = new System.Drawing.Size(746, 420);
             this.Controls.Add(this.modelControllerTab);
             this.Name = "ReadForm";
             this.Text = "ReadForm";
@@ -299,6 +312,8 @@ namespace GraduationProject
             this.errorQualityResultGroupBox.PerformLayout();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Button button1;
 
         private System.Windows.Forms.TextBox errorQualityResultTextBox;
 
