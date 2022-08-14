@@ -129,7 +129,6 @@ namespace GraduationProject
             this.checkButtonModel.TabIndex = 4;
             this.checkButtonModel.Text = "Проверить с исходником";
             this.checkButtonModel.UseVisualStyleBackColor = true;
-            this.checkButtonModel.Click += new System.EventHandler(this.checkButtonModel_Click);
             // 
             // reReading
             // 

@@ -40,20 +40,6 @@ public partial class ReadForm : Form
         SetSolidWorksProjectTree();
     }
 
-    private void checkButtonModel_Click(object sender, EventArgs e)
-    {
-        var comparer = new Comparer();
-        initialModelPropertiesTextBox.Text =
-            File.ReadAllText(@"..\..\Files\Свойства модели.txt").Replace("\n", Environment.NewLine);
-        userModelPropertiesTextBox.Text = Controller.CreateTemplateModelProperties().Replace("\n", Environment.NewLine);
-        Controller.GetLines(ref comparer);
-        foreach (var result in comparer.CorrectResults)
-            correctQualityResult.Text += result.Replace("\n", Environment.NewLine);
-
-        foreach (var result in comparer.ErrorResult.Distinct())
-            errorQualityResultTextBox.Text += result.Replace("\n", Environment.NewLine);
-    }
-
     private void writeToFile_Click(object sender, EventArgs e)
     {
         Controller.CreateTemplateModelProperties();
@@ -62,17 +48,34 @@ public partial class ReadForm : Form
 
     private void button1_Click(object sender, EventArgs e)
     {
-        var comparer = new Comparer();
         initialModelPropertiesTextBox.Text =
             File.ReadAllText(@"..\..\Files\Свойства модели.txt").Replace("\n", Environment.NewLine);
         userModelPropertiesTextBox.Text = Controller.CreateTemplateModelProperties().Replace("\n", Environment.NewLine);
         errorQualityResultTextBox.Text = string.Empty;
         correctQualityResult.Text = string.Empty;
-        Controller.GetLines(ref comparer);
-        foreach (var result in comparer.CorrectResults)
-            correctQualityResult.Text += result.Replace("\n", Environment.NewLine);
+        var comparer = Controller.GetLines();
 
-        foreach (var result in comparer.ErrorResult.Distinct())
-            errorQualityResultTextBox.Text += result.Replace("\n", Environment.NewLine);
+        foreach (var comparerResults in comparer)
+        {
+            comparerResults.ForEach(comparerResult =>
+            {
+                comparerResult.correct.ForEach(correct =>
+                {
+                    correctQualityResult.Text += correct.Replace("\n", Environment.NewLine);
+                });
+                comparerResult.error.ForEach(error =>
+                {
+                    errorQualityResultTextBox.Text += error.Replace("\n", Environment.NewLine);
+                });
+            });
+            
+        }
+        
+        // foreach (var result in comparer)
+        // {
+        //     correctQualityResult.Text += result.Replace("\n", Environment.NewLine);
+        // }
+        // foreach (var result in comparer.ErrorResult.Distinct())
+        //     errorQualityResultTextBox.Text += result.Replace("\n", Environment.NewLine);
     }
 }
