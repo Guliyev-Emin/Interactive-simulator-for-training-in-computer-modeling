@@ -24,33 +24,43 @@ public class Comparer
     /// <param name="correctSketch">Правильный эскиз</param>
     /// <param name="userSketch">Пользовательский эскиз</param>
     /// <returns>Возвращает кортеж с правильными и неправильными примитивами в пользовательском эскизе</returns>
-    public List<(string name, List<(List<string> correct, List<string> error)>)> SketchComparer(
-        SketchInfo correctSketch,
+    public List<List<(List<string> correct, List<string> error)>> SketchComparer(SketchInfo correctSketch,
         SketchInfo userSketch)
     {
         _name = userSketch.SketchName;
-        var comparerResults = new List<(string name, List<(List<string> correct, List<string> error)>)>();
-
+        List<(List<string> correct, List<string> error)> comparerResults;
+        var comparerFinalResult = new List<List<(List<string> correct, List<string> error)>>();
         if (correctSketch.UserPoints?.Count != 0)
         {
         }
 
         if (correctSketch.Lines?.Count != 0)
+        {
             ComparerParameters(correctSketch.Lines, userSketch.Lines, out comparerResults);
-
-
+            comparerFinalResult.Add(comparerResults);
+        }
+        
+        
         if (correctSketch.Arcs?.Count != 0)
+        {
             ComparerParameters(correctSketch.Arcs, userSketch.Arcs, out comparerResults);
-
+            comparerFinalResult.Add(comparerResults);
+        }
+        
 
         if (correctSketch.Ellipses?.Count != 0)
+        {
             ComparerParameters(correctSketch.Ellipses, userSketch.Ellipses, out comparerResults);
-
+            comparerFinalResult.Add(comparerResults);
+        }
 
         if (correctSketch.Parabolas?.Count != 0)
+        {
             ComparerParameters(correctSketch.Parabolas, userSketch.Parabolas, out comparerResults);
+            comparerFinalResult.Add(comparerResults);
+        }
 
-        return comparerResults;
+        return comparerFinalResult;
     }
 
     /// <summary>
@@ -61,8 +71,7 @@ public class Comparer
     /// <param name="comparerResults"></param>
     /// <typeparam name="T">Класс примитива</typeparam>
     private void ComparerParameters<T>(ICollection<T> correctParameters,
-        List<T> userParameters,
-        out List<(string name, List<(List<string> correct, List<string> error)>)> comparerResults)
+        List<T> userParameters, out List<(List<string> correct, List<string> error)> comparerResults)
     {
         _objectIndex = 1;
         var arc = typeof(T).Name.Equals("Arc");
@@ -83,8 +92,7 @@ public class Comparer
             }
 
             if (line)
-                comparer.Add(GetProperties(correctParameters as List<Line>, userParameter as Line, "Отрезок ",
-                    ++index,
+                comparer.Add(GetProperties(correctParameters as List<Line>, userParameter as Line, "Отрезок ", ++index,
                     objectIsRight,
                     true));
             if (arc)
@@ -101,10 +109,7 @@ public class Comparer
                     arc, ellipse, true));
         }
 
-        var g = new List<(string name, List<(List<string> correct, List<string> error)>)>();
-        
-        g.Add((_name, comparer));
-        comparerResults = g;
+        comparerResults = comparer;
     }
 
 
@@ -112,7 +117,7 @@ public class Comparer
     ///     Функция получения параметров результата проверки пользовательских объектов
     /// </summary>
     /// <param name="correctParameters">Правильные параметры примитива</param>
-    /// <param name="userParameters">Пользовательские параметры примитива</param>
+    /// <param name="userParameter">Пользовательские параметры примитива</param>
     /// <param name="index">Номер объекта примитива</param>
     /// <param name="type">Тип объекта примитива</param>
     /// <param name="result">Результат проверки пользователького объекта</param>
@@ -123,28 +128,28 @@ public class Comparer
     /// <typeparam name="T">Класс примитива</typeparam>
     /// <returns>Возвращает кортеж правильных и неправильных пользовательских объектов</returns>
     private (List<string> correct, List<string> error) GetProperties<T>(IEnumerable<T> correctParameters,
-        T userParameters, string type, short index,
+        T userParameter, string type, short index,
         bool result, bool line = false, bool arc = false, bool ellipse = false, bool parabola = false)
     {
-        var comparerResults = (correct: new List<string>(), error: new List<string>());
+        var comparerResult = (correct: new List<string>(), error: new List<string>());
 
         if (result)
         {
-            if (!comparerResults.correct.Exists(sketchName => sketchName.Equals("\n" + _name)))
-                comparerResults.correct.Add("\n" + _name);
+            if (!comparerResult.correct.Exists(sketchName => sketchName.Equals("\n" + _name)))
+                comparerResult.correct.Add("\n" + _name);
 
-            var userCoordinates = userParameters as IPoint;
-            comparerResults.correct.Add(GetCorrectProperties(type, index, userCoordinates!.Coordinate));
-            return comparerResults;
+            var userCoordinates = userParameter as IPoint;
+            comparerResult.correct.Add(GetCorrectProperties(type, index, userCoordinates!.Coordinate));
+            return comparerResult;
         }
 
 
-        if (!comparerResults.error.Exists(sketchName => sketchName.Equals("\n" + _name)))
-            comparerResults.error.Add("\n" + _name);
+        if (!comparerResult.error.Exists(sketchName => sketchName.Equals("\n" + _name)))
+            comparerResult.error.Add("\n" + _name);
 
         if (line)
         {
-            var userLine = userParameters as Line;
+            var userLine = userParameter as Line;
             var correctLines = correctParameters as List<Line>;
             foreach (var correctLine in correctLines!)
             {
@@ -153,13 +158,15 @@ public class Comparer
                 if (!userLine!.LineLength.Equals(correctLine!.LineLength))
                     error.Append("\n\t\tНеверная длина: " + userLine!.LineLength + " мм");
                 error.Append(GetErrorCoordinates(correctLine, userLine));
-                comparerResults.error.Add(error.ToString());
+                comparerResult.error.Add(error.ToString());
+                // TODO Убрать break
+                break;
             }
         }
 
         if (arc)
         {
-            var userArc = userParameters as Arc;
+            var userArc = userParameter as Arc;
             var correctArcs = correctParameters as List<Arc>;
             foreach (var correctArc in correctArcs!)
             {
@@ -168,37 +175,37 @@ public class Comparer
                 if (!userArc!.ArcRadius.Equals(correctArc!.ArcRadius))
                     error.Append("\n\t\tНеверный радиус: " + userArc!.ArcRadius + " мм\n");
                 error.Append(GetErrorCoordinates(correctArc, userArc));
-                comparerResults.error.Add(error.ToString());
+                comparerResult.error.Add(error.ToString());
             }
         }
 
         if (ellipse)
         {
-            var userEllipse = userParameters as Ellipse;
+            var userEllipse = userParameter as Ellipse;
             var correctEllipses = correctParameters as List<Ellipse>;
             foreach (var correctEllipse in correctEllipses!)
             {
                 var error = new StringBuilder();
                 error.Append("\n\t" + type + _objectIndex++ + ":\n");
                 error.Append(GetErrorCoordinates(correctEllipse, userEllipse));
-                comparerResults.error.Add(error.ToString());
+                comparerResult.error.Add(error.ToString());
             }
         }
 
         if (parabola)
         {
-            var userParabola = userParameters as Ellipse;
+            var userParabola = userParameter as Ellipse;
             var correctParabolas = correctParameters as List<Ellipse>;
             foreach (var correctParabola in correctParabolas!)
             {
                 var error = new StringBuilder();
                 error.Append("\n\t" + type + _objectIndex++ + ":\n");
                 error.Append(GetErrorCoordinates(correctParabola, userParabola));
-                comparerResults.error.Add(error.ToString());
+                comparerResult.error.Add(error.ToString());
             }
         }
 
-        return comparerResults;
+        return comparerResult;
     }
 
     /// <summary>
@@ -213,7 +220,7 @@ public class Comparer
         return "\n\t" + type + index + " построен верно:" + "\n\t\t" +
                "Координаты: \n\t\t\t" +
                userCoordinates.Replace("\n", "\n\t\t\t");
-        ;
+        
     }
 
     /// <summary>

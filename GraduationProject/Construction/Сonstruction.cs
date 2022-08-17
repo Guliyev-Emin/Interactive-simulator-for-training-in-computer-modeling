@@ -155,7 +155,7 @@ public class Сonstruction : Connection
         _entity = _faces[2] as Entity;
         _entity!.Select(true);
         SketchManager.InsertSketch(false);
-        SketchManager.CreateCornerRectangle(-0.03, 0.055, 0, 0.03, 0, 0);
+        SketchManager.CreateCornerRectangle(-0.03, 0.055, 0, 0.04, 0, 0);
         FeatureCut(0.015);
         ModelDoc2.ClearSelection();
     }

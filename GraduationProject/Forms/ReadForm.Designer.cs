@@ -49,7 +49,7 @@ namespace GraduationProject
             this.userModelPropertiesTextBox = new System.Windows.Forms.TextBox();
             this.correctQualityTablePanel = new System.Windows.Forms.TableLayoutPanel();
             this.correctQualityResultGroupBox = new System.Windows.Forms.GroupBox();
-            this.correctQualityResult = new System.Windows.Forms.TextBox();
+            this.correctQualityResultTextBox = new System.Windows.Forms.TextBox();
             this.errorQualityResultGroupBox = new System.Windows.Forms.GroupBox();
             this.errorQualityResultTextBox = new System.Windows.Forms.TextBox();
             this.modelControllerTab.SuspendLayout();
@@ -245,7 +245,7 @@ namespace GraduationProject
             // 
             // correctQualityResultGroupBox
             // 
-            this.correctQualityResultGroupBox.Controls.Add(this.correctQualityResult);
+            this.correctQualityResultGroupBox.Controls.Add(this.correctQualityResultTextBox);
             this.correctQualityResultGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.correctQualityResultGroupBox.Location = new System.Drawing.Point(3, 3);
             this.correctQualityResultGroupBox.Name = "correctQualityResultGroupBox";
@@ -256,14 +256,14 @@ namespace GraduationProject
             // 
             // correctQualityResult
             // 
-            this.correctQualityResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.correctQualityResult.Location = new System.Drawing.Point(3, 16);
-            this.correctQualityResult.Multiline = true;
-            this.correctQualityResult.Name = "correctQualityResult";
-            this.correctQualityResult.ReadOnly = true;
-            this.correctQualityResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.correctQualityResult.Size = new System.Drawing.Size(198, 163);
-            this.correctQualityResult.TabIndex = 0;
+            this.correctQualityResultTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.correctQualityResultTextBox.Location = new System.Drawing.Point(3, 16);
+            this.correctQualityResultTextBox.Multiline = true;
+            this.correctQualityResultTextBox.Name = "correctQualityResultTextBox";
+            this.correctQualityResultTextBox.ReadOnly = true;
+            this.correctQualityResultTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.correctQualityResultTextBox.Size = new System.Drawing.Size(198, 163);
+            this.correctQualityResultTextBox.TabIndex = 0;
             // 
             // errorQualityResultGroupBox
             // 
@@ -318,7 +318,7 @@ namespace GraduationProject
 
         private System.Windows.Forms.GroupBox errorQualityResultGroupBox;
 
-        private System.Windows.Forms.TextBox correctQualityResult;
+        private System.Windows.Forms.TextBox correctQualityResultTextBox;
 
         private System.Windows.Forms.GroupBox correctQualityResultGroupBox;
 
