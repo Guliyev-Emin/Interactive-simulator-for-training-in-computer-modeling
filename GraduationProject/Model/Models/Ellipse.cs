@@ -19,7 +19,6 @@ public record Ellipse : IEllipse
     public double XMinor { get; set; }
     public double YMinor { get; set; }
     public double ZMinor { get; set; }
-
     public double XCenter { get; set; }
     public double YCenter { get; set; }
     public double ZCenter { get; set; }

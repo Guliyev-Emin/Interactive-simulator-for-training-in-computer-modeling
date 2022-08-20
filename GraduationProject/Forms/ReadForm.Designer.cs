@@ -38,7 +38,6 @@ namespace GraduationProject
             this.modelControllerTab = new System.Windows.Forms.TabControl();
             this.ProjectTreePage = new System.Windows.Forms.TabPage();
             this.writeToFile = new System.Windows.Forms.Button();
-            this.checkButtonModel = new System.Windows.Forms.Button();
             this.reReading = new System.Windows.Forms.Button();
             this.QualityControllPage = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
@@ -67,7 +66,7 @@ namespace GraduationProject
             // 
             this.exit_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.exit_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.exit_button.Location = new System.Drawing.Point(411, 348);
+            this.exit_button.Location = new System.Drawing.Point(269, 348);
             this.exit_button.Name = "exit_button";
             this.exit_button.Size = new System.Drawing.Size(105, 40);
             this.exit_button.TabIndex = 1;
@@ -97,7 +96,6 @@ namespace GraduationProject
             // ProjectTreePage
             // 
             this.ProjectTreePage.Controls.Add(this.writeToFile);
-            this.ProjectTreePage.Controls.Add(this.checkButtonModel);
             this.ProjectTreePage.Controls.Add(this.reReading);
             this.ProjectTreePage.Controls.Add(this.exit_button);
             this.ProjectTreePage.Controls.Add(this.SolidWorksProjectTree);
@@ -120,21 +118,11 @@ namespace GraduationProject
             this.writeToFile.UseVisualStyleBackColor = true;
             this.writeToFile.Click += new System.EventHandler(this.writeToFile_Click);
             // 
-            // checkButtonModel
-            // 
-            this.checkButtonModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkButtonModel.Location = new System.Drawing.Point(129, 348);
-            this.checkButtonModel.Name = "checkButtonModel";
-            this.checkButtonModel.Size = new System.Drawing.Size(136, 40);
-            this.checkButtonModel.TabIndex = 4;
-            this.checkButtonModel.Text = "Проверить с исходником";
-            this.checkButtonModel.UseVisualStyleBackColor = true;
-            // 
             // reReading
             // 
             this.reReading.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.reReading.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.reReading.Location = new System.Drawing.Point(271, 348);
+            this.reReading.Location = new System.Drawing.Point(129, 348);
             this.reReading.Name = "reReading";
             this.reReading.Size = new System.Drawing.Size(134, 40);
             this.reReading.TabIndex = 3;
@@ -254,7 +242,7 @@ namespace GraduationProject
             this.correctQualityResultGroupBox.TabStop = false;
             this.correctQualityResultGroupBox.Text = "Правильные элементы";
             // 
-            // correctQualityResult
+            // correctQualityResultTextBox
             // 
             this.correctQualityResultTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.correctQualityResultTextBox.Location = new System.Drawing.Point(3, 16);
@@ -337,8 +325,6 @@ namespace GraduationProject
         private System.Windows.Forms.TabPage QualityControllPage;
 
         private System.Windows.Forms.Button writeToFile;
-
-        private System.Windows.Forms.Button checkButtonModel;
 
         private System.Windows.Forms.Button reReading;
 

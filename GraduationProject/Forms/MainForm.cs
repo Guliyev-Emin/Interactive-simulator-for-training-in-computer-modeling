@@ -48,29 +48,29 @@ public partial class MainForm : Form
             }
             case 1:
             {
-                Сonstruction.Step2();
-                //Сonstruction.Step5();
+                //Сonstruction.Step2();
+                Сonstruction.Step5();
                 Step++;
                 break;
             }
             case 2:
             {
-                Сonstruction.Step3();
-                //Сonstruction.Step2();
+                //Сonstruction.Step3();
+                Сonstruction.Step2();
                 Step++;
                 break;
             }
             case 3:
             {
-                Сonstruction.Step4();
-                //Сonstruction.Step3();
+                //Сonstruction.Step4();
+                Сonstruction.Step3();
                 Step++;
                 break;
             }
             case 4:
             {
-                Сonstruction.Step5();
-                //Сonstruction.Step4();
+                //Сonstruction.Step5();
+                Сonstruction.Step4();
                 Step++;
                 break;
             }

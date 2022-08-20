@@ -16,7 +16,7 @@ public class Comparer
     private const byte MajorPt = 3;
     private const byte MinorPt = 4;
     private static string _name;
-    private short _objectIndex;
+    private short _objectNumber;
 
     /// <summary>
     ///     Функция проверки правильных эскизов с пользовательскими эскизами
@@ -28,25 +28,25 @@ public class Comparer
         SketchInfo userSketch)
     {
         _name = userSketch.SketchName;
-        List<(List<string> correct, List<string> error)> comparerResults;
         var comparerFinalResult = new List<List<(List<string> correct, List<string> error)>>();
-        if (correctSketch.UserPoints?.Count != 0)
-        {
-        }
+
+        ComparerDeepth(correctSketch.Deepth, userSketch.Deepth, out var comparerResults);
+        comparerFinalResult.Add(comparerResults);
+
 
         if (correctSketch.Lines?.Count != 0)
         {
             ComparerParameters(correctSketch.Lines, userSketch.Lines, out comparerResults);
             comparerFinalResult.Add(comparerResults);
         }
-        
-        
+
+
         if (correctSketch.Arcs?.Count != 0)
         {
             ComparerParameters(correctSketch.Arcs, userSketch.Arcs, out comparerResults);
             comparerFinalResult.Add(comparerResults);
         }
-        
+
 
         if (correctSketch.Ellipses?.Count != 0)
         {
@@ -63,6 +63,30 @@ public class Comparer
         return comparerFinalResult;
     }
 
+    private void ComparerDeepth(double correctDeepth, double userDeepth,
+        out List<(List<string> correct, List<string> error)> comparerResults)
+    {
+        var comparer = new List<(List<string> correct, List<string> error)>();
+        var comparerResult = (correct: new List<string>(), error: new List<string>());
+
+        if (userDeepth.Equals(correctDeepth))
+        {
+            if (!comparerResult.correct.Exists(sketchName => sketchName.Equals("\n" + _name)))
+                comparerResult.correct.Add("\n" + _name);
+            comparerResult.correct.Add("\n\tВыдавливание правильно: " + userDeepth + " мм");
+        }
+
+        if (!userDeepth.Equals(correctDeepth))
+        {
+            if (!comparerResult.error.Exists(sketchName => sketchName.Equals("\n" + _name)))
+                comparerResult.error.Add("\n" + _name);
+            comparerResult.error.Add("\n\tВыдавливание не правильно: " + userDeepth + " мм");
+        }
+
+        comparer.Add(comparerResult);
+        comparerResults = comparer;
+    }
+
     /// <summary>
     ///     Процедура определения пользовательского объекта
     /// </summary>
@@ -73,7 +97,7 @@ public class Comparer
     private void ComparerParameters<T>(ICollection<T> correctParameters,
         List<T> userParameters, out List<(List<string> correct, List<string> error)> comparerResults)
     {
-        _objectIndex = 1;
+        _objectNumber = 1;
         var arc = typeof(T).Name.Equals("Arc");
         var line = typeof(T).Name.Equals("Line");
         var ellipse = typeof(T).Name.Equals("Ellipse");
@@ -135,14 +159,10 @@ public class Comparer
 
         if (result)
         {
-            if (!comparerResult.correct.Exists(sketchName => sketchName.Equals("\n" + _name)))
-                comparerResult.correct.Add("\n" + _name);
-
             var userCoordinates = userParameter as IPoint;
             comparerResult.correct.Add(GetCorrectProperties(type, index, userCoordinates!.Coordinate));
             return comparerResult;
         }
-
 
         if (!comparerResult.error.Exists(sketchName => sketchName.Equals("\n" + _name)))
             comparerResult.error.Add("\n" + _name);
@@ -151,32 +171,26 @@ public class Comparer
         {
             var userLine = userParameter as Line;
             var correctLines = correctParameters as List<Line>;
-            foreach (var correctLine in correctLines!)
-            {
-                var error = new StringBuilder();
-                error.Append("\n\t" + type + _objectIndex++ + ":");
-                if (!userLine!.LineLength.Equals(correctLine!.LineLength))
-                    error.Append("\n\t\tНеверная длина: " + userLine!.LineLength + " мм");
-                error.Append(GetErrorCoordinates(correctLine, userLine));
-                comparerResult.error.Add(error.ToString());
-                // TODO Убрать break
-                break;
-            }
+            var error = new StringBuilder();
+            error.Append("\n\t" + type + _objectNumber + ":");
+            if (!userLine!.LineLength.Equals(correctLines?[_objectNumber - 1]!.LineLength))
+                error.Append("\n\t\tНеверная длина: " + userLine!.LineLength + " мм");
+            error.Append(GetErrorCoordinates(correctLines?[_objectNumber - 1], userLine));
+            comparerResult.error.Add(error.ToString());
+            _objectNumber++;
         }
 
         if (arc)
         {
             var userArc = userParameter as Arc;
             var correctArcs = correctParameters as List<Arc>;
-            foreach (var correctArc in correctArcs!)
-            {
-                var error = new StringBuilder();
-                error.Append("\n\t" + type + _objectIndex++ + ":");
-                if (!userArc!.ArcRadius.Equals(correctArc!.ArcRadius))
-                    error.Append("\n\t\tНеверный радиус: " + userArc!.ArcRadius + " мм\n");
-                error.Append(GetErrorCoordinates(correctArc, userArc));
-                comparerResult.error.Add(error.ToString());
-            }
+            var error = new StringBuilder();
+            error.Append("\n\t" + type + _objectNumber + ":");
+            if (!userArc!.ArcRadius.Equals(correctArcs?[_objectNumber - 1]!.ArcRadius))
+                error.Append("\n\t\tНеверный радиус: " + userArc!.ArcRadius + " мм\n");
+            error.Append(GetErrorCoordinates(correctArcs?[_objectNumber - 1], userArc));
+            comparerResult.error.Add(error.ToString());
+            _objectNumber++;
         }
 
         if (ellipse)
@@ -186,7 +200,7 @@ public class Comparer
             foreach (var correctEllipse in correctEllipses!)
             {
                 var error = new StringBuilder();
-                error.Append("\n\t" + type + _objectIndex++ + ":\n");
+                error.Append("\n\t" + type + _objectNumber++ + ":\n");
                 error.Append(GetErrorCoordinates(correctEllipse, userEllipse));
                 comparerResult.error.Add(error.ToString());
             }
@@ -199,7 +213,7 @@ public class Comparer
             foreach (var correctParabola in correctParabolas!)
             {
                 var error = new StringBuilder();
-                error.Append("\n\t" + type + _objectIndex++ + ":\n");
+                error.Append("\n\t" + type + _objectNumber++ + ":\n");
                 error.Append(GetErrorCoordinates(correctParabola, userParabola));
                 comparerResult.error.Add(error.ToString());
             }
@@ -220,7 +234,6 @@ public class Comparer
         return "\n\t" + type + index + " построен верно:" + "\n\t\t" +
                "Координаты: \n\t\t\t" +
                userCoordinates.Replace("\n", "\n\t\t\t");
-        
     }
 
     /// <summary>

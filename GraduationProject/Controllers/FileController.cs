@@ -55,7 +55,7 @@ public static class FileController
     }
 
     /// <summary>
-    /// Ассинхронная процедура сохранения текста и объектов в файлы
+    ///     Ассинхронная процедура сохранения текста и объектов в файлы
     /// </summary>
     /// <param name="variant">Вариант модели</param>
     public static async void SavingModelPropertiesToAFile(string variant)
@@ -74,7 +74,7 @@ public static class FileController
     }
 
     /// <summary>
-    /// Функция чтения объектов примитивов из бинарного файла
+    ///     Функция чтения объектов примитивов из бинарного файла
     /// </summary>
     /// <param name="modelVariant">Вариант модели</param>
     /// <returns>Возвращает объекты из бинарного файла</returns>
@@ -86,11 +86,10 @@ public static class FileController
         var sketchInfosFromFile = (List<SketchInfo>)deserializer.Deserialize(openFileStream);
         openFileStream.Close();
         return sketchInfosFromFile;
-
     }
 
     /// <summary>
-    /// Функция чтения текста из файла
+    ///     Функция чтения текста из файла
     /// </summary>
     /// <param name="modelVariant">Вариант модели</param>
     /// <returns>Возвращает текст из файла</returns>

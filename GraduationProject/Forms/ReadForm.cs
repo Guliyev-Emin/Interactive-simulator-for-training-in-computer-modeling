@@ -13,7 +13,6 @@ namespace GraduationProject;
 
 public partial class ReadForm : Form
 {
-    
     public ReadForm()
     {
         InitializeComponent();
@@ -63,7 +62,7 @@ public partial class ReadForm : Form
             Width = 240,
             Height = 120
         };
-        
+
         var modelVariantLabel = new Label
         {
             Location = new Point(13, 9),
@@ -78,17 +77,16 @@ public partial class ReadForm : Form
             Location = new Point(102, 12),
             Size = new Size(105, 22)
         };
-        
+
         var confirmation = new Button
         {
             Text = buttonCaption,
             Location = new Point(126, 41),
             Margin = new Padding(4),
             Size = new Size(81, 26),
-            DialogResult = DialogResult.OK,
-            
+            DialogResult = DialogResult.OK
         };
-        
+
         confirmation.Click += (_, _) => { modelVariantForm.Close(); };
         modelVariantForm.Controls.Add(modelVariantText);
         modelVariantForm.Controls.Add(confirmation);
@@ -104,7 +102,7 @@ public partial class ReadForm : Form
         userModelPropertiesTextBox.Text = FileController.CreateTemplateModelProperties();
         errorQualityResultTextBox.Text = string.Empty;
         correctQualityResultTextBox.Text = string.Empty;
-        
+
         var comparer = Controller.Comparer(modelVariant);
         if (comparer is null) return;
         foreach (var comparerResults in comparer)
