@@ -8,7 +8,7 @@ namespace GraduationProject.Model.Models;
 public record SketchInfo : ISketchInfo
 {
     public string SketchName { get; set; }
-    public double Deepth { get; set; }
+    public double Depth { get; set; }
     public List<UserPoint> UserPoints { get; set; }
     public List<Line> Lines { get; set; }
     public List<Arc> Arcs { get; set; }

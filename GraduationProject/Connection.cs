@@ -7,15 +7,15 @@ namespace GraduationProject;
 
 public class Connection
 {
-    protected static ModelDoc2 ModelDoc2;
-    protected static SketchManager SketchManager;
-    public static FeatureManager FeatureManager;
+    protected static ModelDoc2 SwModel;
+    protected static SketchManager SwSketchManager;
+    public static FeatureManager SwFeatureManager;
     private static SldWorks _app;
 
     public static void AppConnection()
     {
         _app = null;
-        ModelDoc2 = null;
+        SwModel = null;
 
         try
         {
@@ -30,39 +30,38 @@ public class Connection
         {
             try
             {
-                ModelDoc2 = (ModelDoc2)_app.GetFirstDocument();
+                SwModel = (ModelDoc2)_app.GetFirstDocument();
             }
             catch
             {
                 // ignored
             }
 
-            if (ModelDoc2 != null)
+            if (SwModel != null)
             {
-                MessageBox.Show(@"Подключение выполнено. Документ найден.", @"Уведомление");
+                var text = $@"Подключение к ""{SwModel.GetTitle()}"" выполнено успешно!";
+                Message.InformationMessage(text, @"Подключение к модели");
 
                 const int prefToggle = (int)swUserPreferenceToggle_e.swInputDimValOnCreate;
 
                 _app.SetUserPreferenceToggle(prefToggle, false);
 
-                SketchManager = ModelDoc2.SketchManager;
-                FeatureManager = ModelDoc2.FeatureManager;
+                SwSketchManager = SwModel.SketchManager;
+                SwFeatureManager = SwModel.FeatureManager;
             }
             else
-            {
-                MessageBox.Show(@"Документ не найден", @"Уведомление");
-            }
+                Message.InformationMessage(@"Документ не найден!", @"Подключение к модели");
+            
         }
         else
-        {
-            MessageBox.Show(@"Не удалось подключиться", @"Уведомление");
-        }
+            Message.WarningMessage(@"Не удалось подключиться к документу!");
+        
     }
 
     public static bool ConnectionTest()
     {
-        if (ModelDoc2 is not null) return true;
-        MessageBox.Show(@"Документ не найден!", @"Уведомление");
+        if (SwModel is not null) return true;
+        Message.InformationMessage("Документ не найден!\nВыполните подключение к документу!", @"Подключение к модели");
         return false;
     }
 }

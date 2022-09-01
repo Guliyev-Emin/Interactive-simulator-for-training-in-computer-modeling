@@ -17,7 +17,7 @@ public class Controller : Connection
         if (correctSketches is null) return null;
         if (correctSketches.Count.Equals(userSketches.Count))
             return (from userSketch in userSketches
-                let correctSketch = GetCorrectSketch(correctSketches, userSketch)
+                let correctSketch = GetCorrectSketch(ref correctSketches, userSketch)
                 where correctSketch is not null
                 select new Comparer().SketchComparer(correctSketch, userSketch)).ToList();
         Message.ErrorMessage(
@@ -25,7 +25,7 @@ public class Controller : Connection
         return null;
     }
 
-    private static SketchInfo GetCorrectSketch(IEnumerable<ISketchInfo> correctSketches, ISketchInfo userSketch)
+    private static SketchInfo GetCorrectSketch(ref List<SketchInfo> correctSketches, ISketchInfo userSketch)
     {
         var correctSketch = correctSketches.Where(correct =>
             correct.Lines.Count.Equals(userSketch.Lines.Count)
@@ -38,19 +38,35 @@ public class Controller : Connection
             case 0:
                 Message.ErrorMessage(userSketch.SketchName + " не соответвует ни одному из правильных эскизов!");
                 return null;
-            case <= 1:
-                return correctSketch.First() as SketchInfo;
+            case 1:
+            {
+                correctSketches.Remove(correctSketch.First());
+                return correctSketch.First();
+            }
             default:
             {
-                var correct = correctSketch.Where(correct => correct.Deepth.Equals(userSketch.Deepth)).ToList();
-                if (correct.Count is not (> 1 or 0)) return correct.First() as SketchInfo;
+                var corrects = correctSketch.Where(correct => correct.Depth.Equals(userSketch.Depth)).ToList();
+                if (corrects.Count is not (> 1 or 0))
+                {
+                    correctSketches.Remove(corrects.First());
+                    return corrects.First();
+                }
+
+                foreach (var correct in correctSketch)
+                {
+                    correctSketches.Remove(correct);
+                    return correct;
+                }
+    
                 Message.ErrorMessage(
-                    "Количестово правильных эскизов превышен! Ошибка нахождения правильности эскиза, пожалуйста обратитесь к разработчику программы!\n\tКласс: Controller\n\tФункция: GetCorrectSketch");
+                    "Количестово правильных эскизов превышен! " +
+                    "Ошибка нахождения правильности эскиза, пожалуйста обратитесь к разработчику программы!" +
+                    "\n\tКласс: Controller\n\tФункция: GetCorrectSketch");
                 return null;
             }
         }
     }
-
+    
     public static string GetLineArrangement(ILine userLine)
     {
         if (userLine.XStart.Equals(userLine.XEnd) && !userLine.YStart.Equals(userLine.YEnd))

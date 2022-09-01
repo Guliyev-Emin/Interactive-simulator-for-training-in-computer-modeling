@@ -37,7 +37,6 @@ F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject
 F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.csproj.AssemblyReference.cache
 F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.csproj.SuggestedBindingRedirects.cache
 F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.MainForm.resources
-F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.ReadForm.resources
 F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.Properties.Resources.resources
 F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.csproj.GenerateResource.cache
 F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.csproj.CoreCompileInputs.cache

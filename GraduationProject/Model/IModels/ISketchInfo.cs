@@ -6,7 +6,7 @@ namespace GraduationProject.Model.IModels;
 public interface ISketchInfo
 {
     public string SketchName { get; set; }
-    public double Deepth { get; set; }
+    public double Depth { get; set; }
 
     public List<UserPoint> UserPoints { get; set; }
     public List<Line> Lines { get; set; }

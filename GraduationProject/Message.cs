@@ -2,7 +2,7 @@
 
 namespace GraduationProject;
 
-public class Message
+public static class Message
 {
     public static void ErrorMessage(string text)
     {
@@ -11,6 +11,11 @@ public class Message
 
     public static void WarningMessage(string text)
     {
-        MessageBox.Show(text, @"Уведмление", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        MessageBox.Show(text, @"Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+    }
+
+    public static void InformationMessage(string text, string caption)
+    {
+        MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 }

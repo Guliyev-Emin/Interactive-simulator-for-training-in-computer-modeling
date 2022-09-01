@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Windows.Forms;
 using GraduationProject.Construction;
 using GraduationProject.Model.Models;
 
@@ -35,7 +34,7 @@ public static class FileController
 
     private static string DataDoesNotExist()
     {
-        MessageBox.Show(@"Данные для модели не найдены!", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Message.ErrorMessage(@"Данные для модели не найдены!");
         return null;
     }
 
@@ -150,7 +149,7 @@ public static class FileController
                 foreach (var parabola in sketch.Parabolas)
                     template.Append("Парабола: \n\t" + parabola.Coordinate.Replace("\n", "\n\t") + "\n\t");
 
-            template.Append("Выдавливание: " + sketch.Deepth + " мм\n\n");
+            template.Append("Выдавливание: " + sketch.Depth + " мм\n\n");
         }
 
         return template.Replace("\n", Environment.NewLine).ToString();

@@ -30,7 +30,7 @@ public class Comparer
         _name = userSketch.SketchName;
         var comparerFinalResult = new List<List<(List<string> correct, List<string> error)>>();
 
-        ComparerDeepth(correctSketch.Deepth, userSketch.Deepth, out var comparerResults);
+        ComparerDeepth(correctSketch.Depth, userSketch.Depth, out var comparerResults);
         comparerFinalResult.Add(comparerResults);
 
 
