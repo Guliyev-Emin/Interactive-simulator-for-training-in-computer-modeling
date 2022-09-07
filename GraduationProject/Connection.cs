@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
@@ -50,12 +49,14 @@ public class Connection
                 SwFeatureManager = SwModel.FeatureManager;
             }
             else
+            {
                 Message.InformationMessage(@"Документ не найден!", @"Подключение к модели");
-            
+            }
         }
         else
+        {
             Message.WarningMessage(@"Не удалось подключиться к документу!");
-        
+        }
     }
 
     public static bool ConnectionTest()

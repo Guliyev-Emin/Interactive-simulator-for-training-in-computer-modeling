@@ -57,7 +57,7 @@ public class Controller : Connection
                     correctSketches.Remove(correct);
                     return correct;
                 }
-    
+
                 Message.ErrorMessage(
                     "Количестово правильных эскизов превышен! " +
                     "Ошибка нахождения правильности эскиза, пожалуйста обратитесь к разработчику программы!" +
@@ -66,7 +66,7 @@ public class Controller : Connection
             }
         }
     }
-    
+
     public static string GetLineArrangement(ILine userLine)
     {
         if (userLine.XStart.Equals(userLine.XEnd) && !userLine.YStart.Equals(userLine.YEnd))

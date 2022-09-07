@@ -125,12 +125,12 @@ public partial class MainForm : Form
 
         FileController.SavingModelPropertiesToAFile(modelVariant);
     }
-    
+
     private void modelValidationButton_Click(object sender, EventArgs e)
     {
         ValidationModel(GetModelVariantDialog(@"Выбор модели", @"Модель № ", @"Проверить"));
     }
-    
+
     private void GetSolidWorksProjectTree()
     {
         SolidWorksProjectTree.Nodes.Clear();
@@ -143,8 +143,9 @@ public partial class MainForm : Form
         SolidWorksProjectTree.Nodes.Add(treeNode);
         SolidWorksProjectTree.EndUpdate();
         modelValidationButton.Visible = true;
+        userModelPropertiesTextBox.Text = FileController.CreateTemplateModelProperties();
     }
-    
+
     private string GetModelVariantDialog(string title, string caption, string buttonCaption)
     {
         var modelVariantForm = new Form
@@ -190,7 +191,7 @@ public partial class MainForm : Form
 
         return modelVariantForm.ShowDialog() == DialogResult.OK ? modelVariantText.Text : "";
     }
-    
+
     private void ValidationModel(string modelVariant)
     {
         initialModelPropertiesTextBox.Text = FileController.GetModelTextSketchesFromFile(modelVariant);
@@ -218,5 +219,4 @@ public partial class MainForm : Form
                 });
             });
     }
-
 }

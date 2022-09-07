@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +8,7 @@ using GraduationProject.Model.Models;
 using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
-
-using Environment = SolidWorks.Interop.sldworks.Environment;
+using Environment = System.Environment;
 
 namespace GraduationProject.Construction;
 
@@ -27,6 +25,7 @@ public class Reader : Connection
     private static List<UserPoint> _userPoints;
     private static List<Parabola> _parabolas;
     private static List<Ellipse> _ellipses;
+    
 
     /// <summary>
     ///     Функция по нахождению узлов в проекте SolidWorks.
@@ -39,7 +38,7 @@ public class Reader : Connection
         var nodeObject = rootNode.Object;
         var nodeType = "";
         var nodeName = "";
-
+        //l = 
         if (nodeObject != null)
         {
             switch (nodeObjectType)
@@ -50,21 +49,24 @@ public class Reader : Connection
                     nodeName = _featureNode.Name;
                     break;
             }
-
+            
             if (_check & !nodeType.Equals("DetailCabinet") & !nodeType.Equals("MaterialFolder") &
                 !nodeType.Equals("HistoryFolder") & !nodeType.Equals("SensorFolder"))
                 SolidWorksProjectTree.LastNode.Nodes.Add(nodeName);
-            else switch (nodeType)
-            {
-                case "MirrorPattern":
-                    GetMirror(_featureNode);
-                    SolidWorksProjectTree.Nodes.Add(nodeName);
-                    break;
-                default:
-                    SolidWorksProjectTree.Nodes.Add(nodeName);
-                    break;
-            }
-
+            else
+                switch (nodeType)
+                {
+                    // case "MirrorPattern":
+                    //     MirrorListener(_featureNode);
+                    //     break;
+                    // case "Fillet":
+                    //     FilletListener(_featureNode);
+                    //     break;
+                    default:
+                        SolidWorksProjectTree.Nodes.Add(nodeName);
+                        break;
+                }
+            
             if (nodeType.Equals("ProfileFeature"))
                 SketchListener(nodeName);
             rootNode.Expanded = false;
@@ -80,9 +82,6 @@ public class Reader : Connection
 
         return SolidWorksProjectTree;
     }
-
-   
-    
 
     /// <summary>
     ///     Процедура позволяющая извлекать значения координат двухмерных объектов в эскизе.
@@ -104,9 +103,6 @@ public class Reader : Connection
         _parabolas = new List<Parabola>();
         _ellipses = new List<Ellipse>();
 
-                    
-
-        GetTestDepth(feature);
         GetPlanesAndFaces(selectedSketch);
 
         if (lineCount != 0)
@@ -130,38 +126,39 @@ public class Reader : Connection
             UserPoints = _userPoints, Ellipses = _ellipses, Parabolas = _parabolas
         });
     }
-
+    
     /// <summary>
     ///     Процедура позволяющая извлекать значения выдавливания эскиза.
     /// </summary>
     /// <param name="feature">Объект типа IFeature</param>
-    /// <param name="type"></param>
+    /// <returns>Глубина выдавливания</returns>
     private static double DepthListener(IFeature feature)
     {
         var depth = feature.GetTypeName().Equals("Rib") ? GetRibThickness(feature) : GetExtrusionThickness(feature);
         var operation = feature.GetTypeName().Equals("Cut") ? "Вырез" : "Выдавливание";
-        
+
         SolidWorksProjectTree.LastNode.Nodes.Insert(0, @$"{operation}: {depth}" + @" мм");
         return depth;
     }
 
+    /// <summary>
+    /// Процедура чтения выдавливания трехмерных объектов
+    /// </summary>
+    /// <param name="feature"></param>
+    /// <returns>Глубину выдавливания для обычных трехмерных объектов</returns>
     private static double GetExtrusionThickness(IFeature feature)
     {
         var extrudeData = (ExtrudeFeatureData2)feature.GetDefinition();
         var depth = extrudeData.GetDepth(!extrudeData.ReverseDirection) * 1000.00;
-        return extrudeData.BothDirections ? depth : depth * 2.0;
+        var depth1 = extrudeData.GetDepth(false) * 1000.00;
+        return extrudeData.BothDirections ? depth * 2.0 : depth;
     }
-    
-    private static void GetTestDepth(IFeature feature)
-    {
-        var featureName = feature.Name;
-        var deDimension = (Dimension)SwModel.Parameter("D1@" + featureName);
-        if (deDimension is null) return;
-        var depths =
-            (double[])deDimension.GetSystemValue3((int)swInConfigurationOpts_e.swThisConfiguration,
-                SwModel.GetConfigurationNames());
-        var _depth = depths[0] * 1000;
-    }
+
+    /// <summary>
+    /// Функция чтения глубины ребра
+    /// </summary>
+    /// <param name="feature"></param>
+    /// <returns>Глубина выдавливания</returns>
     private static double GetRibThickness(IFeature feature)
     {
         var swRibFeat = (RibFeatureData2)feature.GetDefinition();
@@ -169,51 +166,7 @@ public class Reader : Connection
         return swRibFeat.IsTwoSided ? thickness * 2 : thickness;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="feature"></param>
-    private static void GetMirror(IFeature feature)
-    {
-        // MirrorPattern
-        var swModel = SwModel;
-        var mirrorData = (IMirrorPatternFeatureData)feature.GetDefinition();
-        var geometryPattern = "Geometry pattern: " + mirrorData.GeometryPattern + System.Environment.NewLine;
-        var faceCount = "Number of mirrored faces: " + mirrorData.GetMirrorFaceCount() + System.Environment.NewLine;
-        var planeType = "Type of mirrored plane (0 = face; 1 = plane): " + mirrorData.GetMirrorPlaneType() + System.Environment.NewLine;
-        var featureCount = "Number of patterned features: " + mirrorData.GetPatternFeatureCount() + System.Environment.NewLine;
-        var plane = "Plane: ";
-
-        if (mirrorData.GetMirrorPlaneType().Equals(1))
-        {
-            var swFeature = (Feature)mirrorData.Plane;
-           
-        }
-
-        var mirrorFeature = new StringBuilder();
-        var patternArray = (object[])mirrorData.PatternFeatureArray;
-        foreach (Feature pattern in patternArray)
-        {
-            mirrorFeature.Append("Feature: " + pattern.Name + System.Environment.NewLine);
-            pattern.Select2(true, 0);
-        }
-        mirrorData.ReleaseSelectionAccess();
-        Message.InformationMessage(geometryPattern + faceCount + planeType + featureCount + plane + mirrorFeature, "Уведомление");
-    }
     
-    /// <summary>
-    /// </summary>
-    /// <param name="sketch"></param>
-    private static void GetPlanesAndFaces(ISketch sketch)
-    {
-        var transformationMatrix = sketch.ModelToSketchTransform;
-        var transformationMatrixData = (double[])transformationMatrix.ArrayData;
-        var top = new double[] { 1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0 };
-        //if (transformationMatrixData.SequenceEqual(top))
-        //MessageBox.Show("Сверху");
-        var s = transformationMatrixData.Aggregate("", (current, data) => current + "|" + data);
-        //MessageBox.Show(s);
-    }
 
     /// <summary>
     ///     Процедура позволяющая извлекать значения координат точек.
@@ -298,7 +251,7 @@ public class Reader : Connection
             var xCenter = arcs[16 * i + 12] * 1000;
             var yCenter = arcs[16 * i + 13] * 1000;
             var zCenter = arcs[16 * i + 14] * 1000;
-            
+
             var start = "Начало: x = " + xStart + ", y = " + yStart +
                         ", z = " + zStart + ";";
             var end = "Конец: x = " + xEnd + ", y = " + yEnd + ", z = " +
@@ -391,6 +344,7 @@ public class Reader : Connection
             _lines.Add(line);
 
             SolidWorksProjectTree.LastNode.LastNode.LastNode.Nodes.Add("Длина: " + lineLength + " мм");
+            SolidWorksProjectTree.LastNode.LastNode.LastNode.Nodes.Add("Расположение: " + line.LineArrangement);
             SolidWorksProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
             SolidWorksProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
         }
@@ -431,4 +385,96 @@ public class Reader : Connection
             SolidWorksProjectTree.LastNode.LastNode.LastNode.Nodes.Add(minorPoint);
         }
     }
+    
+    
+    // TODO ТЕСТОВЫЕ МЕТОДЫ, ТРЕБУЮЩИЕ ДАЛЬНЕЙШЕЙ РАЗРАБОТКИ
+    
+    /// <summary>
+    /// Процедура для чтения зеркального отражения
+    /// </summary>
+    /// <param name="feature"></param>
+    private static void MirrorListener(IFeature feature)
+    {
+        // MirrorPattern
+        var swModel = SwModel;
+        var mirrorData = (IMirrorPatternFeatureData)feature.GetDefinition();
+        var geometryPattern = "Geometry pattern: " + mirrorData.GeometryPattern + Environment.NewLine;
+        var faceCount = "Number of mirrored faces: " + mirrorData.GetMirrorFaceCount() + Environment.NewLine;
+        var planeType = "Type of mirrored plane (0 = face; 1 = plane): " + mirrorData.GetMirrorPlaneType() +
+                        Environment.NewLine;
+        var featureCount = "Number of patterned features: " + mirrorData.GetPatternFeatureCount() + Environment.NewLine;
+        var plane = "Plane: ";
+
+        mirrorData.AccessSelections(swModel, null);
+
+        if (mirrorData.GetMirrorPlaneType().Equals(1))
+        {
+            var swFeature = (Feature)mirrorData.Plane;
+            plane += swFeature.Name + Environment.NewLine;
+        }
+        else
+        {
+            var swEntity = (Entity)mirrorData.Plane;
+            
+        }
+
+        var mirrorFeature = new StringBuilder();
+        var patternArray = (object[])mirrorData.PatternFeatureArray;
+        foreach (Feature pattern in patternArray)
+            mirrorFeature.Append("Feature: " + pattern.Name + Environment.NewLine);
+
+        mirrorData.ReleaseSelectionAccess();
+        Message.InformationMessage(geometryPattern + faceCount + planeType + featureCount + plane + mirrorFeature,
+            "Уведомление");
+    }
+
+    /// <summary>
+    /// Процедура для определения плоскости
+    /// </summary>
+    /// <param name="sketch"></param>
+    private static void GetPlanesAndFaces(ISketch sketch)
+    {
+        var transformationMatrix = sketch.ModelToSketchTransform;
+        var transformationMatrixData = (double[])transformationMatrix.ArrayData;
+        var top = new double[] { 1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0 };
+        //if (transformationMatrixData.SequenceEqual(top))
+        //MessageBox.Show("Сверху");
+        var s = transformationMatrixData.Aggregate("", (current, data) => current + "|" + data);
+    }
+    
+    /// <summary>
+    /// Тестовая процедура чтения тип объектов скругливания
+    /// </summary>
+    /// <param name="feature"></param>
+    private static void FilletListener(IFeature feature)
+    {
+        var swFillet = (SimpleFilletFeatureData2)feature.GetDefinition();
+        var filletInformation = "Constant width = " + swFillet.ConstantWidth + "\nCurvature continuous = " +
+                   swFillet.CurvatureContinuous +
+                   "\nDefault radius = " + swFillet.DefaultRadius + "\nNumber of fillet items = " +
+                   swFillet.FilletItemsCount +
+                   "\nMultiple radii = " + swFillet.IsMultipleRadius + "\nKeep existing features = " +
+                   swFillet.KeepFeatures +
+                   "\nApply fillet to attachment edges = " + swFillet.OmitAttachedEdges + "\nOverflow type = " +
+                   swFillet.OverflowType +
+                   "\nExtend fillet to all affected parts = " + swFillet.PropagateFeatureToParts +
+                   "\nExtend fillet to all tangent faces = " + swFillet.PropagateToTangentFaces +
+                   "\nReverse normal = " + swFillet.get_ReverseFaceNormal(0) + "\nRound fillet corners = " +
+                   swFillet.RoundCorners +
+                   "\nTrim and attach to surfaces = " + swFillet.TrimAndAttachSurfaces + "\nType of fillet = " +
+                   swFillet.Type +
+                   "\nNumber of faces associated with this fillet = " +
+                   swFillet.GetFaceCount((int)swSimpleFilletWhichFaces_e.swSimpleFilletSingleRadius);
+
+        var filletCount = swFillet.FilletItemsCount;
+        filletInformation += "\nFillet items count = " + filletCount;
+        var filletObjectType = swFillet.GetFilletItemAtIndex(-1);
+        filletInformation += "\nRadius = " + swFillet.GetRadius(filletObjectType);
+        var filletFeatureCount = swFillet.GetFeatureCount();
+        filletInformation += "\nFillet feature count = " + filletFeatureCount;
+        
+        
+        Message.InformationMessage(filletInformation, "Fillet information");
+    }
+    
 }
