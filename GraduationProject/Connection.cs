@@ -9,27 +9,27 @@ public class Connection
     protected static ModelDoc2 SwModel;
     protected static SketchManager SwSketchManager;
     public static FeatureManager SwFeatureManager;
-    private static SldWorks _app;
+    protected static SldWorks SwApp;
 
     public static void AppConnection()
     {
-        _app = null;
+        SwApp = null;
         SwModel = null;
 
         try
         {
-            _app = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
+            SwApp = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
         }
         catch
         {
             // ignored
         }
 
-        if (_app != null)
+        if (SwApp != null)
         {
             try
             {
-                SwModel = (ModelDoc2)_app.GetFirstDocument();
+                SwModel = (ModelDoc2)SwApp.GetFirstDocument();
             }
             catch
             {
@@ -38,15 +38,15 @@ public class Connection
 
             if (SwModel != null)
             {
-                var text = $@"Подключение к ""{SwModel.GetTitle()}"" выполнено успешно!";
-                Message.InformationMessage(text, @"Подключение к модели");
+                var text = $@"Подключение к ""{GetModelName()}"" выполнено успешно!";
 
                 const int prefToggle = (int)swUserPreferenceToggle_e.swInputDimValOnCreate;
 
-                _app.SetUserPreferenceToggle(prefToggle, false);
+                SwApp.SetUserPreferenceToggle(prefToggle, false);
 
                 SwSketchManager = SwModel.SketchManager;
                 SwFeatureManager = SwModel.FeatureManager;
+                Message.InformationMessage(text, @"Подключение к модели");
             }
             else
             {
@@ -57,6 +57,11 @@ public class Connection
         {
             Message.WarningMessage(@"Не удалось подключиться к документу!");
         }
+    }
+
+    public static string GetModelName()
+    {
+        return SwModel.GetTitle();
     }
 
     public static bool ConnectionTest()

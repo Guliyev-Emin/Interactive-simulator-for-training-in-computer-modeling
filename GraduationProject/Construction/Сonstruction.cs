@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using GraduationProject.Controllers;
+using GraduationProject.ModelObjects.IObjects;
+using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 
@@ -7,8 +9,8 @@ namespace GraduationProject.Construction;
 [UsedImplicitly]
 public class Сonstruction : Connection
 {
-    private static Feature _firstFeature, _secondFeature, _feature;
-    private static dynamic _faces;
+    private const double Millimeter = 0.001;
+    private static Feature _feature;
     private static Entity _entity;
 
     private static Feature FeatureExtrusion(double deepth, bool sd = true, bool dir = false)
@@ -25,6 +27,13 @@ public class Сonstruction : Connection
             true, true, 0, 0, false);
     }
 
+    public static void SelectFace(string featureName, string featureType, int index)
+    {
+        var faces = (dynamic[])_feature.GetFaces();
+        _entity = faces[index] as Entity;
+        _entity!.Select(true);
+    }
+
     private static void SelectPlane(string name, string obj = "PLANE")
     {
         SwModel.Extension.SelectByID2(name, obj, 0, 0, 0, false, 0, null, 0);
@@ -38,125 +47,52 @@ public class Сonstruction : Connection
             false, false, false, false, false);
     }
 
-    public static void Step1()
+    public static void Selected()
     {
-        SelectPlane("Сверху");
-        SwSketchManager.InsertSketch(true);
-        SwSketchManager.CreateCenterRectangle(0, 0, 0, 0.055, 0.085 / 2.0, 0);
-        _firstFeature = FeatureExtrusion(0.11 / 2);
-        SwModel.ClearSelection();
-        SwModel.ClearSelection2(false);
+        SwModel.Extension.SelectByID2("Бобышка-Вытянуть2", "BOSS", 0, 0, 1, false, 0, null, 0);
     }
 
-    // public static void Step2()
-    // {
-    //     SelectPlane("Сверху");
-    //     SketchManager.InsertSketch(true);
-    //     SketchManager.CreateCornerRectangle(-0.11/2, 0.085/2, 0, 0.11/2, 0.0025, 0);
-    //     _secondFeature = FeatureExtrusion(0.105);
-    //     ModelDoc2.ClearSelection();
-    // }
-    //
-    // public static void Step3()
-    // {
-    //     _faces = (dynamic[]) _firstFeature.GetFaces();
-    //     _entity = _faces[3] as Entity;
-    //     _entity!.Select(true);
-    //     SketchManager.InsertSketch(true);
-    //     SketchManager.CreateLine(-(0.085 / 2) + 0.04, 0.085, 0, 0.085 / 2 - 0.025, 0.055, 0);
-    //     ModelDoc2.FeatureManager.InsertRib(false, true, 0.01,
-    //         0, false, false, true,
-    //         0, false, false);
-    //     _feature = ModelDoc2.Extension.GetLastFeatureAdded();
-    //     ModelDoc2.Extension.SelectByID2("Справа", "PLANE", 0, 0, 0, false, 2, null, 0);
-    //     // ОБЯЗАТЕЛЬНО!!! SOLIDBODY!!!! 
-    //     ModelDoc2.Extension.SelectByID2(_feature.Name, "SOLIDBODY", 0, 0, 0, true, 256, null, 0);
-    //     _feature = FeatureManager.InsertMirrorFeature2(true, true, true, false,
-    //         (int) swFeatureScope_e.swFeatureScope_AllBodies);
-    //     ModelDoc2.ClearSelection2(true);
-    // }
-    //
-    // public static void Step4()
-    // {
-    //     _faces = (dynamic[]) _secondFeature.GetFaces();
-    //     _entity = _faces[1] as Entity;
-    //     _entity!.Select(true);
-    //     SketchManager.InsertSketch(false);
-    //     SketchManager.CreateArc(0, 0.105, 0, -0.033, 0.105, 0, 0.033, 0.105, 0, +1);
-    //     SketchManager.CreateLine(-0.033, 0.105, 0, 0.033, 0.105, 0);
-    //     FeatureCut(0.04);
-    //     ModelDoc2.ClearSelection();
-    // }
-    //
-    // public static void Step5()
-    // {
-    //     _faces = (dynamic[]) _firstFeature.GetFaces();
-    //     _entity = _faces[0] as Entity;
-    //     _entity!.Select(true);
-    //     SketchManager.InsertSketch(false);
-    //     SketchManager.CreateCornerRectangle(-0.03, 0.055, 0, 0.03, 0, 0);
-    //     FeatureCut(0.015);
-    //     ModelDoc2.ClearSelection();
-    // }
-
-
-    public static void Step2()
+    public static void Drawing()
     {
-        SelectPlane("Справа");
-        SwSketchManager.InsertSketch(false);
+        IModel model = FileController.GetModelObjectFromFile("13");
 
-        SwSketchManager.CreateCornerRectangle(0.085 / 2, 0.055, 0, 0.085 / 2 - 0.04, 0.105, 0.04);
-        //вытягивание в две стороны
-        _secondFeature = FeatureExtrusion(0.11 / 2, false);
-        SwModel.ClearSelection();
-    }
+        foreach (var feature in model.Features)
+        {
+            var sketch = feature.Sketch;
+            if (sketch.Plane is not null)
+                SelectPlane(sketch.Plane);
+            else
+                SelectFace(sketch.Face.Item1, sketch.Face.Item2, sketch.Face.Item3);
+            SwSketchManager.InsertSketch(true);
 
-    public static void Step3()
-    {
-        _faces = (dynamic[])_firstFeature.GetFaces();
-        _entity = _faces[3] as Entity;
-        _entity!.Select(true);
-        SwSketchManager.InsertSketch(true);
-        SwSketchManager.CreateLine(-(0.085 / 2) + 0.04, 0.085, 0, 0.085 / 2 - 0.025, 0.055, 0);
-        // создаем ребро (rib)
-        SwModel.FeatureManager.InsertRib(false, true, 0.01,
-            0, false, false, true,
-            0, false, false);
+            if (sketch.UserPoints.Count != 0)
+                foreach (var userPoint in sketch.UserPoints)
+                    SwSketchManager.CreatePoint(userPoint.X, userPoint.Y, userPoint.Z);
 
-        _feature = SwModel.Extension.GetLastFeatureAdded();
+            if (sketch.Arcs.Count != 0)
+                foreach (var arc in sketch.Arcs)
+                    SwSketchManager.CreateArc(arc.XCenter * Millimeter, arc.YCenter * Millimeter,
+                        arc.ZCenter * Millimeter, arc.XStart * Millimeter, arc.YStart * Millimeter,
+                        arc.ZStart * Millimeter, arc.XEnd * Millimeter, arc.YEnd * Millimeter, arc.ZEnd * Millimeter,
+                        arc.Direction);
 
-        SwModel.Extension.SelectByID2("Справа", "PLANE", 0, 0, 0, false, 2, null, 0);
-        // ОБЯЗАТЕЛЬНО!!! SOLIDBODY!!!! 
-        SwModel.Extension.SelectByID2(_feature.Name, "SOLIDBODY", 0, 0, 0, true, 256, null, 0);
+            if (sketch.Lines.Count != 0)
+                foreach (var line in sketch.Lines)
+                {
+                    var swSketchSegment = SwSketchManager.CreateLine(line.XStart * Millimeter, line.YStart * Millimeter,
+                        line.ZStart, line.XEnd * Millimeter, line.YEnd * Millimeter, line.ZEnd * Millimeter);
+                    if (line.LineType.Equals(4))
+                    {
+                        swSketchSegment.Style = line.LineType;
+                        SwSketchManager.CreateConstructionGeometry();
+                    }
+                }
 
-        _feature = SwFeatureManager.InsertMirrorFeature2(true, true, true, false,
-            (int)swFeatureScope_e.swFeatureScope_AllBodies);
-
-        SwModel.ClearSelection2(true);
-    }
-
-    public static void Step4()
-    {
-        _faces = (dynamic[])_secondFeature.GetFaces();
-        _entity = _faces[1] as Entity;
-        _entity!.Select(true);
-        SwSketchManager.InsertSketch(false);
-        var yCenter = 0.110f;
-        //var yCenter = 0.105f;
-        SwSketchManager.CreateArc(0, yCenter, 0, -0.033, yCenter, 0, 0.033, yCenter, 0, +1);
-        SwSketchManager.CreateLine(-0.033, yCenter, 0, 0.033, yCenter, 0);
-        FeatureCut(0.04);
-        SwModel.ClearSelection();
-    }
-
-    public static void Step5()
-    {
-        _faces = (dynamic[])_firstFeature.GetFaces();
-        _entity = _faces[2] as Entity;
-        _entity!.Select(true);
-        SwSketchManager.InsertSketch(false);
-        SwSketchManager.CreateCornerRectangle(-0.03, 0.055, 0, 0.04, 0, 0);
-        FeatureCut(0.015);
-        SwModel.ClearSelection();
+            if (feature.Type.Equals("Extrusion") || feature.Type.Equals("Boss"))
+                _feature = FeatureExtrusion(feature.Depth * Millimeter);
+            if (feature.Type.Equals("Cut"))
+                FeatureCut(feature.Depth * Millimeter);
+            SwModel.ClearSelection();
+        }
     }
 }

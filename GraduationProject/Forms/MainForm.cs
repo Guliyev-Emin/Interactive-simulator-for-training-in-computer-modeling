@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GraduationProject.Construction;
 using GraduationProject.Controllers;
-using GraduationProject.Model.Models;
-using SolidWorks.Interop.swconst;
 
 namespace GraduationProject;
 
 public partial class MainForm : Form
 {
-    private static int _step;
-
     public MainForm()
     {
         InitializeComponent();
@@ -24,7 +17,6 @@ public partial class MainForm : Form
     {
         Connection.AppConnection();
     }
-
 
     private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -44,54 +36,12 @@ public partial class MainForm : Form
 
     private void StepDrawingToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (!Connection.ConnectionTest()) return;
-        switch (_step)
-        {
-            case 0:
-            {
-                Сonstruction.Step1();
-                _step++;
-                break;
-            }
-            case 1:
-            {
-                Сonstruction.Step2();
-                //Сonstruction.Step5();
-                _step++;
-                break;
-            }
-            case 2:
-            {
-                Сonstruction.Step3();
-                //Сonstruction.Step2();
-                _step++;
-                break;
-            }
-            case 3:
-            {
-                Сonstruction.Step4();
-                //Сonstruction.Step3();
-                _step++;
-                break;
-            }
-            case 4:
-            {
-                Сonstruction.Step5();
-                //Сonstruction.Step4();
-                _step++;
-                break;
-            }
-        }
+        Сonstruction.Selected();
     }
 
     private void FullDrawingToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (!Connection.ConnectionTest()) return;
-        Сonstruction.Step1();
-        Сonstruction.Step2();
-        Сonstruction.Step3();
-        Сonstruction.Step4();
-        Сonstruction.Step5();
+        Сonstruction.Drawing();
     }
 
     private void StepDeleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -133,15 +83,8 @@ public partial class MainForm : Form
 
     private void GetSolidWorksProjectTree()
     {
-        SolidWorksProjectTree.Nodes.Clear();
-        SolidWorksProjectTree.BeginUpdate();
-        Reader.SolidWorksProjectTree = new TreeNode("Дерево проекта");
-        Reader.SketchInfos = new List<SketchInfo>();
-        var treeNode = Reader.ProjectReading(
-            Connection.SwFeatureManager.GetFeatureTreeRootItem2((int)swFeatMgrPane_e.swFeatMgrPaneBottom));
-        treeNode.Expand();
-        SolidWorksProjectTree.Nodes.Add(treeNode);
-        SolidWorksProjectTree.EndUpdate();
+        if (!Reader.GetProjectTree(ref SolidWorksProjectTree))
+            return;
         modelValidationButton.Visible = true;
         userModelPropertiesTextBox.Text = FileController.CreateTemplateModelProperties();
     }
@@ -198,25 +141,25 @@ public partial class MainForm : Form
         userModelPropertiesTextBox.Text = FileController.CreateTemplateModelProperties();
         errorQualityResultTextBox.Text = string.Empty;
         correctQualityResultTextBox.Text = string.Empty;
-
-        var comparer = Controller.Comparer(modelVariant);
-        if (comparer is null) return;
-        foreach (var comparerResults in comparer)
-            comparerResults.ForEach(comparerObjectResults =>
-            {
-                comparerObjectResults.ForEach(comparerResult =>
-                {
-                    foreach (var correct in comparerResult.correct.Where(correct =>
-                                 !Regex.IsMatch(correctQualityResultTextBox.Text,
-                                     $@"\w*{comparerResult.correct[0]}\w*") ||
-                                 !correct.Equals(comparerResult.correct[0])))
-                        correctQualityResultTextBox.Text += correct.Replace("\n", Environment.NewLine);
-
-                    foreach (var error in comparerResult.error.Where(error =>
-                                 !Regex.IsMatch(errorQualityResultTextBox.Text, $@"\w*{comparerResult.error[0]}\w*") ||
-                                 !error.Equals(comparerResult.error[0])))
-                        errorQualityResultTextBox.Text += error.Replace("\n", Environment.NewLine);
-                });
-            });
+        Controller.ModelValidationController(modelVariant);
+        // var comparer = Controller.Comparer(modelVariant);
+        // if (comparer is null) return;
+        // foreach (var comparerResults in comparer)
+        //     comparerResults.ForEach(comparerObjectResults =>
+        //     {
+        //         comparerObjectResults.ForEach(comparerResult =>
+        //         {
+        //             foreach (var correct in comparerResult.correct.Where(correct =>
+        //                          !Regex.IsMatch(correctQualityResultTextBox.Text,
+        //                              $@"\w*{comparerResult.correct[0]}\w*") ||
+        //                          !correct.Equals(comparerResult.correct[0])))
+        //                 correctQualityResultTextBox.Text += correct.Replace("\n", Environment.NewLine);
+        //
+        //             foreach (var error in comparerResult.error.Where(error =>
+        //                          !Regex.IsMatch(errorQualityResultTextBox.Text, $@"\w*{comparerResult.error[0]}\w*") ||
+        //                          !error.Equals(comparerResult.error[0])))
+        //                 errorQualityResultTextBox.Text += error.Replace("\n", Environment.NewLine);
+        //         });
+        //     });
     }
 }

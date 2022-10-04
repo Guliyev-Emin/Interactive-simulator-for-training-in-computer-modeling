@@ -119,22 +119,29 @@
             <DependentUpon>MainForm.cs</DependentUpon>
         </Compile>
         <Compile Include="Message.cs"/>
-        <Compile Include="Model\IModels\IArc.cs"/>
-        <Compile Include="Model\IModels\IEllipse.cs"/>
-        <Compile Include="Model\IModels\ILine.cs"/>
-        <Compile Include="Model\IModels\IParabola.cs"/>
-        <Compile Include="Model\IModels\IPoints\ICenterPoint.cs"/>
-        <Compile Include="Model\IModels\IPoints\IEllipsePoint.cs"/>
-        <Compile Include="Model\IModels\IPoints\IParabolaPoint.cs"/>
-        <Compile Include="Model\IModels\IPoints\IPoint.cs"/>
-        <Compile Include="Model\IModels\ISketchInfo.cs"/>
-        <Compile Include="Model\IModels\IUserPoint.cs"/>
-        <Compile Include="Model\Models\Arc.cs"/>
-        <Compile Include="Model\Models\Ellipse.cs"/>
-        <Compile Include="Model\Models\Line.cs"/>
-        <Compile Include="Model\Models\Parabola.cs"/>
-        <Compile Include="Model\Models\SketchInfo.cs"/>
-        <Compile Include="Model\Models\UserPoint.cs"/>
+        <Compile Include="ModelObjects\IObjects\ITridimensionalOperation.cs"/>
+        <Compile Include="ModelObjects\IObjects\IFillet.cs"/>
+        <Compile Include="ModelObjects\IObjects\IMirror.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\IArc.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\IEllipse.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\ILine.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\IParabola.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\IPoints\ICenterPoint.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\IPoints\IEllipsePoint.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\IPoints\IParabolaPoint.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\IPoints\IPoint.cs"/>
+        <Compile Include="ModelObjects\IObjects\IModel.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\ISketch.cs"/>
+        <Compile Include="ModelObjects\IObjects\ISketchObjects\IUserPoint.cs"/>
+        <Compile Include="ModelObjects\Objects\TridimensionalOperation.cs"/>
+        <Compile Include="ModelObjects\Objects\Mirror.cs"/>
+        <Compile Include="ModelObjects\Objects\Model.cs"/>
+        <Compile Include="ModelObjects\Objects\SketchObjects\Arc.cs"/>
+        <Compile Include="ModelObjects\Objects\SketchObjects\Ellipse.cs"/>
+        <Compile Include="ModelObjects\Objects\SketchObjects\Line.cs"/>
+        <Compile Include="ModelObjects\Objects\SketchObjects\Parabola.cs"/>
+        <Compile Include="ModelObjects\Objects\SketchObjects\Sketch.cs"/>
+        <Compile Include="ModelObjects\Objects\SketchObjects\UserPoint.cs"/>
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <EmbeddedResource Include="Forms\MainForm.resx">
@@ -171,7 +178,6 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Files\Models"/>
-        <Folder Include="Model"/>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 </Project>
