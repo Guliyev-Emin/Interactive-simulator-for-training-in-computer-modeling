@@ -9,7 +9,7 @@ public record Sketch : ISketch
 {
     public string SketchName { get; set; }
     public string Plane { get; set; }
-    public (string, string, int) Face { get; set; }
+    public Face Face { get; set; }
     public List<UserPoint> UserPoints { get; set; }
     public List<Line> Lines { get; set; }
     public List<Arc> Arcs { get; set; }

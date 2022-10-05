@@ -84,10 +84,9 @@ public static class FileController
         writer.Close();
 
         Stream saveFileStream = File.OpenWrite(path + ModelObjectsProperties);
-
         var serializer = new BinaryFormatter();
-        //serializer.Serialize(saveFileStream, Reader.Sketches);
-        serializer.Serialize(saveFileStream, Reader._model);
+        var model = Reader.GetModel();
+        serializer.Serialize(saveFileStream, model);
         saveFileStream.Close();
     }
 
@@ -127,7 +126,7 @@ public static class FileController
     public static string CreateTemplateModelProperties()
     {
         var template = new StringBuilder();
-        if (Reader.Sketches is null) return null;
+
         foreach (var sketch in Reader.Sketches)
         {
             template.Append("Имя эскиза: " + sketch.SketchName + "\n");

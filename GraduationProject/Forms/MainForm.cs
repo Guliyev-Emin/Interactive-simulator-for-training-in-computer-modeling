@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GraduationProject.Construction;
 using GraduationProject.Controllers;
+using GraduationProject.ModelObjects.IObjects;
 
 namespace GraduationProject;
 
@@ -36,12 +37,13 @@ public partial class MainForm : Form
 
     private void StepDrawingToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        Сonstruction.Selected();
+        
     }
 
     private void FullDrawingToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        Сonstruction.Drawing();
+    {        
+        var modelVariant = GetModelVariantDialog(@"Отрисовка модели", @"Модель № ", @"Начертить");
+        Сonstruction.Drawing(modelVariant);
     }
 
     private void StepDeleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -89,7 +91,7 @@ public partial class MainForm : Form
         userModelPropertiesTextBox.Text = FileController.CreateTemplateModelProperties();
     }
 
-    private string GetModelVariantDialog(string title, string caption, string buttonCaption)
+    private static string GetModelVariantDialog(string title, string caption, string buttonCaption)
     {
         var modelVariantForm = new Form
         {

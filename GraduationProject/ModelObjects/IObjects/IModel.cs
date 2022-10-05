@@ -9,7 +9,4 @@ public interface IModel
 
     public string Name { get; set; }
     public List<TridimensionalOperation> Features { get; set; }
-
-    public List<Mirror> Mirrors { get; set; }
-    //public List<IFillet> Fillets { get; set; }
 }

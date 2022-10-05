@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GraduationProject.Controllers;
-using GraduationProject.ModelObjects.IObjects;
 using GraduationProject.ModelObjects.Objects;
 using GraduationProject.ModelObjects.Objects.SketchObjects;
 using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
+using Face = GraduationProject.ModelObjects.Objects.SketchObjects.Face;
 using Sketch = GraduationProject.ModelObjects.Objects.SketchObjects.Sketch;
 
 namespace GraduationProject.Construction;
@@ -25,50 +25,47 @@ public class Reader : Connection
     private const byte XCenterIndex = 12;
     private const byte YCenterIndex = 13;
     private const byte ZCenterIndex = 14;
-    private const short Millimeters = 1000;
+    private const short MetersToMillimeters = 1000;
     public static List<Sketch> Sketches;
     private static TreeNode _swProjectTree;
-    public static bool FirstSketch;
     private static bool _checkChild;
     private static string _topWord = string.Empty;
     private static string _frontWord = string.Empty;
     private static string _rightWord = string.Empty;
-    private static double _depth;
+    private static Model _model;
     private static Feature _featureNode;
-    private static string _plane;
     private static List<Arc> _arcs;
     private static List<Line> _lines;
     private static List<UserPoint> _userPoints;
     private static List<Parabola> _parabolas;
     private static List<Ellipse> _ellipses;
-    public static Model _model;
     private static List<TridimensionalOperation> _features;
-    private static List<Mirror> _mirrors;
-    private static List<IFillet> _fillets;
     private static List<Feature> _swFeatures;
-    private static readonly List<Feature> _featureNames = new();
-    private static (string, string, int) _faces;
+    private static Face _faces;
+    private static string _plane;
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public static Model GetModel() => _model;
 
-    private static readonly List<double> _areas = new();
-
-    public static Model GetModel()
-    {
-        return _model;
-    }
-
+    /// <summary>
+    /// 
+    /// </summary>
     private static void ModelInizialize()
     {
         _model = new Model();
         _features = new List<TridimensionalOperation>();
-        _mirrors = new List<Mirror>();
-        _fillets = new List<IFillet>();
         _model.Name = GetModelName();
         _model.Features = _features;
-        _model.Mirrors = _mirrors;
-        //_model.Fillets = _fillets;
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="swProjectTree"></param>
+    /// <returns></returns>
     public static bool GetProjectTree(ref TreeView swProjectTree)
     {
         if (!ConnectionTest())
@@ -95,7 +92,7 @@ public class Reader : Connection
     /// </summary>
     /// <param name="rootNode">Узел</param>
     /// <returns>Возвращает узлы дерева проекта SolidWorks и свойства узлов</returns>
-    private static TreeNode ProjectReading(TreeControlItem rootNode)
+    private static TreeNode ProjectReading(ITreeControlItem rootNode)
     {
         var nodeObjectType = rootNode.ObjectType;
         var nodeObject = rootNode.Object;
@@ -143,16 +140,31 @@ public class Reader : Connection
         return _swProjectTree;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="swFeature"></param>
+    /// <param name="sketch"></param>
+    /// <param name="mirror"></param>
+    /// <returns></returns>
     private static TridimensionalOperation FeatureListener(IFeature swFeature,
-        Sketch sketch)
+        [CanBeNull] Sketch sketch, [CanBeNull]Mirror mirror)
     {
         var feature = new TridimensionalOperation
         {
             Name = swFeature.Name,
             Type = swFeature.GetTypeName(),
             Sketch = sketch,
-            Depth = GetDepth(swFeature)
+            Mirror = mirror
         };
+        switch (feature.Type)
+        {
+            case "MirrorPattern" or "Fillet":
+                break;
+            default:
+                feature.Depth = DepthListener(swFeature);
+                break;
+        }
         return feature;
     }
 
@@ -174,9 +186,20 @@ public class Reader : Connection
         _userPoints = new List<UserPoint>();
         _parabolas = new List<Parabola>();
         _ellipses = new List<Ellipse>();
-        _plane = GetPlane(selectedSketch, parentFeature);
-        //GetFacesTest(parentFeature);
-
+        _plane = null;
+        _faces = null;
+        var nEntType = 0;
+        var entity = selectedSketch.GetReferenceEntity(ref nEntType);
+        switch (nEntType)
+        {
+            case (int)swSelectType_e.swSelDATUMPLANES:
+                _plane = GetPlane(selectedSketch);
+                break;
+            case (int)swSelectType_e.swSelFACES:
+                _faces = GetFace((Entity)entity);
+                break;
+        }
+        
         if (lineCount != 0)
             LineListener(selectedSketch, lineCount);
 
@@ -198,7 +221,7 @@ public class Reader : Connection
             UserPoints = _userPoints, Ellipses = _ellipses, Parabolas = _parabolas
         };
         Sketches.Add(sketch);
-        _features.Add(FeatureListener(parentFeature, sketch));
+        _features.Add(FeatureListener(parentFeature, sketch, null));
     }
 
     /// <summary>
@@ -219,9 +242,9 @@ public class Reader : Connection
         {
             _swProjectTree.LastNode.LastNode.Nodes.Add("Точка");
             if (index == pointCount) continue;
-            var x = points[pointArrayLength * index + xPoint] * Millimeters;
-            var y = points[pointArrayLength * index + yPoint] * Millimeters;
-            var z = points[pointArrayLength * index + zPoint] * Millimeters;
+            var x = points[pointArrayLength * index + xPoint] * MetersToMillimeters;
+            var y = points[pointArrayLength * index + yPoint] * MetersToMillimeters;
+            var z = points[pointArrayLength * index + zPoint] * MetersToMillimeters;
             var pointCoordinate = "Координаты: x = " + x + ", y = " + y + ", z = " + z + ";";
             var point = new UserPoint
             {
@@ -257,12 +280,12 @@ public class Reader : Connection
             var j = index;
             if (index == lineCount) continue;
             var lineStyle = (short)lineArrayInfo[lineArrayLength * index + lineStyleIndex];
-            var xStart = lineArrayInfo[lineArrayLength * index + XStartIndex] * Millimeters;
-            var yStart = lineArrayInfo[lineArrayLength * index + YStartIndex] * Millimeters;
-            var zStart = lineArrayInfo[lineArrayLength * index + ZStartIndex] * Millimeters;
-            var xEnd = lineArrayInfo[lineArrayLength * index + XEndIndex] * Millimeters;
-            var yEnd = lineArrayInfo[lineArrayLength * index + YEndIndex] * Millimeters;
-            var zEnd = lineArrayInfo[lineArrayLength * index + ZEndIndex] * Millimeters;
+            var xStart = lineArrayInfo[lineArrayLength * index + XStartIndex] * MetersToMillimeters;
+            var yStart = lineArrayInfo[lineArrayLength * index + YStartIndex] * MetersToMillimeters;
+            var zStart = lineArrayInfo[lineArrayLength * index + ZStartIndex] * MetersToMillimeters;
+            var xEnd = lineArrayInfo[lineArrayLength * index + XEndIndex] * MetersToMillimeters;
+            var yEnd = lineArrayInfo[lineArrayLength * index + YEndIndex] * MetersToMillimeters;
+            var zEnd = lineArrayInfo[lineArrayLength * index + ZEndIndex] * MetersToMillimeters;
             var start = "Начало: x = " + xStart + ", y = " + yStart + ", z = " + zStart + ";";
             var end = "Конец: x = " + xEnd + ", y = " + yEnd + ", z = " + zEnd + ";";
             var sketchSegment = sketchSegments[j];
@@ -272,7 +295,7 @@ public class Reader : Connection
                 sketchSegment = sketchSegments[j];
             }
 
-            var lineLength = sketchSegment.GetLength() * Millimeters;
+            var lineLength = sketchSegment.GetLength() * MetersToMillimeters;
             var line = new Line
             {
                 LineLength = lineLength,
@@ -312,15 +335,15 @@ public class Reader : Connection
             _swProjectTree.LastNode.LastNode.Nodes.Add("Дуга");
             var j = index;
             if (index == arcCount) continue;
-            var xStart = arcs[arcArrayLength * index + XStartIndex] * Millimeters;
-            var yStart = arcs[arcArrayLength * index + YStartIndex] * Millimeters;
-            var zStart = arcs[arcArrayLength * index + ZStartIndex] * Millimeters;
-            var xEnd = arcs[arcArrayLength * index + XEndIndex] * Millimeters;
-            var yEnd = arcs[arcArrayLength * index + YEndIndex] * Millimeters;
-            var zEnd = arcs[arcArrayLength * index + ZEndIndex] * Millimeters;
-            var xCenter = arcs[arcArrayLength * index + XCenterIndex] * Millimeters;
-            var yCenter = arcs[arcArrayLength * index + YCenterIndex] * Millimeters;
-            var zCenter = arcs[arcArrayLength * index + ZCenterIndex] * Millimeters;
+            var xStart = arcs[arcArrayLength * index + XStartIndex] * MetersToMillimeters;
+            var yStart = arcs[arcArrayLength * index + YStartIndex] * MetersToMillimeters;
+            var zStart = arcs[arcArrayLength * index + ZStartIndex] * MetersToMillimeters;
+            var xEnd = arcs[arcArrayLength * index + XEndIndex] * MetersToMillimeters;
+            var yEnd = arcs[arcArrayLength * index + YEndIndex] * MetersToMillimeters;
+            var zEnd = arcs[arcArrayLength * index + ZEndIndex] * MetersToMillimeters;
+            var xCenter = arcs[arcArrayLength * index + XCenterIndex] * MetersToMillimeters;
+            var yCenter = arcs[arcArrayLength * index + YCenterIndex] * MetersToMillimeters;
+            var zCenter = arcs[arcArrayLength * index + ZCenterIndex] * MetersToMillimeters;
             var direction = (short)arcs[arcArrayLength * index + directionIndex];
             var start = "Начало: x = " + xStart + ", y = " + yStart + ", z = " + zStart + ";";
             var end = "Конец: x = " + xEnd + ", y = " + yEnd + ", z = " + zEnd + ";";
@@ -334,7 +357,7 @@ public class Reader : Connection
 
             // ReSharper disable once SuspiciousTypeConversion.Global
             var arcSketch = (SketchArc)sketchSegment;
-            var radius = arcSketch.GetRadius() * Millimeters;
+            var radius = arcSketch.GetRadius() * MetersToMillimeters;
             var arc = new Arc
             {
                 XStart = xStart,
@@ -378,18 +401,18 @@ public class Reader : Connection
         {
             _swProjectTree.LastNode.LastNode.Nodes.Add("Парабола");
             if (index == parabolaCount) continue;
-            var xStart = parabolas[parabolaArrayLength * index + XStartIndex] * Millimeters;
-            var yStart = parabolas[parabolaArrayLength * index + YStartIndex] * Millimeters;
-            var zStart = parabolas[parabolaArrayLength * index + ZStartIndex] * Millimeters;
-            var xEnd = parabolas[parabolaArrayLength * index + XEndIndex] * Millimeters;
-            var yEnd = parabolas[parabolaArrayLength * index + YEndIndex] * Millimeters;
-            var zEnd = parabolas[parabolaArrayLength * index + ZEndIndex] * Millimeters;
-            var xFocus = parabolas[parabolaArrayLength * index + xFocusIndex] * Millimeters;
-            var yFocus = parabolas[parabolaArrayLength * index + yFocusIndex] * Millimeters;
-            var zFocus = parabolas[parabolaArrayLength * index + zFocusIndex] * Millimeters;
-            var xApex = parabolas[parabolaArrayLength * index + xApexIndex] * Millimeters;
-            var yApex = parabolas[parabolaArrayLength * index + yApexIndex] * Millimeters;
-            var zApex = parabolas[parabolaArrayLength * index + zApexIndex] * Millimeters;
+            var xStart = parabolas[parabolaArrayLength * index + XStartIndex] * MetersToMillimeters;
+            var yStart = parabolas[parabolaArrayLength * index + YStartIndex] * MetersToMillimeters;
+            var zStart = parabolas[parabolaArrayLength * index + ZStartIndex] * MetersToMillimeters;
+            var xEnd = parabolas[parabolaArrayLength * index + XEndIndex] * MetersToMillimeters;
+            var yEnd = parabolas[parabolaArrayLength * index + YEndIndex] * MetersToMillimeters;
+            var zEnd = parabolas[parabolaArrayLength * index + ZEndIndex] * MetersToMillimeters;
+            var xFocus = parabolas[parabolaArrayLength * index + xFocusIndex] * MetersToMillimeters;
+            var yFocus = parabolas[parabolaArrayLength * index + yFocusIndex] * MetersToMillimeters;
+            var zFocus = parabolas[parabolaArrayLength * index + zFocusIndex] * MetersToMillimeters;
+            var xApex = parabolas[parabolaArrayLength * index + xApexIndex] * MetersToMillimeters;
+            var yApex = parabolas[parabolaArrayLength * index + yApexIndex] * MetersToMillimeters;
+            var zApex = parabolas[parabolaArrayLength * index + zApexIndex] * MetersToMillimeters;
             var start = "Начало: x = " + xStart + ", y = " + yStart + ", z = " + zStart + ";";
             var end = "Конец: x = " + xEnd + ", y = " + yEnd + ", z = " + zEnd + ";";
             var focusPoint = "Фокусная точка: x = " + xFocus + ", y = " + yFocus + ", z = " + zFocus + ";";
@@ -439,21 +462,21 @@ public class Reader : Connection
         {
             _swProjectTree.LastNode.LastNode.Nodes.Add("Эллипс");
             if (index == ellipseCount) continue;
-            var xStart = ellipses[ellipseArrayLength * index + XStartIndex] * Millimeters;
-            var yStart = ellipses[ellipseArrayLength * index + YStartIndex] * Millimeters;
-            var zStart = ellipses[ellipseArrayLength * index + ZStartIndex] * Millimeters;
-            var xEnd = ellipses[ellipseArrayLength * index + XEndIndex] * Millimeters;
-            var yEnd = ellipses[ellipseArrayLength * index + YEndIndex] * Millimeters;
-            var zEnd = ellipses[ellipseArrayLength * index + ZEndIndex] * Millimeters;
-            var xCenter = ellipses[ellipseArrayLength * index + XCenterIndex] * Millimeters;
-            var yCenter = ellipses[ellipseArrayLength * index + YCenterIndex] * Millimeters;
-            var zCenter = ellipses[ellipseArrayLength * index + ZCenterIndex] * Millimeters;
-            var xMajor = ellipses[ellipseArrayLength * index + xMajorIndex] * Millimeters;
-            var yMajor = ellipses[ellipseArrayLength * index + yMajorIndex] * Millimeters;
-            var zMajor = ellipses[ellipseArrayLength * index + zMajorIndex] * Millimeters;
-            var xMinor = ellipses[ellipseArrayLength * index + xMinorIndex] * Millimeters;
-            var yMinor = ellipses[ellipseArrayLength * index + yMinorIndex] * Millimeters;
-            var zMinor = ellipses[ellipseArrayLength * index + zMinorIndex] * Millimeters;
+            var xStart = ellipses[ellipseArrayLength * index + XStartIndex] * MetersToMillimeters;
+            var yStart = ellipses[ellipseArrayLength * index + YStartIndex] * MetersToMillimeters;
+            var zStart = ellipses[ellipseArrayLength * index + ZStartIndex] * MetersToMillimeters;
+            var xEnd = ellipses[ellipseArrayLength * index + XEndIndex] * MetersToMillimeters;
+            var yEnd = ellipses[ellipseArrayLength * index + YEndIndex] * MetersToMillimeters;
+            var zEnd = ellipses[ellipseArrayLength * index + ZEndIndex] * MetersToMillimeters;
+            var xCenter = ellipses[ellipseArrayLength * index + XCenterIndex] * MetersToMillimeters;
+            var yCenter = ellipses[ellipseArrayLength * index + YCenterIndex] * MetersToMillimeters;
+            var zCenter = ellipses[ellipseArrayLength * index + ZCenterIndex] * MetersToMillimeters;
+            var xMajor = ellipses[ellipseArrayLength * index + xMajorIndex] * MetersToMillimeters;
+            var yMajor = ellipses[ellipseArrayLength * index + yMajorIndex] * MetersToMillimeters;
+            var zMajor = ellipses[ellipseArrayLength * index + zMajorIndex] * MetersToMillimeters;
+            var xMinor = ellipses[ellipseArrayLength * index + xMinorIndex] * MetersToMillimeters;
+            var yMinor = ellipses[ellipseArrayLength * index + yMinorIndex] * MetersToMillimeters;
+            var zMinor = ellipses[ellipseArrayLength * index + zMinorIndex] * MetersToMillimeters;
             var start = "Начало: x = " + xStart + ", y = " + yStart + ", z = " + zStart + ";";
             var end = "Конец: x = " + xEnd + ", y = " + yEnd + ", z = " + zEnd + ";";
             var center = "Центр: x = " + xCenter + ", y = " + yCenter + ", z = " + zCenter + ";";
@@ -510,7 +533,7 @@ public class Reader : Connection
     private static double GetExtrusionThickness(IFeature feature)
     {
         var extrudeData = (ExtrudeFeatureData2)feature.GetDefinition();
-        var depth = extrudeData.GetDepth(!extrudeData.ReverseDirection) * Millimeters;
+        var depth = extrudeData.GetDepth(!extrudeData.ReverseDirection) * MetersToMillimeters;
         return extrudeData.BothDirections ? depth * 2.0 : depth;
     }
 
@@ -522,7 +545,7 @@ public class Reader : Connection
     private static double GetRibThickness(IFeature feature)
     {
         var swRibFeat = (RibFeatureData2)feature.GetDefinition();
-        var thickness = swRibFeat.Thickness * Millimeters;
+        var thickness = swRibFeat.Thickness * MetersToMillimeters;
         return swRibFeat.IsTwoSided ? thickness * 2.0 : thickness;
     }
 
@@ -553,7 +576,7 @@ public class Reader : Connection
             mirror.FeatureNames.Add(pattern.Name);
 
         mirrorData.ReleaseSelectionAccess();
-        _mirrors.Add(mirror);
+        _features.Add(FeatureListener(feature, null, mirror));
     }
 
     /// <summary>
@@ -608,52 +631,39 @@ public class Reader : Connection
 
     /// <summary>
     /// </summary>
-    /// <param name="faceFeature"></param>
-    /// <param name="faceIndex"></param>
+    /// <param name="entity"></param>
     /// <returns></returns>
-    public static (string featureName, string featureType, int index) GetFacesTest(IFeature faceFeature, int faceIndex)
+    private static Face GetFace(Entity entity)
     {
-        var face = (featureName: faceFeature.Name, featureType: faceFeature.GetTypeName(), index: faceIndex);
-        return face;
+        var sketchFace = entity as Face2;
+        var feature = (Feature)sketchFace?.GetFeature()!;
+        var sketchFaceNormal = (double[])sketchFace!.Normal;
+        return new Face
+        {
+            FeatureName = feature.Name,
+            I = sketchFaceNormal[0],
+            J = sketchFaceNormal[1],
+            K = sketchFaceNormal[2]
+        };
     }
 
     /// <summary>
     ///     Процедура для определения плоскости
     /// </summary>
     /// <param name="sketch"></param>
-    /// <param name="parentFeature"></param>
-    private static string GetPlane(ISketch sketch, Feature parentFeature)
+    private static string GetPlane(ISketch sketch)
     {
         var transformationMatrix = sketch.ModelToSketchTransform;
         var transformationMatrixData = (double[])transformationMatrix.ArrayData;
         var topPlaneMatrixData = new double[] { 1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0 };
         var frontPlaneMatrixData = new double[] { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
         var rightPlaneMatrixData = new double[] { 0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0 };
-
-        var faces23 = (dynamic[])parentFeature.GetFaces();
-        var index23 = faces23.Length;
-        var str = "";
-        foreach (Face2 face in faces23) str += face.GetArea() + "|\n";
-        _featureNames.Add(parentFeature);
         if (transformationMatrixData.SequenceEqual(topPlaneMatrixData))
             return _topWord;
         if (transformationMatrixData.SequenceEqual(frontPlaneMatrixData))
             return _frontWord;
         if (transformationMatrixData.SequenceEqual(rightPlaneMatrixData))
             return _rightWord;
-        _featureNames.Remove(parentFeature);
-
-        var str2 = 0;
-        var pEntity = (Entity)sketch.GetReferenceEntity(ref str2);
-        var pFace = (Face2)pEntity;
-
-        var faces = (dynamic[])_featureNames.Last().GetFaces();
-
-        foreach (Face2 face in faces) _areas.Add(face.GetArea());
-        var index = _areas.FindIndex(a => a.Equals(pFace.GetArea()));
-
-        _faces = GetFacesTest(_featureNames.Last(), index);
-
         return null;
     }
 
@@ -664,8 +674,8 @@ public class Reader : Connection
     private static void FilletListener(IFeature feature)
     {
         var swFillet = (SimpleFilletFeatureData2)feature.GetDefinition();
-        var radius = swFillet.DefaultRadius * Millimeters;
-
+        var radius = swFillet.DefaultRadius * MetersToMillimeters;
+        
         // swFillet.AccessSelections(SwModel, null);
         //
         // swFillet.ReleaseSelectionAccess();

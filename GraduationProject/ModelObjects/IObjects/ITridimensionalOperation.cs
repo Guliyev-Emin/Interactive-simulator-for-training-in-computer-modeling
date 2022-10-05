@@ -1,4 +1,6 @@
-﻿using GraduationProject.ModelObjects.Objects.SketchObjects;
+﻿using GraduationProject.ModelObjects.Objects;
+using GraduationProject.ModelObjects.Objects.SketchObjects;
+using JetBrains.Annotations;
 
 namespace GraduationProject.ModelObjects.IObjects;
 
@@ -6,6 +8,7 @@ public interface ITridimensionalOperation
 {
     public string Name { get; set; }
     public string Type { get; set; }
-    public Sketch Sketch { get; set; }
+    [CanBeNull] public Sketch Sketch { get; set; }
+    [CanBeNull] public Mirror Mirror { get; set; }
     public double Depth { get; set; }
 }
