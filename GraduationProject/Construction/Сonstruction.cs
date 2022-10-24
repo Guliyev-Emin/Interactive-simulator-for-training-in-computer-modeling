@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using GraduationProject.Controllers;
 using GraduationProject.ModelObjects.IObjects;
 using GraduationProject.ModelObjects.IObjects.ISketchObjects.IPoints;
@@ -18,6 +18,7 @@ public class Сonstruction : Connection
     private static Feature _feature;
     private static List<Feature> _features = new();
     private static Entity _entity;
+    private static FeatureManager _featureManager;
 
     private static void Draw(ITridimensionalOperation feature)
     {
@@ -28,14 +29,15 @@ public class Сonstruction : Connection
                 SelectPlane(sketch.Plane);
             else if (sketch.Face != null) SelectFace(sketch.Face);
             SwSketchManager.InsertSketch(false);
-
-            if (sketch.UserPoints.Count != 0)
+            
+            if (sketch.UserPoints.Count != 0) 
                 foreach (var userPoint in sketch.UserPoints!)
-                    SwSketchManager.CreatePoint(userPoint.X, userPoint.Y, userPoint.Z);
+                    SwSketchManager.CreatePoint(userPoint.X * MillimetersToMeters, userPoint.Y * MillimetersToMeters, userPoint.Z * MillimetersToMeters);
 
             if (sketch.Arcs.Count != 0)
                 foreach (var arc in sketch.Arcs!)
                 {
+
                     if (CircleCheck(arc))
                     {
                         SwSketchManager.CreateCircleByRadius(arc.XCenter * MillimetersToMeters,
@@ -44,12 +46,14 @@ public class Сonstruction : Connection
                         continue;
                     }
 
-                    SwSketchManager.CreateArc(arc.XCenter * MillimetersToMeters, arc.YCenter * MillimetersToMeters,
-                        arc.ZCenter * MillimetersToMeters, arc.XStart * MillimetersToMeters,
-                        arc.YStart * MillimetersToMeters,
-                        arc.ZStart * MillimetersToMeters, arc.XEnd * MillimetersToMeters,
-                        arc.YEnd * MillimetersToMeters, arc.ZEnd * MillimetersToMeters,
+                    SwSketchManager.CreateArc(arc.XCenter * MillimetersToMeters, 
+                        arc.YCenter * MillimetersToMeters, 
+                        arc.ZCenter * MillimetersToMeters,  arc.XStart * MillimetersToMeters, 
+                            arc.YStart * MillimetersToMeters, 
+                                arc.ZStart * MillimetersToMeters,  arc.XEnd * MillimetersToMeters,
+                                    arc.YEnd * MillimetersToMeters,  arc.ZEnd * MillimetersToMeters, 
                         arc.Direction);
+                    
                 }
 
             if (sketch.Lines.Count != 0)
@@ -57,8 +61,10 @@ public class Сonstruction : Connection
                 {
                     var swSketchSegment = SwSketchManager.CreateLine(line.XStart * MillimetersToMeters,
                         line.YStart * MillimetersToMeters,
-                        line.ZStart, line.XEnd * MillimetersToMeters, line.YEnd * MillimetersToMeters,
-                        line.ZEnd * MillimetersToMeters);
+                            line.ZStart * MillimetersToMeters, 
+                                line.XEnd * MillimetersToMeters,
+                                    line.YEnd * MillimetersToMeters,
+                                        line.ZEnd * MillimetersToMeters);
                     if (!line.LineType.Equals(4)) continue;
                     swSketchSegment.Style = line.LineType;
                     SwSketchManager.CreateConstructionGeometry();
@@ -76,7 +82,8 @@ public class Сonstruction : Connection
                 break;
             case "Rib":
                 Rib(feature.Depth);
-                _feature = null;
+                var rib = (Feature)SwModel.FeatureByPositionReverse(0);
+                _feature = rib.GetTypeName().Equals(feature.Type) ? rib : null;
                 break;
             case "Cut":
                 _feature = Cut(feature.Depth * MillimetersToMeters);
@@ -117,6 +124,13 @@ public class Сonstruction : Connection
             true, true, 0, 0, false);
     }
 
+    private static void Fillet()
+    {
+        ModelDoc2 doc = new();
+        doc = (ModelDoc2)SwApp.ActiveDoc;
+        
+    }
+
     private static Feature Cut(double deepth, bool flip = false,
         swEndConditions_e mode = swEndConditions_e.swEndCondBlind)
     {
@@ -136,7 +150,6 @@ public class Сonstruction : Connection
     {
         foreach (var featureName in mirror.FeatureNames)
             SwModel.Extension.SelectByID2(featureName, "BODYFEATURE", 0, 0, 0, false, 1, null, 0);
-        Thread.Sleep(3000);
         SwModel.Extension.SelectByID2(mirror.Plane, "PLANE", 0, 0, 0, true, 2, null, 0);
         var feature = SwModel.FeatureManager.InsertMirrorFeature2(false, false, false, false,
             (int)swFeatureScope_e.swFeatureScope_AllBodies);

@@ -26,32 +26,35 @@ public class Reader : Connection
     private const byte YCenterIndex = 13;
     private const byte ZCenterIndex = 14;
     private const short MetersToMillimeters = 1000;
-    public static List<Sketch> Sketches;
     private static TreeNode _swProjectTree;
+    private static Model _model;
+    private static List<TridimensionalOperation> _features;
+    private static List<Feature> _swFeatures;
+    private static Feature _swFeature;
+    public static List<Sketch> Sketches;
+    private static Face _faces;
+    private static List<UserPoint> _userPoints;
+    private static List<Line> _lines;
+    private static List<Arc> _arcs;
+    private static List<Parabola> _parabolas;
+    private static List<Ellipse> _ellipses;
     private static bool _checkChild;
+    private static string _plane;
     private static string _topWord = string.Empty;
     private static string _frontWord = string.Empty;
     private static string _rightWord = string.Empty;
-    private static Model _model;
-    private static Feature _featureNode;
-    private static List<Arc> _arcs;
-    private static List<Line> _lines;
-    private static List<UserPoint> _userPoints;
-    private static List<Parabola> _parabolas;
-    private static List<Ellipse> _ellipses;
-    private static List<TridimensionalOperation> _features;
-    private static List<Feature> _swFeatures;
-    private static Face _faces;
-    private static string _plane;
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public static Model GetModel() => _model;
 
     /// <summary>
-    /// 
+    ///     Функция возвращающая параметры модель
+    /// </summary>
+    /// <returns>Объекта класса модель</returns>
+    public static Model GetModel()
+    {
+        return _model;
+    }
+
+    /// <summary>
+    ///     Процедура инициализации модели
     /// </summary>
     private static void ModelInizialize()
     {
@@ -62,10 +65,10 @@ public class Reader : Connection
     }
 
     /// <summary>
-    /// 
+    ///     Функция по чтению документа SolidWorks
     /// </summary>
-    /// <param name="swProjectTree"></param>
-    /// <returns></returns>
+    /// <param name="swProjectTree">Ссылочный объект TreeView</param>
+    /// <returns>Возвращает булевское значение выполненной работы</returns>
     public static bool GetProjectTree(ref TreeView swProjectTree)
     {
         if (!ConnectionTest())
@@ -91,7 +94,7 @@ public class Reader : Connection
     ///     Функция по нахождению узлов в проекте SolidWorks
     /// </summary>
     /// <param name="rootNode">Узел</param>
-    /// <returns>Возвращает узлы дерева проекта SolidWorks и свойства узлов</returns>
+    /// <returns>Узлы дерева проекта SolidWorks и свойства узлов</returns>
     private static TreeNode ProjectReading(ITreeControlItem rootNode)
     {
         var nodeObjectType = rootNode.ObjectType;
@@ -103,9 +106,9 @@ public class Reader : Connection
             switch (nodeObjectType)
             {
                 case (int)swTreeControlItemType_e.swFeatureManagerItem_Feature:
-                    _featureNode = (Feature)nodeObject;
-                    nodeType = _featureNode.GetTypeName();
-                    nodeName = _featureNode.Name;
+                    _swFeature = (Feature)nodeObject;
+                    nodeType = _swFeature.GetTypeName();
+                    nodeName = _swFeature.Name;
                     break;
             }
 
@@ -117,7 +120,7 @@ public class Reader : Connection
                 {
                     case "MirrorPattern" or "Fillet":
                         _swProjectTree.Nodes.Add(nodeName);
-                        _swFeatures.Add(_featureNode);
+                        _swFeatures.Add(_swFeature);
                         break;
                     default:
                         _swProjectTree.Nodes.Add(nodeName);
@@ -141,14 +144,14 @@ public class Reader : Connection
     }
 
     /// <summary>
-    /// 
+    ///     Функция для инициализации трехмерных операций
     /// </summary>
-    /// <param name="swFeature"></param>
-    /// <param name="sketch"></param>
-    /// <param name="mirror"></param>
-    /// <returns></returns>
+    /// <param name="swFeature">Объект IFeature</param>
+    /// <param name="sketch">Эскиз с параметрами, может быть пустым</param>
+    /// <param name="mirror">Объект Mirror, может быть пустым</param>
+    /// <returns>Объект с информацией о трехмерной операцией</returns>
     private static TridimensionalOperation FeatureListener(IFeature swFeature,
-        [CanBeNull] Sketch sketch, [CanBeNull]Mirror mirror)
+        [CanBeNull] Sketch sketch, [CanBeNull] Mirror mirror)
     {
         var feature = new TridimensionalOperation
         {
@@ -165,6 +168,7 @@ public class Reader : Connection
                 feature.Depth = DepthListener(swFeature);
                 break;
         }
+
         return feature;
     }
 
@@ -174,8 +178,8 @@ public class Reader : Connection
     /// <param name="sketchName">Название эскиза</param>
     private static void SketchListener(string sketchName)
     {
-        var selectedSketch = (SolidWorks.Interop.sldworks.Sketch)_featureNode.GetSpecificFeature2();
-        var parentFeature = _featureNode.GetOwnerFeature();
+        var selectedSketch = (SolidWorks.Interop.sldworks.Sketch)_swFeature.GetSpecificFeature2();
+        var parentFeature = _swFeature.GetOwnerFeature();
         var lineCount = selectedSketch.GetLineCount();
         var arcCount = selectedSketch.GetArcCount();
         var ellipseCount = selectedSketch.GetEllipseCount();
@@ -199,7 +203,7 @@ public class Reader : Connection
                 _faces = GetFace((Entity)entity);
                 break;
         }
-        
+
         if (lineCount != 0)
             LineListener(selectedSketch, lineCount);
 
@@ -273,11 +277,11 @@ public class Reader : Connection
         var vSketchSeg = sketch.GetSketchSegments();
         var sketchSegEnum = (IEnumerable)vSketchSeg;
         var sketchSegments = sketchSegEnum.Cast<SketchSegment>().ToArray();
-
+        var j = 0;
         for (var index = 0; index < lineCount; index++)
         {
             _swProjectTree.LastNode.LastNode.Nodes.Add("Отрезок");
-            var j = index;
+            
             if (index == lineCount) continue;
             var lineStyle = (short)lineArrayInfo[lineArrayLength * index + lineStyleIndex];
             var xStart = lineArrayInfo[lineArrayLength * index + XStartIndex] * MetersToMillimeters;
@@ -294,7 +298,7 @@ public class Reader : Connection
                 j++;
                 sketchSegment = sketchSegments[j];
             }
-
+            j++;
             var lineLength = sketchSegment.GetLength() * MetersToMillimeters;
             var line = new Line
             {
@@ -330,10 +334,11 @@ public class Reader : Connection
         var vSketchSeg = sketch.GetSketchSegments();
         var sketchSegEnum = (IEnumerable)vSketchSeg;
         var sketchSegments = sketchSegEnum.Cast<SketchSegment>().ToArray();
+        var j = 0;
         for (var index = 0; index < arcCount; index++)
         {
             _swProjectTree.LastNode.LastNode.Nodes.Add("Дуга");
-            var j = index;
+            
             if (index == arcCount) continue;
             var xStart = arcs[arcArrayLength * index + XStartIndex] * MetersToMillimeters;
             var yStart = arcs[arcArrayLength * index + YStartIndex] * MetersToMillimeters;
@@ -355,6 +360,7 @@ public class Reader : Connection
                 sketchSegment = sketchSegments[j];
             }
 
+            j++;
             // ReSharper disable once SuspiciousTypeConversion.Global
             var arcSketch = (SketchArc)sketchSegment;
             var radius = arcSketch.GetRadius() * MetersToMillimeters;
@@ -528,7 +534,7 @@ public class Reader : Connection
     /// <summary>
     ///     Процедура чтения выдавливания трехмерных объектов
     /// </summary>
-    /// <param name="feature"></param>
+    /// <param name="feature">Объект типа IFeature</param>
     /// <returns>Глубину выдавливания для обычных трехмерных объектов</returns>
     private static double GetExtrusionThickness(IFeature feature)
     {
@@ -540,8 +546,8 @@ public class Reader : Connection
     /// <summary>
     ///     Функция чтения глубины ребра
     /// </summary>
-    /// <param name="feature"></param>
-    /// <returns>Глубина выдавливания</returns>
+    /// <param name="feature">Объект типа IFeature</param>
+    /// <returns>Глубина выдавливания ребра</returns>
     private static double GetRibThickness(IFeature feature)
     {
         var swRibFeat = (RibFeatureData2)feature.GetDefinition();
@@ -552,7 +558,7 @@ public class Reader : Connection
     /// <summary>
     ///     Процедура для чтения зеркального отражения
     /// </summary>
-    /// <param name="feature"></param>
+    /// <param name="feature">Объект типа IFeature</param>
     private static void MirrorListener(IFeature feature)
     {
         const byte planeType = 1;
@@ -590,6 +596,7 @@ public class Reader : Connection
     }
 
     /// <summary>
+    ///     Процедура по нахождению зеркальных и скругления объектов
     /// </summary>
     private static void SwitchMirrorAndFilletInformation()
     {
@@ -608,6 +615,7 @@ public class Reader : Connection
     }
 
     /// <summary>
+    ///     Инициализация плоскостей с учетом языка меню SolidWorks
     /// </summary>
     private static void PlaneWordInitialize()
     {
@@ -626,13 +634,11 @@ public class Reader : Connection
         }
     }
 
-
-    // TODO ТЕСТОВЫЕ МЕТОДЫ, ТРЕБУЮЩИЕ ДАЛЬНЕЙШЕЙ РАЗРАБОТКИ
-
     /// <summary>
+    ///     Функция определения грани эскиза
     /// </summary>
     /// <param name="entity"></param>
-    /// <returns></returns>
+    /// <returns>Объект пользовательского типа Face с именем трехмерного объекта и нормалью</returns>
     private static Face GetFace(Entity entity)
     {
         var sketchFace = entity as Face2;
@@ -650,7 +656,8 @@ public class Reader : Connection
     /// <summary>
     ///     Процедура для определения плоскости
     /// </summary>
-    /// <param name="sketch"></param>
+    /// <param name="sketch">Объект типа ISketch</param>
+    /// <returns>Наименование плоскости</returns>
     private static string GetPlane(ISketch sketch)
     {
         var transformationMatrix = sketch.ModelToSketchTransform;
@@ -665,17 +672,18 @@ public class Reader : Connection
         if (transformationMatrixData.SequenceEqual(rightPlaneMatrixData))
             return _rightWord;
         return null;
-    }
+    }   
 
     /// <summary>
     ///     Тестовая процедура чтения типов объектов скругливания
     /// </summary>
-    /// <param name="feature"></param>
+    /// <param name="feature">Объект типа IFeature</param>
     private static void FilletListener(IFeature feature)
     {
         var swFillet = (SimpleFilletFeatureData2)feature.GetDefinition();
-        var radius = swFillet.DefaultRadius * MetersToMillimeters;
         
+        var g =  swFillet.GetFaceCount((int)swSimpleFilletWhichFaces_e.swSimpleFilletSingleRadius);
+        var radius = swFillet.DefaultRadius * MetersToMillimeters;
         // swFillet.AccessSelections(SwModel, null);
         //
         // swFillet.ReleaseSelectionAccess();

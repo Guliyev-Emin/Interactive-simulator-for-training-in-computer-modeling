@@ -1,4 +1,6 @@
-﻿using GraduationProject.Construction;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
+using GraduationProject.Construction;
 using GraduationProject.ModelObjects.IObjects.ISketchObjects;
 using JetBrains.Annotations;
 
@@ -7,20 +9,14 @@ namespace GraduationProject.Controllers;
 [UsedImplicitly]
 public class Controller : Connection
 {
-    public static void ModelValidationController(string modelVarian)
+    public static List<(string SketchName, List<List<(List<string> correct, List<string> error)>>)> ModelValidationController(string modelVarian)
     {
         var userModel = Reader.GetModel();
         var correctModel = FileController.GetModelObjectFromFile(modelVarian);
         if (correctModel is null)
-            return;
-        if (correctModel.Equals(userModel))
-        {
-            // Model is true
-        }
-        else
-        {
-            Comparer.ModelObjectsComparision(userModel, correctModel);
-        }
+            return null;
+        var f = Comparer.ModelObjectsComparision(userModel, correctModel);
+        return f;
     }
 
     // public static List<List<List<(List<string> correct, List<string> error)>>> Comparer(string modelVariant)

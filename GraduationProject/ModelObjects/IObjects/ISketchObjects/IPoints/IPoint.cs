@@ -1,4 +1,6 @@
-﻿namespace GraduationProject.ModelObjects.IObjects.ISketchObjects.IPoints;
+﻿using System;
+
+namespace GraduationProject.ModelObjects.IObjects.ISketchObjects.IPoints;
 
 public interface IPoint
 {

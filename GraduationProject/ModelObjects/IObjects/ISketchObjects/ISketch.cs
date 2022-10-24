@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using GraduationProject.ModelObjects.Objects.SketchObjects;
+using JetBrains.Annotations;
 
 namespace GraduationProject.ModelObjects.IObjects.ISketchObjects;
 
 public interface ISketch
 {
     public string SketchName { get; set; }
-    public string Plane { get; set; }
+    [CanBeNull] public string Plane { get; set; }
     public Face Face { get; set; }
 
     public List<UserPoint> UserPoints { get; set; }

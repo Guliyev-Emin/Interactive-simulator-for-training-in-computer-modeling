@@ -4,7 +4,7 @@ using GraduationProject.ModelObjects.IObjects.ISketchObjects;
 namespace GraduationProject.ModelObjects.Objects.SketchObjects;
 
 [Serializable]
-public class Face : IFace
+public record Face : IFace
 {
     public string FeatureName { get; set; }
     public double I { get; set; }

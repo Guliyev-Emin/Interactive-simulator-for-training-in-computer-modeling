@@ -7,8 +7,7 @@ namespace GraduationProject.ModelObjects.Objects;
 [Serializable]
 public record Model : IModel
 {
-    public short NumberOf3DOperations => (short)(Features.Count);
+    public short NumberOf3DOperations => (short)Features.Count;
     public string Name { get; set; }
     public List<TridimensionalOperation> Features { get; set; }
-    
 }

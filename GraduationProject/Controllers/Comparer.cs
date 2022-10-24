@@ -19,27 +19,54 @@ public class Comparer
     private const byte ApexPt = 3;
     private const byte MajorPt = 3;
     private const byte MinorPt = 4;
-    private static string _name;
     private static short _objectNumber;
-    public static List<List<string>> Correct;
-    public static List<List<string>> Wrong;
+    private static bool _firstSketchChecking;
+    private static List<List<List<string>>> _correct;
+    private static List<List<List<string>>> _wrong;
 
-    public static void ModelObjectsComparision(Model userModel, Model correctModel)
+    public static List<(string SketchName, List<List<(List<string> correct, List<string> error)>>)> ModelObjectsComparision(Model userModel, Model correctModel)
     {
         if (userModel.NumberOf3DOperations.Equals(correctModel.NumberOf3DOperations))
         {
-            // Model 3D operations count is true!
-            FeaturesComparision(userModel.Features, correctModel.Features);
+            _correct = new List<List<List<string>>>();
+            _wrong = new List<List<List<string>>>();
+            _firstSketchChecking = true;
+            return FeaturesComparision(userModel.Features, correctModel.Features);
         }
-        // Error! Model 3D operations count is false!
+        Message.ErrorMessage("Количество пользовательских трехмерных операций не соответствует количеству правильных трехмерных операций!");
+        return null;
     }
 
-    private static void FeaturesComparision(List<TridimensionalOperation> userFeatures,
+    private static void FindCorrectFeature(TridimensionalOperation userFeature,
         List<TridimensionalOperation> correctFeatures)
     {
+        foreach (var correctFeature in correctFeatures)
+        {
+            if (correctFeature.Type.Equals("MirrorPattern") || userFeature.Type.Equals("MirrorPattern")) continue;
+            
+            
+        }
+    }
+    
+    private static List<(string SketchName, List<List<(List<string> correct, List<string> error)>>)> FeaturesComparision(List<TridimensionalOperation> userFeatures,
+        List<TridimensionalOperation> correctFeatures)
+    {
+        var s = new List<(string SketchName, List<List<(List<string> correct, List<string> error)>>)>();
         var index = 0;
+        if (_firstSketchChecking)
+        {
+            var startSketchPlane = CheckingSketchPlane(userFeatures[0].Sketch, correctFeatures[0].Sketch);
+            _firstSketchChecking = false;
+            if (!startSketchPlane)
+            {
+                Message.ErrorMessage("Первый эскиз был начерчен не верно! Проверка приостановлена!");
+                return null;
+            }
+        }
+        
         foreach (var userFeature in userFeatures)
         {
+            FindCorrectFeature(userFeature, correctFeatures);
             var correctFeature = correctFeatures[index];
             if (!userFeature.Depth.Equals(correctFeature.Depth))
             {
@@ -47,23 +74,40 @@ public class Comparer
             }
 
             // true
-            if (!userFeature.Sketch.Equals(correctFeature.Sketch))
-                SketchComparision(userFeature.Sketch, correctFeature.Sketch);
+            if (correctFeature.Sketch is not null)
+            {
+                var sketchComparerResult = (userFeature.Sketch!.SketchName, FindingAnErrorInASketch(userFeature.Sketch, correctFeature.Sketch));
+                s.Add(sketchComparerResult);
+                FindingAnErrorInASketch(userFeature.Sketch, correctFeature.Sketch);
+                // Кортеж (string sketchName, List<True, False>) 
+            }
             // true
+            index++;
         }
+        return s;
     }
 
-    private static void SketchComparision(ISketch userSketch, ISketch correctSketch)
+    private static bool CheckingSketchPlane(ISketch userSketch, ISketch correctSketch)
     {
-        MessageBox.Show(userSketch.SketchName);
+        if (userSketch.Plane is null || correctSketch.Plane is null) return false;
+        var plane = userSketch.Plane.Equals(correctSketch.Plane);
+        return plane;
+    }
+
+    private static List<List<(List<string> correct, List<string> error)>> FindingAnErrorInASketch(ISketch userSketch, ISketch correctSketch)
+    {
+        var comparerResult = new List<List<(List<string> correct, List<string> error)>>();
         if (userSketch.LineIsTrue && correctSketch.LineIsTrue && userSketch.LineCount.Equals(correctSketch.LineCount))
         {
-            ComparerParameters(userSketch.Lines, correctSketch.Lines);
+            comparerResult.Add(ComparerParameters(userSketch.Lines, correctSketch.Lines));
         }
 
-        // Error
         if (userSketch.ArcIsTrue && correctSketch.ArcIsTrue && userSketch.ArcCount.Equals(correctSketch.ArcCount))
-            ComparerParameters(userSketch.Arcs, correctSketch.Arcs);
+        {
+            comparerResult.Add(ComparerParameters(userSketch.Arcs, correctSketch.Arcs));
+        }
+        
+        return comparerResult;
     }
 
     /// <summary>
@@ -71,135 +115,49 @@ public class Comparer
     /// </summary>
     /// <param name="correctParameters">Правильные параметры примитива</param>
     /// <param name="userParameters">Пользовательские параметры примитива</param>
-    /// <param name="comparerResults"></param>
     /// <typeparam name="T">Класс примитива</typeparam>
-    private static void ComparerParameters<T>(List<T> userParameters, ICollection<T> correctParameters)
+    private static List<(List<string> correct, List<string> error)> ComparerParameters<T>(List<T> userParameters, IList<T> correctParameters)
     {
         _objectNumber = 1;
         var arc = typeof(T).Name.Equals("Arc");
         var line = typeof(T).Name.Equals("Line");
         var ellipse = typeof(T).Name.Equals("Ellipse");
         var parabola = typeof(T).Name.Equals("Parabola");
-        var index = (short)0;
         var comparer = new List<(List<string> correct, List<string> error)>();
-        foreach (var userParameter in userParameters)
+        var lineObjectNumber = 1;
+        var arcObjectNumber = 1;
+        for (var index = 0; index < userParameters.Count; index++)
         {
-            var objectIsRight = false;
-            foreach (var correctParameter in correctParameters.Where(correctParameter =>
-                         userParameter.Equals(correctParameter)))
+            var userParam = userParameters[index];
+            var correctParam = correctParameters[index];
+            var comparerResult = (correct: new List<string>(), error: new List<string>());
+            switch (typeof(T).Name)
             {
-                correctParameters.Remove(correctParameter);
-                objectIsRight = true;
-                break;
+                case "Line":
+                    var userLine = userParam as Line;
+                    var correctLine = correctParam as Line;
+                    if (!userLine!.Coordinate.Equals(correctLine!.Coordinate) || !userLine.LineLength.Equals(userLine.LineLength))
+                        comparerResult.error.Add("\n\tОбъект \"Отрезок " + lineObjectNumber++ + "\""  + " построен неверно:" + "\t\t" + GetErrorCoordinates(userLine, correctLine));
+                    else
+                        comparerResult.correct.Add(GetCorrectProperties("Отрезок ", (short)(lineObjectNumber++), userLine.Coordinate));
+                    break;
+                case "Arc":
+                    var userArc = userParam as Arc;
+                    var correctArc = correctParam as Arc;
+                    if (!userArc!.Coordinate.Equals(correctArc!.Coordinate))
+                        comparerResult.error.Add("\n\tОбъект \"Дуга " + arcObjectNumber++ + "\""  + " построен неверно:" + "\n\t\t" + GetErrorCoordinates(userArc, correctArc));
+                    else 
+                        comparerResult.correct.Add(GetCorrectProperties("Дуга ", (short)(arcObjectNumber++), userArc.Coordinate));
+                    break;
+                case "Ellipse":
+                    break;
+                case "Parabola":
+                    break;
             }
-
-            if (line)
-                comparer.Add(GetProperties(userParameter as Line, correctParameters as List<Line>, "Отрезок ", ++index,
-                    objectIsRight,
-                    true));
-            if (arc)
-                comparer.Add(GetProperties(userParameter as Arc, correctParameters as List<Arc>, "Дуга ", ++index,
-                    objectIsRight, line,
-                    true));
-            if (ellipse)
-                comparer.Add(GetProperties(userParameter as Ellipse, correctParameters as List<Ellipse>, "Эллипс ",
-                    ++index, objectIsRight, line,
-                    arc, true));
-            if (parabola)
-                comparer.Add(GetProperties(userParameter as Parabola, correctParameters as List<Parabola>, "Парабола ",
-                    ++index, objectIsRight, line,
-                    arc, ellipse, true));
+            
+            comparer.Add(comparerResult);
         }
-
-        var correct = comparer.SelectMany(c => c.correct).ToList().Aggregate("", (x, y) => x + "\n" + y);
-        var error = comparer.SelectMany(c => c.error).ToList().Aggregate("", (x, y) => x + "\n" + y);
-        MessageBox.Show(correct + Environment.NewLine + error);
-    }
-
-    /// <summary>
-    ///     Функция получения параметров результата проверки пользовательских объектов
-    /// </summary>
-    /// <param name="correctParameters">Правильные параметры примитива</param>
-    /// <param name="userParameter">Пользовательские параметры примитива</param>
-    /// <param name="index">Номер объекта примитива</param>
-    /// <param name="type">Тип объекта примитива</param>
-    /// <param name="result">Результат проверки пользователького объекта</param>
-    /// <param name="line">Объект "Отрезок"</param>
-    /// <param name="arc">Объект "Дуга"</param>
-    /// <param name="ellipse">Объект "Эллипс"</param>
-    /// <param name="parabola">Объект "Парабола"</param>
-    /// <typeparam name="T">Класс примитива</typeparam>
-    /// <returns>Возвращает кортеж правильных и неправильных пользовательских объектов</returns>
-    private static (List<string> correct, List<string> error) GetProperties<T>(T userParameter,
-        IEnumerable<T> correctParameters,
-        string type, short index,
-        bool result, bool line = false, bool arc = false, bool ellipse = false, bool parabola = false)
-    {
-        var comparerResult = (correct: new List<string>(), error: new List<string>());
-
-        if (result)
-        {
-            var userCoordinates = userParameter as IPoint;
-            comparerResult.correct.Add(GetCorrectProperties(type, index, userCoordinates!.Coordinate));
-            return comparerResult;
-        }
-
-        // if (!comparerResult.error.Exists(sketchName => sketchName.Equals("\n" + _name)))
-        //     comparerResult.error.Add("\n" + _name);
-
-        if (line)
-        {
-            var userLine = userParameter as Line;
-            var correctLines = correctParameters as List<Line>;
-            var error = new StringBuilder();
-            error.Append("\n\t" + type + _objectNumber + ":");
-            if (!userLine!.LineLength.Equals(correctLines?[_objectNumber - 1]!.LineLength))
-                error.Append("\n\t\tНеверная длина: " + userLine!.LineLength + " мм");
-            error.Append(GetErrorCoordinates(correctLines?[_objectNumber - 1], userLine));
-            comparerResult.error.Add(error.ToString());
-            _objectNumber++;
-        }
-
-        if (arc)
-        {
-            var userArc = userParameter as Arc;
-            var correctArcs = correctParameters as List<Arc>;
-            var error = new StringBuilder();
-            error.Append("\n\t" + type + _objectNumber + ":");
-            if (!userArc!.ArcRadius.Equals(correctArcs?[_objectNumber - 1]!.ArcRadius))
-                error.Append("\n\t\tНеверный радиус: " + userArc!.ArcRadius + " мм\n");
-            error.Append(GetErrorCoordinates(correctArcs?[_objectNumber - 1], userArc));
-            comparerResult.error.Add(error.ToString());
-            _objectNumber++;
-        }
-
-        if (ellipse)
-        {
-            var userEllipse = userParameter as Ellipse;
-            var correctEllipses = correctParameters as List<Ellipse>;
-            foreach (var correctEllipse in correctEllipses!)
-            {
-                var error = new StringBuilder();
-                error.Append("\n\t" + type + _objectNumber++ + ":\n");
-                error.Append(GetErrorCoordinates(correctEllipse, userEllipse));
-                comparerResult.error.Add(error.ToString());
-            }
-        }
-
-        if (parabola)
-        {
-            var userParabola = userParameter as Ellipse;
-            var correctParabolas = correctParameters as List<Ellipse>;
-            foreach (var correctParabola in correctParabolas!)
-            {
-                var error = new StringBuilder();
-                error.Append("\n\t" + type + _objectNumber++ + ":\n");
-                error.Append(GetErrorCoordinates(correctParabola, userParabola));
-                comparerResult.error.Add(error.ToString());
-            }
-        }
-
-        return comparerResult;
+        return comparer;
     }
 
     /// <summary>
@@ -227,9 +185,7 @@ public class Comparer
     {
         var userCoordinate = (IPoint)userCoordinates;
         var correctCoordinate = (IPoint)correctCoordinates;
-
         var error = new StringBuilder();
-
         var arc = typeof(T).Name.Equals("Arc");
         var ellipse = typeof(T).Name.Equals("Ellipse");
         var parabola = typeof(T).Name.Equals("Parabola");

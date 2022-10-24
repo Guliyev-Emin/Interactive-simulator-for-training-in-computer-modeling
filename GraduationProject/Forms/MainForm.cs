@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using GraduationProject.Construction;
 using GraduationProject.Controllers;
-using GraduationProject.ModelObjects.IObjects;
 
 namespace GraduationProject;
 
@@ -37,12 +36,18 @@ public partial class MainForm : Form
 
     private void StepDrawingToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        
+        TestClass.Step1();
+        TestClass.Step2();
+        TestClass.Step3();
+        TestClass.Step4();
+        TestClass.Step5();
     }
 
     private void FullDrawingToolStripMenuItem_Click(object sender, EventArgs e)
-    {        
+    {
         var modelVariant = GetModelVariantDialog(@"Отрисовка модели", @"Модель № ", @"Начертить");
+        if (modelVariant is null)
+            return;
         Сonstruction.Drawing(modelVariant);
     }
 
@@ -72,6 +77,8 @@ public partial class MainForm : Form
     private void saveModelButton_Click(object sender, EventArgs e)
     {
         var modelVariant = GetModelVariantDialog(@"Добавление модели", @"Модель № ", @"Сохранить");
+        if (modelVariant is null)
+            return;
         if (string.IsNullOrWhiteSpace(modelVariant))
             return;
 
@@ -80,7 +87,10 @@ public partial class MainForm : Form
 
     private void modelValidationButton_Click(object sender, EventArgs e)
     {
-        ValidationModel(GetModelVariantDialog(@"Выбор модели", @"Модель № ", @"Проверить"));
+        var modelVariant = GetModelVariantDialog(@"Выбор модели", @"Модель № ", @"Проверить");
+        if (modelVariant is null)
+            return;
+        ValidationModel(modelVariant);
     }
 
     private void GetSolidWorksProjectTree()
@@ -134,34 +144,45 @@ public partial class MainForm : Form
         modelVariantForm.Controls.Add(modelVariantLabel);
         modelVariantForm.AcceptButton = confirmation;
 
-        return modelVariantForm.ShowDialog() == DialogResult.OK ? modelVariantText.Text : "";
+        return modelVariantForm.ShowDialog() == DialogResult.OK ? modelVariantText.Text : null;
     }
 
     private void ValidationModel(string modelVariant)
     {
+        if (modelVariant is null)
+            return;
         initialModelPropertiesTextBox.Text = FileController.GetModelTextSketchesFromFile(modelVariant);
         userModelPropertiesTextBox.Text = FileController.CreateTemplateModelProperties();
         errorQualityResultTextBox.Text = string.Empty;
         correctQualityResultTextBox.Text = string.Empty;
-        Controller.ModelValidationController(modelVariant);
-        // var comparer = Controller.Comparer(modelVariant);
-        // if (comparer is null) return;
-        // foreach (var comparerResults in comparer)
-        //     comparerResults.ForEach(comparerObjectResults =>
-        //     {
-        //         comparerObjectResults.ForEach(comparerResult =>
-        //         {
-        //             foreach (var correct in comparerResult.correct.Where(correct =>
-        //                          !Regex.IsMatch(correctQualityResultTextBox.Text,
-        //                              $@"\w*{comparerResult.correct[0]}\w*") ||
-        //                          !correct.Equals(comparerResult.correct[0])))
-        //                 correctQualityResultTextBox.Text += correct.Replace("\n", Environment.NewLine);
-        //
-        //             foreach (var error in comparerResult.error.Where(error =>
-        //                          !Regex.IsMatch(errorQualityResultTextBox.Text, $@"\w*{comparerResult.error[0]}\w*") ||
-        //                          !error.Equals(comparerResult.error[0])))
-        //                 errorQualityResultTextBox.Text += error.Replace("\n", Environment.NewLine);
-        //         });
-        //     });
+        var comparer = Controller.ModelValidationController(modelVariant);
+        
+        if (comparer is null) return;
+
+        foreach (var valueTuple in comparer)
+        {
+            foreach (var comparerResults in valueTuple.Item2)
+            {
+                var sketchWrited = true;
+                comparerResults.ForEach(results =>
+                {
+                    if (results.correct.Count >= 1 && sketchWrited)
+                        correctQualityResultTextBox.Text += Environment.NewLine + valueTuple.SketchName;
+                    if (results.error.Count >= 1 && sketchWrited)
+                        errorQualityResultTextBox.Text += Environment.NewLine + valueTuple.SketchName;
+                    
+                    sketchWrited = false;
+                    results.correct.ForEach(c =>
+                    {
+                        correctQualityResultTextBox.Text += c.Replace("\n", Environment.NewLine);
+                    });
+                    results.error.ForEach(e =>
+                    {
+                        errorQualityResultTextBox.Text += e.Replace("\n", Environment.NewLine);
+                    });
+                });
+            }
+        }
     }
+
 }
