@@ -61,9 +61,9 @@ namespace GraduationProject
             this.userModelPropertiesTextBox = new System.Windows.Forms.TextBox();
             this.correctQualityTablePanel = new System.Windows.Forms.TableLayoutPanel();
             this.correctQualityResultGroupBox = new System.Windows.Forms.GroupBox();
-            this.correctQualityResultTextBox = new System.Windows.Forms.TextBox();
+            this.correctQualityResultTreeView = new System.Windows.Forms.TreeView();
             this.errorQualityResultGroupBox = new System.Windows.Forms.GroupBox();
-            this.errorQualityResultTextBox = new System.Windows.Forms.TextBox();
+            this.errorQualityResultTreeView = new System.Windows.Forms.TreeView();
             this.menuStrip.SuspendLayout();
             this.ProjectTabControl.SuspendLayout();
             this.Reading.SuspendLayout();
@@ -348,7 +348,7 @@ namespace GraduationProject
             // 
             // correctQualityResultGroupBox
             // 
-            this.correctQualityResultGroupBox.Controls.Add(this.correctQualityResultTextBox);
+            this.correctQualityResultGroupBox.Controls.Add(this.correctQualityResultTreeView);
             this.correctQualityResultGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.correctQualityResultGroupBox.Location = new System.Drawing.Point(3, 3);
             this.correctQualityResultGroupBox.Name = "correctQualityResultGroupBox";
@@ -357,21 +357,17 @@ namespace GraduationProject
             this.correctQualityResultGroupBox.TabStop = false;
             this.correctQualityResultGroupBox.Text = "Правильные элементы";
             // 
-            // correctQualityResultTextBox
+            // correctQualityResultTreeView
             // 
-            this.correctQualityResultTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.correctQualityResultTextBox.Location = new System.Drawing.Point(3, 16);
-            this.correctQualityResultTextBox.Multiline = true;
-            this.correctQualityResultTextBox.Name = "correctQualityResultTextBox";
-            this.correctQualityResultTextBox.ReadOnly = true;
-            this.correctQualityResultTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.correctQualityResultTextBox.Size = new System.Drawing.Size(185, 152);
-            this.correctQualityResultTextBox.TabIndex = 0;
-            this.correctQualityResultTextBox.WordWrap = false;
+            this.correctQualityResultTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.correctQualityResultTreeView.Location = new System.Drawing.Point(3, 16);
+            this.correctQualityResultTreeView.Name = "correctQualityResultTreeView";
+            this.correctQualityResultTreeView.Size = new System.Drawing.Size(185, 152);
+            this.correctQualityResultTreeView.TabIndex = 0;
             // 
             // errorQualityResultGroupBox
             // 
-            this.errorQualityResultGroupBox.Controls.Add(this.errorQualityResultTextBox);
+            this.errorQualityResultGroupBox.Controls.Add(this.errorQualityResultTreeView);
             this.errorQualityResultGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.errorQualityResultGroupBox.Location = new System.Drawing.Point(3, 180);
             this.errorQualityResultGroupBox.Name = "errorQualityResultGroupBox";
@@ -380,17 +376,13 @@ namespace GraduationProject
             this.errorQualityResultGroupBox.TabStop = false;
             this.errorQualityResultGroupBox.Text = "Неверные элементы";
             // 
-            // errorQualityResultTextBox
+            // errorQualityResultTreeView
             // 
-            this.errorQualityResultTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.errorQualityResultTextBox.Location = new System.Drawing.Point(3, 16);
-            this.errorQualityResultTextBox.Multiline = true;
-            this.errorQualityResultTextBox.Name = "errorQualityResultTextBox";
-            this.errorQualityResultTextBox.ReadOnly = true;
-            this.errorQualityResultTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.errorQualityResultTextBox.Size = new System.Drawing.Size(185, 152);
-            this.errorQualityResultTextBox.TabIndex = 0;
-            this.errorQualityResultTextBox.WordWrap = false;
+            this.errorQualityResultTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.errorQualityResultTreeView.Location = new System.Drawing.Point(3, 16);
+            this.errorQualityResultTreeView.Name = "errorQualityResultTreeView";
+            this.errorQualityResultTreeView.Size = new System.Drawing.Size(185, 152);
+            this.errorQualityResultTreeView.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -415,12 +407,14 @@ namespace GraduationProject
             this.userModelProperties.PerformLayout();
             this.correctQualityTablePanel.ResumeLayout(false);
             this.correctQualityResultGroupBox.ResumeLayout(false);
-            this.correctQualityResultGroupBox.PerformLayout();
             this.errorQualityResultGroupBox.ResumeLayout(false);
-            this.errorQualityResultGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.TreeView errorQualityResultTreeView;
+
+        private System.Windows.Forms.TreeView correctQualityResultTreeView;
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.GroupBox initialModelPropertiesGroupBox;
@@ -429,9 +423,7 @@ namespace GraduationProject
         private System.Windows.Forms.TextBox userModelPropertiesTextBox;
         private System.Windows.Forms.TableLayoutPanel correctQualityTablePanel;
         private System.Windows.Forms.GroupBox correctQualityResultGroupBox;
-        private System.Windows.Forms.TextBox correctQualityResultTextBox;
         private System.Windows.Forms.GroupBox errorQualityResultGroupBox;
-        private System.Windows.Forms.TextBox errorQualityResultTextBox;
         private System.Windows.Forms.Button modelValidationButton;
 
         private System.Windows.Forms.Button saveModelButton;

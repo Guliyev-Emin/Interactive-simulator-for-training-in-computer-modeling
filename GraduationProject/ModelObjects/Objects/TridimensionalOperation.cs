@@ -13,6 +13,10 @@ public record TridimensionalOperation : ITridimensionalOperation
     public string Type { get; set; }
     public Sketch Sketch { get; set; }
     public Mirror Mirror { get; set; }
-    public double Depth { get => Math.Round(_depth, Accuracy);
-        set => _depth = value; }
+
+    public double Depth
+    {
+        get => Math.Round(_depth, Accuracy);
+        set => _depth = value;
+    }
 }

@@ -22,6 +22,25 @@ public record Parabola : IParabola
     private double _zEnd;
     private double _zFocus;
     private double _zStart;
+
+    public double XCenter
+    {
+        get => Math.Round(_xCenter, Accuracy);
+        set => _xCenter = value;
+    }
+
+    public double YCenter
+    {
+        get => Math.Round(_yCenter, Accuracy);
+        set => _yCenter = value;
+    }
+
+    public double ZCenter
+    {
+        get => Math.Round(_zCenter, Accuracy);
+        set => _zCenter = value;
+    }
+
     public string Coordinate { get; set; }
 
     public double XStart
@@ -58,24 +77,6 @@ public record Parabola : IParabola
     {
         get => Math.Round(_zEnd, Accuracy);
         set => _zEnd = value;
-    }
-
-    public double XCenter
-    {
-        get => Math.Round(_xCenter, Accuracy);
-        set => _xCenter = value;
-    }
-
-    public double YCenter
-    {
-        get => Math.Round(_yCenter, Accuracy);
-        set => _yCenter = value;
-    }
-
-    public double ZCenter
-    {
-        get => Math.Round(_zCenter, Accuracy);
-        set => _zCenter = value;
     }
 
     public double XFocus

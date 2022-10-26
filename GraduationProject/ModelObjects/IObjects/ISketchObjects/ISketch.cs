@@ -8,7 +8,7 @@ public interface ISketch
 {
     public string SketchName { get; set; }
     [CanBeNull] public string Plane { get; set; }
-    public Face Face { get; set; }
+    [CanBeNull] public Face Face { get; set; }
 
     public List<UserPoint> UserPoints { get; set; }
     public List<Line> Lines { get; set; }

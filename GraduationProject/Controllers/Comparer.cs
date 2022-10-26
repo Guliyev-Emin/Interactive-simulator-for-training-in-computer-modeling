@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using GraduationProject.ModelObjects.IObjects.ISketchObjects;
 using GraduationProject.ModelObjects.IObjects.ISketchObjects.IPoints;
@@ -10,7 +7,7 @@ using GraduationProject.ModelObjects.Objects.SketchObjects;
 
 namespace GraduationProject.Controllers;
 
-public class Comparer
+public static class Comparer
 {
     private const byte StartPt = 0;
     private const byte EndPt = 1;
@@ -19,39 +16,37 @@ public class Comparer
     private const byte ApexPt = 3;
     private const byte MajorPt = 3;
     private const byte MinorPt = 4;
-    private static short _objectNumber;
     private static bool _firstSketchChecking;
-    private static List<List<List<string>>> _correct;
-    private static List<List<List<string>>> _wrong;
+    public static TreeNode CorrectNodes;
+    public static TreeNode ErrorNodes;
 
-    public static List<(string SketchName, List<List<(List<string> correct, List<string> error)>>)> ModelObjectsComparision(Model userModel, Model correctModel)
+    /// <summary>
+    /// </summary>
+    /// <param name="userModel"></param>
+    /// <param name="correctModel"></param>
+    public static void ModelObjectsComparision(Model userModel, Model correctModel)
     {
-        if (userModel.NumberOf3DOperations.Equals(correctModel.NumberOf3DOperations))
+        if (!userModel.NumberOf3DOperations.Equals(correctModel.NumberOf3DOperations))
         {
-            _correct = new List<List<List<string>>>();
-            _wrong = new List<List<List<string>>>();
-            _firstSketchChecking = true;
-            return FeaturesComparision(userModel.Features, correctModel.Features);
+            Message.ErrorMessage(
+                "Количество пользовательских трехмерных операций не соответствует количеству правильных трехмерных операций!");
+            return;
         }
-        Message.ErrorMessage("Количество пользовательских трехмерных операций не соответствует количеству правильных трехмерных операций!");
-        return null;
-    }
 
-    private static void FindCorrectFeature(TridimensionalOperation userFeature,
-        List<TridimensionalOperation> correctFeatures)
-    {
-        foreach (var correctFeature in correctFeatures)
-        {
-            if (correctFeature.Type.Equals("MirrorPattern") || userFeature.Type.Equals("MirrorPattern")) continue;
-            
-            
-        }
+        CorrectNodes = new TreeNode("Правильные элементы");
+        ErrorNodes = new TreeNode("Ошибки в эскизе");
+        _firstSketchChecking = true;
+        FeaturesComparision(userModel.Features, correctModel.Features);
     }
     
-    private static List<(string SketchName, List<List<(List<string> correct, List<string> error)>>)> FeaturesComparision(List<TridimensionalOperation> userFeatures,
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userFeatures"></param>
+    /// <param name="correctFeatures"></param>
+    private static void FeaturesComparision(List<TridimensionalOperation> userFeatures,
         List<TridimensionalOperation> correctFeatures)
     {
-        var s = new List<(string SketchName, List<List<(List<string> correct, List<string> error)>>)>();
         var index = 0;
         if (_firstSketchChecking)
         {
@@ -60,54 +55,90 @@ public class Comparer
             if (!startSketchPlane)
             {
                 Message.ErrorMessage("Первый эскиз был начерчен не верно! Проверка приостановлена!");
-                return null;
+                return;
             }
         }
-        
+
         foreach (var userFeature in userFeatures)
         {
-            FindCorrectFeature(userFeature, correctFeatures);
+            CorrectNodes.Nodes.Add(userFeature.Name);
+            ErrorNodes.Nodes.Add(userFeature.Name);
             var correctFeature = correctFeatures[index];
-            if (!userFeature.Depth.Equals(correctFeature.Depth))
-            {
-                // error
-            }
-
-            // true
             if (correctFeature.Sketch is not null)
             {
-                var sketchComparerResult = (userFeature.Sketch!.SketchName, FindingAnErrorInASketch(userFeature.Sketch, correctFeature.Sketch));
-                s.Add(sketchComparerResult);
                 FindingAnErrorInASketch(userFeature.Sketch, correctFeature.Sketch);
-                // Кортеж (string sketchName, List<True, False>) 
             }
-            // true
+
             index++;
+            if (userFeature.Depth.Equals(correctFeature.Depth))
+                CorrectNodes.LastNode.Nodes.Insert(0, $"Глубина: {userFeature.Depth} мм");
+            else
+                ErrorNodes.LastNode.Nodes.Insert(0, $"Глубина: {userFeature.Depth} мм");
         }
-        return s;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userSketch"></param>
+    /// <param name="correctSketch"></param>
+    private static void FindingAnErrorInASketch(ISketch userSketch, ISketch correctSketch)
+    {
+        CorrectNodes.LastNode.Nodes.Add(userSketch!.SketchName);
+        ErrorNodes.LastNode.Nodes.Add(userSketch!.SketchName);
+        if (userSketch.Face is not null)
+            CheckingSketchFace(userSketch.Face, correctSketch.Face);
+        if (userSketch.Plane is not null)
+            CheckingSketchPlane(userSketch, correctSketch);
+        if (userSketch.LineIsTrue && correctSketch.LineIsTrue && userSketch.LineCount.Equals(correctSketch.LineCount))
+            ComparerParameters(userSketch.Lines, correctSketch.Lines);
+        if (userSketch.ArcIsTrue && correctSketch.ArcIsTrue && userSketch.ArcCount.Equals(correctSketch.ArcCount))
+            ComparerParameters(userSketch.Arcs, correctSketch.Arcs);
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userSketch"></param>
+    /// <param name="correctSketch"></param>
+    /// <returns></returns>
     private static bool CheckingSketchPlane(ISketch userSketch, ISketch correctSketch)
     {
         if (userSketch.Plane is null || correctSketch.Plane is null) return false;
         var plane = userSketch.Plane.Equals(correctSketch.Plane);
+        switch (plane)
+        {
+            case true when !_firstSketchChecking:
+                CorrectNodes.LastNode.LastNode.Nodes.Add($"Плоскость: {userSketch.Plane}");
+                break;
+            case false when !_firstSketchChecking:
+                ErrorNodes.LastNode.LastNode.Nodes.Add($"Плоскость: {userSketch.Plane}");
+                break;
+        }
         return plane;
     }
 
-    private static List<List<(List<string> correct, List<string> error)>> FindingAnErrorInASketch(ISketch userSketch, ISketch correctSketch)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userFace"></param>
+    /// <param name="correctFace"></param>
+    private static void CheckingSketchFace(Face userFace, Face correctFace)
     {
-        var comparerResult = new List<List<(List<string> correct, List<string> error)>>();
-        if (userSketch.LineIsTrue && correctSketch.LineIsTrue && userSketch.LineCount.Equals(correctSketch.LineCount))
+        if (userFace.Equals(correctFace))
         {
-            comparerResult.Add(ComparerParameters(userSketch.Lines, correctSketch.Lines));
+            CorrectNodes.LastNode.LastNode.Nodes.Add("Грань");
+            CorrectNodes.LastNode.LastNode.LastNode.Nodes.Add($"Объект: {correctFace.FeatureName}");
+            CorrectNodes.LastNode.LastNode.LastNode.Nodes.Add($"I: {correctFace.I}");
+            CorrectNodes.LastNode.LastNode.LastNode.Nodes.Add($"J: {correctFace.J}");
+            CorrectNodes.LastNode.LastNode.LastNode.Nodes.Add($"K: {correctFace.K}");
+            return;
         }
-
-        if (userSketch.ArcIsTrue && correctSketch.ArcIsTrue && userSketch.ArcCount.Equals(correctSketch.ArcCount))
-        {
-            comparerResult.Add(ComparerParameters(userSketch.Arcs, correctSketch.Arcs));
-        }
-        
-        return comparerResult;
+        ErrorNodes.LastNode.LastNode.Nodes.Add("Грань");
+        ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add($"Объект: {correctFace.FeatureName}");
+        ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add($"I: {correctFace.I}");
+        ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add($"J: {correctFace.J}");
+        ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add($"K: {correctFace.K}");
     }
 
     /// <summary>
@@ -116,62 +147,107 @@ public class Comparer
     /// <param name="correctParameters">Правильные параметры примитива</param>
     /// <param name="userParameters">Пользовательские параметры примитива</param>
     /// <typeparam name="T">Класс примитива</typeparam>
-    private static List<(List<string> correct, List<string> error)> ComparerParameters<T>(List<T> userParameters, IList<T> correctParameters)
+    private static void ComparerParameters<T>(IReadOnlyList<T> userParameters, IReadOnlyList<T> correctParameters)
     {
-        _objectNumber = 1;
-        var arc = typeof(T).Name.Equals("Arc");
-        var line = typeof(T).Name.Equals("Line");
-        var ellipse = typeof(T).Name.Equals("Ellipse");
-        var parabola = typeof(T).Name.Equals("Parabola");
-        var comparer = new List<(List<string> correct, List<string> error)>();
         var lineObjectNumber = 1;
         var arcObjectNumber = 1;
         for (var index = 0; index < userParameters.Count; index++)
         {
             var userParam = userParameters[index];
             var correctParam = correctParameters[index];
-            var comparerResult = (correct: new List<string>(), error: new List<string>());
+            string objectType;
+            bool result;
             switch (typeof(T).Name)
             {
                 case "Line":
                     var userLine = userParam as Line;
                     var correctLine = correctParam as Line;
-                    if (!userLine!.Coordinate.Equals(correctLine!.Coordinate) || !userLine.LineLength.Equals(userLine.LineLength))
-                        comparerResult.error.Add("\n\tОбъект \"Отрезок " + lineObjectNumber++ + "\""  + " построен неверно:" + "\t\t" + GetErrorCoordinates(userLine, correctLine));
+                    objectType = "Отрезок";
+                    result = CheckCoordinates(objectType, lineObjectNumber, userLine!.Coordinate, correctLine!.Coordinate);
+                    if (result)
+                        GetCorrectCoordinates(userLine.Coordinate);
                     else
-                        comparerResult.correct.Add(GetCorrectProperties("Отрезок ", (short)(lineObjectNumber++), userLine.Coordinate));
+                        GetErrorCoordinates(userLine, correctLine);
+                    CheckValues(objectType, lineObjectNumber, userLine.LineLength, correctLine.LineLength, "Длина");
+                    lineObjectNumber++;
                     break;
                 case "Arc":
                     var userArc = userParam as Arc;
                     var correctArc = correctParam as Arc;
-                    if (!userArc!.Coordinate.Equals(correctArc!.Coordinate))
-                        comparerResult.error.Add("\n\tОбъект \"Дуга " + arcObjectNumber++ + "\""  + " построен неверно:" + "\n\t\t" + GetErrorCoordinates(userArc, correctArc));
-                    else 
-                        comparerResult.correct.Add(GetCorrectProperties("Дуга ", (short)(arcObjectNumber++), userArc.Coordinate));
+                    objectType = "Дуга";
+                    result = CheckCoordinates(objectType, arcObjectNumber, userArc!.Coordinate, correctArc!.Coordinate);
+                    if (result)
+                        GetCorrectCoordinates(userArc.Coordinate);
+                    else
+                        GetErrorCoordinates(userArc, correctArc);
+                    CheckValues(objectType, arcObjectNumber, userArc.ArcRadius, correctArc.ArcRadius, "Радиус");
+                    arcObjectNumber++;
                     break;
                 case "Ellipse":
                     break;
                 case "Parabola":
                     break;
             }
-            
-            comparer.Add(comparerResult);
         }
-        return comparer;
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="objectType"></param>
+    /// <param name="objectNumber"></param>
+    /// <param name="userCoordinate"></param>
+    /// <param name="correctCoordinate"></param>
+    /// <returns></returns>
+    private static bool CheckCoordinates(string objectType, int objectNumber, string userCoordinate, string correctCoordinate)
+    {
+        if (userCoordinate.Equals(correctCoordinate))
+        {
+            CorrectNodes.LastNode.LastNode.Nodes.Add($"{objectType} {objectNumber}");
+            return true;
+        }
+        ErrorNodes.LastNode.LastNode.Nodes.Add($"{objectType} {objectNumber}");
+        return false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="objectType"></param>
+    /// <param name="objectNumber"></param>
+    /// <param name="userValue"></param>
+    /// <param name="correctValue"></param>
+    /// <param name="valueType"></param>
+    private static void CheckValues(string objectType, int objectNumber, double userValue, double correctValue, string valueType)
+    {
+        if (userValue.Equals(correctValue))
+        {
+            if (CorrectNodes.LastNode.LastNode.LastNode is null ||
+                !CorrectNodes.LastNode.LastNode.LastNode.Text.Equals($"{objectType} {objectNumber}"))
+                CorrectNodes.LastNode.LastNode.Nodes.Add($"{objectType} {objectNumber}");
+            CorrectNodes.LastNode.LastNode.LastNode!.Nodes.Insert(0, $"{valueType}: {userValue} мм");
+        }
+        else
+        {
+            if (ErrorNodes.LastNode.LastNode.LastNode is null ||
+                !ErrorNodes.LastNode.LastNode.LastNode.Text.Equals($"{objectType} {objectNumber}"))
+                ErrorNodes.LastNode.LastNode.Nodes.Add($"{objectType} {objectNumber}");
+            ErrorNodes.LastNode.LastNode.LastNode!.Nodes.Insert(0,
+                $"{valueType}: {userValue} мм");
+        }
+    }
+
+    
+    /// <summary>
     ///     Функция вывода информации о правильности пользовательского объекта
     /// </summary>
-    /// <param name="type">Тип объекта</param>
-    /// <param name="index">Номер объекта</param>
     /// <param name="userCoordinates">Координаты объекта</param>
     /// <returns>Возвращает информацию правильности пользовательского объекта</returns>
-    private static string GetCorrectProperties(string type, short index, string userCoordinates)
+    private static void GetCorrectCoordinates(string userCoordinates)
     {
-        return "\n\t" + type + index + " построен верно:" + "\n\t\t" +
-               "Координаты: \n\t\t\t" +
-               userCoordinates.Replace("\n", "\n\t\t\t");
+        var coordinates = userCoordinates.Split('\n');
+        foreach (var coordinate in coordinates)
+            CorrectNodes.LastNode.LastNode.LastNode.Nodes.Add(coordinate);
     }
 
     /// <summary>
@@ -181,11 +257,10 @@ public class Comparer
     /// <param name="userCoordinates">Пользовательский объект примитива</param>
     /// <typeparam name="T">Класс примитива</typeparam>
     /// <returns>Возвращает тип string с неверными координатами</returns>
-    private static string GetErrorCoordinates<T>(T userCoordinates, T correctCoordinates)
+    private static void GetErrorCoordinates<T>(T userCoordinates, T correctCoordinates)
     {
         var userCoordinate = (IPoint)userCoordinates;
         var correctCoordinate = (IPoint)correctCoordinates;
-        var error = new StringBuilder();
         var arc = typeof(T).Name.Equals("Arc");
         var ellipse = typeof(T).Name.Equals("Ellipse");
         var parabola = typeof(T).Name.Equals("Parabola");
@@ -193,25 +268,27 @@ public class Comparer
         if (!GetCoordinateValueFromSplit(userCoordinate!.Coordinate, StartPt)
                 .Equals(GetCoordinateValueFromSplit(correctCoordinate!.Coordinate, StartPt)))
         {
-            error.Append("\n\t\t" + GetCoordinateValueFromSplit(userCoordinate!.Coordinate, StartPt));
+            ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add(GetCoordinateValueFromSplit(userCoordinate!.Coordinate,
+                StartPt));
             if (!userCoordinate!.XStart.Equals(correctCoordinate!.XStart))
-                error.Append("\n\t\t\tx: " + userCoordinate.XStart);
+                ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"x = {userCoordinate.XStart}");
             if (!userCoordinate!.YStart.Equals(correctCoordinate!.YStart))
-                error.Append("\n\t\t\ty: " + userCoordinate!.YStart);
+                ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"y = {userCoordinate.YStart}");
             if (!userCoordinate!.ZStart.Equals(correctCoordinate!.ZStart))
-                error.Append("\n\t\t\tz: " + userCoordinate!.ZStart);
+                ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"z = {userCoordinate.ZStart}");
         }
 
         if (!GetCoordinateValueFromSplit(userCoordinate!.Coordinate, EndPt)
                 .Equals(GetCoordinateValueFromSplit(correctCoordinate!.Coordinate, EndPt)))
         {
-            error.Append("\n\t\t" + GetCoordinateValueFromSplit(userCoordinate!.Coordinate, EndPt));
+            ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add(GetCoordinateValueFromSplit(userCoordinate!.Coordinate,
+                EndPt));
             if (!userCoordinate!.XEnd.Equals(correctCoordinate!.XEnd))
-                error.Append("\n\t\t\tx: " + userCoordinate!.XEnd);
+                ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"x = {userCoordinate.XEnd}");
             if (!userCoordinate!.YEnd.Equals(correctCoordinate!.YEnd))
-                error.Append("\n\t\t\ty: " + userCoordinate!.YEnd);
+                ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"y = {userCoordinate.YEnd}");
             if (!userCoordinate!.ZEnd.Equals(correctCoordinate!.ZEnd))
-                error.Append("\n\t\t\tz: " + userCoordinate!.ZEnd);
+                ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"z = {userCoordinate.ZEnd}");
         }
 
         if (arc | ellipse | parabola)
@@ -222,13 +299,14 @@ public class Comparer
                 var userCenterPoint = userCoordinates as ICenterPoint;
                 var correctCenterPoint = correctCoordinates as ICenterPoint;
 
-                error.Append("\n\t\t" + GetCoordinateValueFromSplit(userCoordinate!.Coordinate, CenterPt));
+                ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add(
+                    GetCoordinateValueFromSplit(userCoordinate!.Coordinate, CenterPt));
                 if (!userCenterPoint!.XCenter.Equals(correctCenterPoint!.XCenter))
-                    error.Append("\n\t\t\tx: " + userCenterPoint!.XCenter);
+                    ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"x = {userCenterPoint.XCenter}");
                 if (!userCenterPoint!.YCenter.Equals(correctCenterPoint!.YCenter))
-                    error.Append("\n\t\t\ty: " + userCenterPoint!.YCenter);
+                    ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"y = {userCenterPoint.YCenter}");
                 if (!userCenterPoint!.ZCenter.Equals(correctCenterPoint!.ZCenter))
-                    error.Append("\n\t\t\tz: " + userCenterPoint!.ZCenter);
+                    ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"z = {userCenterPoint.ZCenter}");
             }
 
             if (ellipse)
@@ -239,25 +317,27 @@ public class Comparer
                 if (!GetCoordinateValueFromSplit(userCoordinate!.Coordinate, MajorPt)
                         .Equals(GetCoordinateValueFromSplit(correctCoordinate!.Coordinate, MajorPt)))
                 {
-                    error.Append("\n\t\t" + GetCoordinateValueFromSplit(userCoordinate!.Coordinate, MajorPt));
+                    ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add(
+                        GetCoordinateValueFromSplit(userCoordinate!.Coordinate, MajorPt));
                     if (!userEllipsePoints!.XMajor.Equals(correctEllipsePoints!.XMajor))
-                        error.Append("\n\t\t\tx: " + userEllipsePoints!.XMajor);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"x = {userEllipsePoints!.XMajor}");
                     if (!userEllipsePoints!.YMajor.Equals(correctEllipsePoints!.YMajor))
-                        error.Append("\n\t\t\ty: " + userEllipsePoints!.YMajor);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"y = {userEllipsePoints!.YMajor}");
                     if (!userEllipsePoints!.ZMajor.Equals(correctEllipsePoints!.ZMajor))
-                        error.Append("\n\t\t\tz: " + userEllipsePoints!.ZMajor);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"z = {userEllipsePoints!.ZMajor}");
                 }
 
                 if (!GetCoordinateValueFromSplit(userCoordinate!.Coordinate, MinorPt)
                         .Equals(GetCoordinateValueFromSplit(correctCoordinate!.Coordinate, MinorPt)))
                 {
-                    error.Append("\n\t\t" + GetCoordinateValueFromSplit(userCoordinate!.Coordinate, MinorPt));
+                    ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add(
+                        GetCoordinateValueFromSplit(userCoordinate!.Coordinate, MinorPt));
                     if (!userEllipsePoints!.XMinor.Equals(correctEllipsePoints!.XMinor))
-                        error.Append("\n\t\t\tx: " + userEllipsePoints!.XMinor);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"x = {userEllipsePoints!.XMinor}");
                     if (!userEllipsePoints!.YMinor.Equals(correctEllipsePoints!.YMinor))
-                        error.Append("\n\t\t\ty: " + userEllipsePoints!.YMinor);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"y = {userEllipsePoints!.YMinor}");
                     if (!userEllipsePoints!.ZMinor.Equals(correctEllipsePoints!.ZMinor))
-                        error.Append("\n\t\t\tz: " + userEllipsePoints!.ZMinor);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"z = {userEllipsePoints!.ZMinor}");
                 }
             }
 
@@ -269,30 +349,30 @@ public class Comparer
                 if (!GetCoordinateValueFromSplit(userCoordinate!.Coordinate, FocusPt)
                         .Equals(GetCoordinateValueFromSplit(correctCoordinate!.Coordinate, FocusPt)))
                 {
-                    error.Append("\n\t\t" + GetCoordinateValueFromSplit(userCoordinate!.Coordinate, FocusPt));
+                    ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add(
+                        GetCoordinateValueFromSplit(userCoordinate!.Coordinate, FocusPt));
                     if (!userParabolaPoints!.XFocus.Equals(correctParabolaPoints!.XFocus))
-                        error.Append("\n\t\t\tx: " + userParabolaPoints!.XFocus);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"x = {userParabolaPoints!.XFocus}");
                     if (!userParabolaPoints!.YFocus.Equals(correctParabolaPoints!.YFocus))
-                        error.Append("\n\t\t\ty: " + userParabolaPoints!.YFocus);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"y = {userParabolaPoints!.YFocus}");
                     if (!userParabolaPoints!.ZFocus.Equals(correctParabolaPoints!.ZFocus))
-                        error.Append("\n\t\t\tz: " + userParabolaPoints!.ZFocus);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"z = {userParabolaPoints!.ZFocus}");
                 }
 
                 if (!GetCoordinateValueFromSplit(userCoordinate!.Coordinate, ApexPt)
                         .Equals(GetCoordinateValueFromSplit(correctCoordinate!.Coordinate, ApexPt)))
                 {
-                    error.Append("\n\t\t" + GetCoordinateValueFromSplit(userCoordinate!.Coordinate, ApexPt));
+                    ErrorNodes.LastNode.LastNode.LastNode.Nodes.Add(
+                        GetCoordinateValueFromSplit(userCoordinate!.Coordinate, ApexPt));
                     if (!userParabolaPoints!.XApex.Equals(correctParabolaPoints!.XApex))
-                        error.Append("\n\t\t\tx: " + userParabolaPoints!.XApex);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"x = {userParabolaPoints!.XApex}");
                     if (!userParabolaPoints!.YApex.Equals(correctParabolaPoints!.YApex))
-                        error.Append("\n\t\t\ty: " + userParabolaPoints!.YApex);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"y = {userParabolaPoints!.YApex}");
                     if (!userParabolaPoints!.ZApex.Equals(correctParabolaPoints!.ZApex))
-                        error.Append("\n\t\t\tz: " + userParabolaPoints!.ZApex);
+                        ErrorNodes.LastNode.LastNode.LastNode.LastNode.Nodes.Add($"z = {userParabolaPoints!.ZApex}");
                 }
             }
         }
-
-        return error.ToString();
     }
 
     /// <summary>

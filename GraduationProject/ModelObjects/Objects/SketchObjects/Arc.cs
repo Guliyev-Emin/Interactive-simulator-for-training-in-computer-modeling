@@ -6,6 +6,7 @@ namespace GraduationProject.ModelObjects.Objects.SketchObjects;
 [Serializable]
 public record Arc : IArc
 {
+    private double _arcRadius;
 
     private double _xCenter;
     private double _xEnd;
@@ -16,13 +17,13 @@ public record Arc : IArc
     private double _zCenter;
     private double _zEnd;
     private double _zStart;
-    private double _arcRadius;
-    
-    public double ArcRadius 
-    { 
+
+    public double ArcRadius
+    {
         get => _arcRadius;
-        set => _arcRadius = value; 
+        set => _arcRadius = value;
     }
+
     public short Direction { get; set; }
     public string Coordinate { get; set; }
 

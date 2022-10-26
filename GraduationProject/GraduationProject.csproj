@@ -108,10 +108,8 @@
         <Compile Include="Connection.cs" />
         <Compile Include="Construction\Reader.cs" />
         <Compile Include="Construction\Remove.cs" />
-        <Compile Include="Construction\TestClass.cs" />
         <Compile Include="Construction\Сonstruction.cs" />
         <Compile Include="Controllers\Comparer.cs" />
-        <Compile Include="Controllers\ComparerTest.cs" />
         <Compile Include="Controllers\Controller.cs" />
         <Compile Include="Controllers\FileController.cs" />
         <Compile Include="Forms\MainForm.cs">

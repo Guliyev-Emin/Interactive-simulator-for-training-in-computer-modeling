@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GraduationProject.Controllers;
 using GraduationProject.ModelObjects.IObjects;
@@ -14,11 +13,9 @@ namespace GraduationProject.Construction;
 [UsedImplicitly]
 public class Сonstruction : Connection
 {
-    private const double MillimetersToMeters = 0.001;
     private static Feature _feature;
     private static List<Feature> _features = new();
     private static Entity _entity;
-    private static FeatureManager _featureManager;
 
     private static void Draw(ITridimensionalOperation feature)
     {
@@ -29,53 +26,57 @@ public class Сonstruction : Connection
                 SelectPlane(sketch.Plane);
             else if (sketch.Face != null) SelectFace(sketch.Face);
             SwSketchManager.InsertSketch(false);
+
+            var addToDbOrig = SwSketchManager.AddToDB;
+            SwSketchManager.AddToDB = true;
             
-            if (sketch.UserPoints.Count != 0) 
+            if (sketch.UserPoints.Count != 0)
                 foreach (var userPoint in sketch.UserPoints!)
-                    SwSketchManager.CreatePoint(userPoint.X * MillimetersToMeters, userPoint.Y * MillimetersToMeters, userPoint.Z * MillimetersToMeters);
-
-            if (sketch.Arcs.Count != 0)
-                foreach (var arc in sketch.Arcs!)
-                {
-
-                    if (CircleCheck(arc))
-                    {
-                        SwSketchManager.CreateCircleByRadius(arc.XCenter * MillimetersToMeters,
-                            arc.YCenter * MillimetersToMeters,
-                            arc.ZCenter * MillimetersToMeters, arc.ArcRadius * MillimetersToMeters);
-                        continue;
-                    }
-
-                    SwSketchManager.CreateArc(arc.XCenter * MillimetersToMeters, 
-                        arc.YCenter * MillimetersToMeters, 
-                        arc.ZCenter * MillimetersToMeters,  arc.XStart * MillimetersToMeters, 
-                            arc.YStart * MillimetersToMeters, 
-                                arc.ZStart * MillimetersToMeters,  arc.XEnd * MillimetersToMeters,
-                                    arc.YEnd * MillimetersToMeters,  arc.ZEnd * MillimetersToMeters, 
-                        arc.Direction);
-                    
-                }
-
+                    SwSketchManager.CreatePoint(userPoint.X, userPoint.Y, userPoint.Z);
+            
             if (sketch.Lines.Count != 0)
                 foreach (var line in sketch.Lines!)
                 {
-                    var swSketchSegment = SwSketchManager.CreateLine(line.XStart * MillimetersToMeters,
-                        line.YStart * MillimetersToMeters,
-                            line.ZStart * MillimetersToMeters, 
-                                line.XEnd * MillimetersToMeters,
-                                    line.YEnd * MillimetersToMeters,
-                                        line.ZEnd * MillimetersToMeters);
+                    var swSketchSegment = SwSketchManager.CreateLine(line.XStart,
+                        line.YStart,
+                        line.ZStart,
+                        line.XEnd,
+                        line.YEnd,
+                        line.ZEnd);
                     if (!line.LineType.Equals(4)) continue;
                     swSketchSegment.Style = line.LineType;
                     SwSketchManager.CreateConstructionGeometry();
                 }
+
+            
+            if (sketch.Arcs.Count != 0)
+                foreach (var arc in sketch.Arcs!)
+                {
+                    if (CircleCheck(arc))
+                    {
+                        SwSketchManager.CreateCircleByRadius(arc.XCenter,
+                            arc.YCenter,
+                            arc.ZCenter, arc.ArcRadius);
+                        continue;
+                    }
+
+                    SwSketchManager.CreateArc(arc.XCenter,
+                        arc.YCenter,
+                        arc.ZCenter, arc.XStart,
+                        arc.YStart,
+                        arc.ZStart, arc.XEnd,
+                        arc.YEnd, arc.ZEnd,
+                        arc.Direction);
+                }
+
+            SwSketchManager.AddToDB = addToDbOrig;
         }
 
         switch (feature.Type)
         {
             case "Extrusion":
             case "Boss":
-                _feature = Extrusion(feature.Depth * MillimetersToMeters);
+                _feature = Extrusion(feature.Depth);
                 break;
             case "MirrorPattern":
                 _feature = Mirror(feature.Mirror);
@@ -86,7 +87,7 @@ public class Сonstruction : Connection
                 _feature = rib.GetTypeName().Equals(feature.Type) ? rib : null;
                 break;
             case "Cut":
-                _feature = Cut(feature.Depth * MillimetersToMeters);
+                _feature = Cut(feature.Depth);
                 break;
         }
 
@@ -109,7 +110,7 @@ public class Сonstruction : Connection
         IModel model = FileController.GetModelObjectFromFile(modelVariant);
         foreach (var feature in model.Features) Draw(feature);
     }
-    
+
     private static Feature Extrusion(double deepth, bool sd = true, bool dir = false)
     {
         // если Sd = true, то вытягивание в одну сторону, если ложь, тогда в обе стороны!
@@ -128,7 +129,6 @@ public class Сonstruction : Connection
     {
         ModelDoc2 doc = new();
         doc = (ModelDoc2)SwApp.ActiveDoc;
-        
     }
 
     private static Feature Cut(double deepth, bool flip = false,
@@ -141,7 +141,7 @@ public class Сonstruction : Connection
 
     private static void Rib(double depth)
     {
-        SwModel.FeatureManager.InsertRib(false, true, depth * MillimetersToMeters,
+        SwModel.FeatureManager.InsertRib(false, true, depth,
             0, false, false, true,
             0, false, false);
     }

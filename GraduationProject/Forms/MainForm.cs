@@ -36,11 +36,7 @@ public partial class MainForm : Form
 
     private void StepDrawingToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        TestClass.Step1();
-        TestClass.Step2();
-        TestClass.Step3();
-        TestClass.Step4();
-        TestClass.Step5();
+
     }
 
     private void FullDrawingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -153,36 +149,19 @@ public partial class MainForm : Form
             return;
         initialModelPropertiesTextBox.Text = FileController.GetModelTextSketchesFromFile(modelVariant);
         userModelPropertiesTextBox.Text = FileController.CreateTemplateModelProperties();
-        errorQualityResultTextBox.Text = string.Empty;
-        correctQualityResultTextBox.Text = string.Empty;
-        var comparer = Controller.ModelValidationController(modelVariant);
-        
-        if (comparer is null) return;
+        correctQualityResultTreeView.Nodes.Clear();
+        correctQualityResultTreeView.BeginUpdate();
+        errorQualityResultTreeView.Nodes.Clear();
+        errorQualityResultTreeView.BeginUpdate();
+        Controller.ModelValidationController(modelVariant);
+        var correct = Comparer.CorrectNodes;
+        correct.Expand();
+        var error = Comparer.ErrorNodes;
+        error.Expand();
 
-        foreach (var valueTuple in comparer)
-        {
-            foreach (var comparerResults in valueTuple.Item2)
-            {
-                var sketchWrited = true;
-                comparerResults.ForEach(results =>
-                {
-                    if (results.correct.Count >= 1 && sketchWrited)
-                        correctQualityResultTextBox.Text += Environment.NewLine + valueTuple.SketchName;
-                    if (results.error.Count >= 1 && sketchWrited)
-                        errorQualityResultTextBox.Text += Environment.NewLine + valueTuple.SketchName;
-                    
-                    sketchWrited = false;
-                    results.correct.ForEach(c =>
-                    {
-                        correctQualityResultTextBox.Text += c.Replace("\n", Environment.NewLine);
-                    });
-                    results.error.ForEach(e =>
-                    {
-                        errorQualityResultTextBox.Text += e.Replace("\n", Environment.NewLine);
-                    });
-                });
-            }
-        }
+        correctQualityResultTreeView.Nodes.Add(correct);
+        errorQualityResultTreeView.Nodes.Add(error);
+        correctQualityResultTreeView.EndUpdate();
+        errorQualityResultTreeView.EndUpdate();
     }
-
 }

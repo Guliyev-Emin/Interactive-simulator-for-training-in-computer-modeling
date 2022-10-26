@@ -16,11 +16,7 @@ public record Line : ILine
     public short LineType { get; set; }
     public string LineArrangement { get; set; }
 
-    public double LineLength
-    {
-        get;
-        set;
-    }
+    public double LineLength { get; set; }
 
     public string Coordinate { get; set; }
 
