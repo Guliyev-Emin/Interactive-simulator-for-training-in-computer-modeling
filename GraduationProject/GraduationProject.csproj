@@ -173,8 +173,6 @@
         <None Include="App.config" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="Files\Свойства модели.bin" />
-        <Content Include="Files\Свойства модели.txt" />
         <Content Include="Resources\EngineerDegre.ico" />
         <Content Include="Resources\ImageTask.png" />
     </ItemGroup>

@@ -8,9 +8,12 @@ public class Connection
 {
     protected static ModelDoc2 SwModel;
     protected static SketchManager SwSketchManager;
-    public static FeatureManager SwFeatureManager;
+    protected static FeatureManager SwFeatureManager;
     protected static SldWorks SwApp;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static void AppConnection()
     {
         SwApp = null;
@@ -59,11 +62,19 @@ public class Connection
         }
     }
 
-    public static string GetModelName()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    protected static string GetModelName()
     {
         return SwModel.GetTitle();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public static bool ConnectionTest()
     {
         if (SwModel is not null) return true;

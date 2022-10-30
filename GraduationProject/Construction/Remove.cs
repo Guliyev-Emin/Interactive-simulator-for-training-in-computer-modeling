@@ -8,12 +8,19 @@ public class Remove : Connection
 {
     private static Feature _feature;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static void RemoveFeature()
     {
         var modelIsTrue = true;
         while (modelIsTrue) modelIsTrue = StepRemove();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public static bool StepRemove()
     {
         _feature = (Feature)SwModel.FeatureByPositionReverse(0);

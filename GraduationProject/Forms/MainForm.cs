@@ -153,14 +153,17 @@ public partial class MainForm : Form
         correctQualityResultTreeView.BeginUpdate();
         errorQualityResultTreeView.Nodes.Clear();
         errorQualityResultTreeView.BeginUpdate();
-        Controller.ModelValidationController(modelVariant);
-        var correct = Comparer.CorrectNodes;
-        correct.Expand();
-        var error = Comparer.ErrorNodes;
-        error.Expand();
+        var comparerResult = Controller.ModelValidationController(modelVariant);
+        if (comparerResult is not null)
+        {
+            var correct = comparerResult.Value.CorrectNodes;
+            correct.Expand();
+            var error = comparerResult.Value.ErrorNodes;
+            error.Expand();
 
-        correctQualityResultTreeView.Nodes.Add(correct);
-        errorQualityResultTreeView.Nodes.Add(error);
+            correctQualityResultTreeView.Nodes.Add(correct);
+            errorQualityResultTreeView.Nodes.Add(error);
+        }
         correctQualityResultTreeView.EndUpdate();
         errorQualityResultTreeView.EndUpdate();
     }

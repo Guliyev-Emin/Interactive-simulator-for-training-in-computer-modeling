@@ -580,20 +580,34 @@ public class Reader : Connection
             Name = feature.Name
         };
         var mirrorData = (IMirrorPatternFeatureData)feature.GetDefinition();
-        var patternArray = (object[])mirrorData.PatternFeatureArray;
 
         mirrorData.AccessSelections(SwModel, null);
-
+        var patternArray = (object[])mirrorData.PatternFeatureArray;
         if (mirrorData.GetMirrorPlaneType().Equals(planeType))
         {
             var swFeature = (Feature)mirrorData.Plane;
             mirror.Plane = swFeature.Name;
         }
 
+        var index = -1;
+        foreach (TreeNode node in _swProjectTree.Nodes)
+        {
+            index++;
+            if (node.Text.Equals(feature.Name))
+                break;
+        }
+
+        _swProjectTree.Nodes[index].Nodes.Add($"Плоскость: {mirror.Plane}");
+        _swProjectTree.Nodes[index].Nodes.Add("Объекты");
+
         foreach (Feature pattern in patternArray)
+        {
             mirror.FeatureNames.Add(pattern.Name);
+            _swProjectTree.Nodes[index].LastNode.Nodes.Add(pattern.Name);
+        }
 
         mirrorData.ReleaseSelectionAccess();
+
         _features.Add(FeatureListener(feature, null, mirror));
     }
 
@@ -694,10 +708,9 @@ public class Reader : Connection
     {
         var swFillet = (SimpleFilletFeatureData2)feature.GetDefinition();
 
-        var g = swFillet.GetFaceCount((int)swSimpleFilletWhichFaces_e.swSimpleFilletSingleRadius);
         var radius = swFillet.DefaultRadius;
-        // swFillet.AccessSelections(SwModel, null);
-        //
-        // swFillet.ReleaseSelectionAccess();
+        swFillet.AccessSelections(SwModel, null);
+
+        swFillet.ReleaseSelectionAccess();
     }
 }
