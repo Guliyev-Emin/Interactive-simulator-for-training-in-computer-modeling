@@ -11,6 +11,8 @@ public partial class MainForm : Form
     public MainForm()
     {
         InitializeComponent();
+        testToolStripMenuItem.Visible = false;
+        Rendering.Visible = false;
     }
 
     private void ConnectionToolStripMenuItem_Click(object sender, EventArgs e)

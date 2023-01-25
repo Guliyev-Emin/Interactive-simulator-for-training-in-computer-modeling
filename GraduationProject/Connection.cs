@@ -12,7 +12,7 @@ public class Connection
     protected static SldWorks SwApp;
 
     /// <summary>
-    /// 
+    ///     Процедура по подключению к документу SolidWorks
     /// </summary>
     public static void AppConnection()
     {
@@ -63,18 +63,18 @@ public class Connection
     }
 
     /// <summary>
-    /// 
+    ///     Функция получения названия документа
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Название документа</returns>
     protected static string GetModelName()
     {
         return SwModel.GetTitle();
     }
 
     /// <summary>
-    /// 
+    ///     Функция проверки подключения к документу SolidWorks
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Результат подключения к документу SolidWorks</returns>
     public static bool ConnectionTest()
     {
         if (SwModel is not null) return true;

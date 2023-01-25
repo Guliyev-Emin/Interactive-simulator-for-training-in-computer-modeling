@@ -177,6 +177,11 @@ public class Сonstruction : Connection
         return feature;
     }
 
+    private static void Fillet()
+    {
+        //SwFeatureManager.Fillet
+    }
+
     /// <summary>
     /// 
     /// </summary>

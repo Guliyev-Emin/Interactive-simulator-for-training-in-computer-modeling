@@ -149,23 +149,20 @@ public static class FileController
                 {
                     template.Append("Отрезок: \n\t" + "Расположение отрезка: " + line.LineArrangement +
                                     "\n\t" + line.Coordinate.Replace("\n", "\n\t") + "\n\t");
-                    template.Append("Длина: " + line.LineLength + " мм\n");
+                    template.Append("Длина: " + line.LineLength + " м\n");
                 }
-
             if (sketch.Arcs.Count != 0)
                 foreach (var arc in sketch.Arcs)
                 {
                     template.Append("Дуга: \n\t" + arc.Coordinate.Replace("\n", "\n\t") + "\n\t");
-                    template.Append("Радиус: " + arc.ArcRadius + " мм\n");
+                    template.Append("Радиус: " + arc.ArcRadius + " м\n");
                 }
-
             if (sketch.Ellipses.Count != 0)
                 foreach (var ellipse in sketch.Ellipses)
                     template.Append("Эллипс: \n\t" + ellipse.Coordinate.Replace("\n", "\n\t") + "\n\t");
             if (sketch.Parabolas.Count != 0)
                 foreach (var parabola in sketch.Parabolas)
                     template.Append("Парабола: \n\t" + parabola.Coordinate.Replace("\n", "\n\t") + "\n\t");
-            //template.Append("Выдавливание: " + sketch.Depth + " мм\n\n");
         }
 
         return template.Replace("\n", Environment.NewLine).ToString();

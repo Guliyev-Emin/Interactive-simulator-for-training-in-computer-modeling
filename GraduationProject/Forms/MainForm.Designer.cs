@@ -46,6 +46,7 @@ namespace GraduationProject
             this.FullDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TreeReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ProjectTabControl = new System.Windows.Forms.TabControl();
             this.Rendering = new System.Windows.Forms.TabPage();
             this.Reading = new System.Windows.Forms.TabPage();
@@ -78,7 +79,7 @@ namespace GraduationProject
             // 
             // menuStrip
             // 
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.FileToolStripMenuItem, this.EditorToolStripMenuItem, this.ReadToolStripMenuItem });
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.FileToolStripMenuItem, this.EditorToolStripMenuItem, this.ReadToolStripMenuItem, this.testToolStripMenuItem });
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(734, 24);
@@ -175,6 +176,12 @@ namespace GraduationProject
             this.TreeReadToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
             this.TreeReadToolStripMenuItem.Text = "Чтение дерева";
             this.TreeReadToolStripMenuItem.Click += new System.EventHandler(this.TreeReadToolStripMenuItem_Click);
+            // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(137, 20);
+            this.testToolStripMenuItem.Text = "алгоритмы проверки";
             // 
             // ProjectTabControl
             // 
@@ -411,6 +418,8 @@ namespace GraduationProject
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
 
         private System.Windows.Forms.TreeView errorQualityResultTreeView;
 

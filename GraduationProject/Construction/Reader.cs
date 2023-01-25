@@ -76,7 +76,7 @@ public class Reader : Connection
         swProjectTree.Nodes.Clear();
         swProjectTree.BeginUpdate();
         GetUnits();
-        _swProjectTree = new TreeNode("Дерево проекта");
+        _swProjectTree = new TreeNode(GetModelName());
         _features = new List<TridimensionalOperation>();
         Sketches = new List<Sketch>();
         ModelInizialize();
@@ -115,16 +115,19 @@ public class Reader : Connection
 
             if (_checkChild & !nodeType.Equals("DetailCabinet") & !nodeType.Equals("MaterialFolder") &
                 !nodeType.Equals("HistoryFolder") & !nodeType.Equals("SensorFolder"))
-                _swProjectTree.LastNode.Nodes.Add(nodeName);
+            {
+                //_swProjectTree.LastNode.Nodes.Add(nodeName);
+                
+            }
             else
                 switch (nodeType)
                 {
                     case "MirrorPattern" or "Fillet":
-                        _swProjectTree.Nodes.Add(nodeName);
+                        //_swProjectTree.Nodes.Add(nodeName);
                         _swFeatures.Add(_swFeature);
                         break;
                     default:
-                        _swProjectTree.Nodes.Add(nodeName);
+                        //_swProjectTree.Nodes.Add(nodeName);
                         break;
                 }
 
@@ -256,7 +259,7 @@ public class Reader : Connection
         if (points is null) return;
         for (var index = 0; index < pointCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Точка");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Точка");
             if (index == pointCount) continue;
             var x = points[pointArrayLength * index + xPoint];
             var y = points[pointArrayLength * index + yPoint];
@@ -270,7 +273,7 @@ public class Reader : Connection
                 Coordinate = pointCoordinate
             };
             _userPoints.Add(point);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(pointCoordinate);
+            //_swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(pointCoordinate);
         }
     }
 
@@ -292,7 +295,7 @@ public class Reader : Connection
         var j = 0;
         for (var index = 0; index < lineCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Отрезок");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Отрезок");
 
             if (index == lineCount) continue;
             var lineStyle = (short)lineArrayInfo[lineArrayLength * index + lineStyleIndex];
@@ -327,10 +330,10 @@ public class Reader : Connection
             };
             line.LineArrangement = Controller.GetLineArrangement(line);
             _lines.Add(line);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Длина: {lineLength} {_units}");
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Расположение: {line.LineArrangement}");
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Длина: {lineLength} {_units}");
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Расположение: {line.LineArrangement}");
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
         }
     }
 
@@ -350,7 +353,7 @@ public class Reader : Connection
         var j = 0;
         for (var index = 0; index < arcCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Дуга");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Дуга");
             if (index == arcCount) continue;
             var xStart = arcs[arcArrayLength * index + XStartIndex];
             var yStart = arcs[arcArrayLength * index + YStartIndex];
@@ -391,11 +394,12 @@ public class Reader : Connection
                 ArcRadius = radius,
                 Coordinate = start + "\n" + end + "\n" + center
             };
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(center);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Радиус: {radius} {_units}");
             _arcs.Add(arc);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(center);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Радиус: {radius} {_units}");
+            
         }
     }
 
@@ -417,7 +421,7 @@ public class Reader : Connection
         if (parabolas is null) return;
         for (var index = 0; index < parabolaCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Парабола");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Парабола");
             if (index == parabolaCount) continue;
             var xStart = parabolas[parabolaArrayLength * index + XStartIndex];
             var yStart = parabolas[parabolaArrayLength * index + YStartIndex];
@@ -451,10 +455,10 @@ public class Reader : Connection
                 ZApex = zApex,
                 Coordinate = start + "\n" + end + "\n" + focusPoint + "\n" + apexPoint
             };
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(focusPoint);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(apexPoint);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(focusPoint);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(apexPoint);
             _parabolas.Add(parabola);
         }
     }
@@ -478,7 +482,7 @@ public class Reader : Connection
         if (ellipses is null) return;
         for (var index = 0; index < ellipseCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Эллипс");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Эллипс");
             if (index == ellipseCount) continue;
             var xStart = ellipses[ellipseArrayLength * index + XStartIndex];
             var yStart = ellipses[ellipseArrayLength * index + YStartIndex];
@@ -516,11 +520,11 @@ public class Reader : Connection
                 ZMajor = zMajor,
                 Coordinate = start + "\n" + end + "\n" + center + "\n" + majorPoint + "\n" + minorPoint
             };
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(center);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(majorPoint);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(minorPoint);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(center);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(majorPoint);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(minorPoint);
             _ellipses.Add(ellipse);
         }
     }
@@ -539,7 +543,7 @@ public class Reader : Connection
     {
         var depth = GetDepth(feature);
         var operation = feature.GetTypeName().Equals("Cut") ? "Вырез" : "Выдавливание";
-        _swProjectTree.LastNode.Nodes.Insert(0, $"{operation}: {depth} {_units}");
+        //_swProjectTree.LastNode.Nodes.Insert(0, $"{operation}: {depth} {_units}");
         return depth;
     }
 
@@ -597,13 +601,13 @@ public class Reader : Connection
                 break;
         }
 
-        _swProjectTree.Nodes[index].Nodes.Add($"Плоскость: {mirror.Plane}");
-        _swProjectTree.Nodes[index].Nodes.Add("Объекты");
+        //_swProjectTree.Nodes[index].Nodes.Add($"Плоскость: {mirror.Plane}");
+        //_swProjectTree.Nodes[index].Nodes.Add("Объекты");
 
         foreach (Feature pattern in patternArray)
         {
             mirror.FeatureNames.Add(pattern.Name);
-            _swProjectTree.Nodes[index].LastNode.Nodes.Add(pattern.Name);
+            //_swProjectTree.Nodes[index].LastNode.Nodes.Add(pattern.Name);
         }
 
         mirrorData.ReleaseSelectionAccess();
@@ -711,6 +715,11 @@ public class Reader : Connection
         var radius = swFillet.DefaultRadius;
         swFillet.AccessSelections(SwModel, null);
 
+        var d3 = (dynamic[])swFillet.GetFaces((int)0);
+        var d = d3[0] as Face2;
+        var nam = (Feature)d.GetFeature();
+        var name = nam.Name;
+        var d4 = swFillet.GetFaceCount(0);
         swFillet.ReleaseSelectionAccess();
     }
 }

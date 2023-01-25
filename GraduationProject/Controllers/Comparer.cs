@@ -62,6 +62,7 @@ public static class Comparer
                 return;
             }
         }
+
         var correctFeaturesCopy = correctFeatures;
         foreach (var userFeature in userFeatures)
         {
@@ -72,6 +73,7 @@ public static class Comparer
                 _errorNodes.LastNode.Nodes.Add("Ошибка! Не найдена данная операция или эскиз!");
                 continue;
             }
+
             _featureName = userFeature.Name;
             correctFeaturesCopy.Remove(correctFeature);
             switch (userFeature.Type)
@@ -84,12 +86,12 @@ public static class Comparer
                         FindingAnErrorInASketch(userFeature.Sketch, correctFeature.Sketch);
                     if (userFeature.Depth.Equals(correctFeature.Depth))
                     {
-                        ObjectNameIsTrue(_featureName, _correctNodes);
+                        ObjectFeatureNameIsTrue(_featureName, _correctNodes);
                         _correctNodes.LastNode.Nodes.Insert(0, $"Глубина: {userFeature.Depth} мм");
                     }
                     else
                     {
-                        ObjectNameIsTrue(_featureName, _errorNodes);
+                        ObjectFeatureNameIsTrue(_featureName, _errorNodes);
                         _errorNodes.LastNode.Nodes.Insert(0, $"Глубина: {userFeature.Depth} мм");
                     }
                     break;
@@ -98,7 +100,6 @@ public static class Comparer
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="userFeature"></param>
     /// <param name="correctFeatures"></param>
@@ -142,8 +143,9 @@ public static class Comparer
                         var lineLenghtIsTrue = false;
                         var faceIsTrue = false;
                         if (correctSketch!.LineIsTrue && userSketch!.LineIsTrue)
-                            lineLenghtIsTrue = userSketch.Lines.First().LineLength.Equals(correctSketch.Lines.First().LineLength);
-                        
+                            lineLenghtIsTrue = userSketch.Lines.First().LineLength
+                                .Equals(correctSketch.Lines.First().LineLength);
+
                         if (correctSketch.Face is not null && userSketch!.Face is not null)
                             faceIsTrue = userSketch.Face.I.Equals(correctSketch.Face.I) &&
                                          userSketch.Face.J.Equals(correctSketch.Face.J) &&
@@ -189,12 +191,12 @@ public static class Comparer
         switch (plane)
         {
             case true when !_firstSketchChecking:
-                ObjectNameIsTrue(_featureName, _correctNodes);
+                ObjectFeatureNameIsTrue(_featureName, _correctNodes);
                 ObjectSketchNameIsTrue(_sketchName, _correctNodes);
                 _correctNodes.LastNode.LastNode.Nodes.Add($"Плоскость: {userSketch.Plane}");
                 break;
             case false when !_firstSketchChecking:
-                ObjectNameIsTrue(_featureName, _errorNodes);
+                ObjectFeatureNameIsTrue(_featureName, _errorNodes);
                 ObjectSketchNameIsTrue(_sketchName, _errorNodes);
                 _errorNodes.LastNode.LastNode.Nodes.Add($"Плоскость: {userSketch.Plane}");
                 break;
@@ -211,7 +213,7 @@ public static class Comparer
     {
         if (userFace.Equals(correctFace))
         {
-            ObjectNameIsTrue(_featureName, _correctNodes);
+            ObjectFeatureNameIsTrue(_featureName, _correctNodes);
             ObjectSketchNameIsTrue(_sketchName, _correctNodes);
             _correctNodes.LastNode.LastNode.Nodes.Add("Грань");
             _correctNodes.LastNode.LastNode.LastNode.Nodes.Add($"Объект: {correctFace.FeatureName}");
@@ -221,7 +223,7 @@ public static class Comparer
             return;
         }
 
-        ObjectNameIsTrue(_featureName, _errorNodes);
+        ObjectFeatureNameIsTrue(_featureName, _errorNodes);
         ObjectSketchNameIsTrue(_sketchName, _errorNodes);
         _errorNodes.LastNode.LastNode.Nodes.Add("Грань");
         _errorNodes.LastNode.LastNode.LastNode.Nodes.Add($"Объект: {correctFace.FeatureName}");
@@ -255,7 +257,7 @@ public static class Comparer
                     result = CheckCoordinates(objectType, lineObjectNumber, userLine!.Coordinate,
                         correctLine!.Coordinate);
                     if (result)
-                        GetCorrectCoordinates(userLine.Coordinate);
+                        GetCorrectCoordinates(userLine.Coordinate, correctLine.Coordinate);
                     else
                         GetErrorCoordinates(userLine, correctLine);
                     CheckValues(objectType, lineObjectNumber, userLine.LineLength, correctLine.LineLength, "Длина");
@@ -267,7 +269,7 @@ public static class Comparer
                     objectType = "Дуга";
                     result = CheckCoordinates(objectType, arcObjectNumber, userArc!.Coordinate, correctArc!.Coordinate);
                     if (result)
-                        GetCorrectCoordinates(userArc.Coordinate);
+                        GetCorrectCoordinates(userArc.Coordinate, correctArc.Coordinate);
                     else
                         GetErrorCoordinates(userArc, correctArc);
                     CheckValues(objectType, arcObjectNumber, userArc.ArcRadius, correctArc.ArcRadius, "Радиус");
@@ -297,6 +299,8 @@ public static class Comparer
             return true;
         }
 
+        ObjectFeatureNameIsTrue(_featureName, _errorNodes);
+        ObjectSketchNameIsTrue(_sketchName, _errorNodes);
         _errorNodes.LastNode.LastNode.Nodes.Add($"{objectType} {objectNumber}");
         return false;
     }
@@ -332,13 +336,19 @@ public static class Comparer
     /// <summary>
     ///     Функция вывода информации о правильности пользовательского объекта
     /// </summary>
-    /// <param name="userCoordinates">Координаты объекта</param>
+    /// <param name="userCoordinate">Координаты объекта</param>
+    /// <param name="correctCoordinate"></param>
     /// <returns>Возвращает информацию правильности пользовательского объекта</returns>
-    private static void GetCorrectCoordinates(string userCoordinates)
+    private static void GetCorrectCoordinates(string userCoordinate, string correctCoordinate)
     {
-        var coordinates = userCoordinates.Split('\n');
-        foreach (var coordinate in coordinates)
-            _correctNodes.LastNode.LastNode.LastNode.Nodes.Add(coordinate);
+        ObjectFeatureNameIsTrue(_featureName, _correctNodes);
+        ObjectSketchNameIsTrue(_sketchName, _correctNodes);
+        var userCoordinates = userCoordinate.Split('\n');
+        var correctCoordinates = correctCoordinate.Split('\n');
+        var index = 0;
+        foreach (var coordinate in userCoordinates)
+            if (coordinate.Equals(correctCoordinates[index++]))
+                _correctNodes.LastNode.LastNode.LastNode.Nodes.Add(coordinate);
     }
 
     /// <summary>
@@ -350,6 +360,8 @@ public static class Comparer
     /// <returns>Возвращает тип string с неверными координатами</returns>
     private static void GetErrorCoordinates<T>(T userCoordinates, T correctCoordinates)
     {
+        ObjectFeatureNameIsTrue(_featureName, _errorNodes);
+        ObjectSketchNameIsTrue(_sketchName, _errorNodes);
         var userCoordinate = (IPoint)userCoordinates;
         var correctCoordinate = (IPoint)correctCoordinates;
         var arc = typeof(T).Name.Equals("Arc");
@@ -479,7 +491,6 @@ public static class Comparer
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="user"></param>
     /// <param name="correct"></param>
@@ -487,24 +498,25 @@ public static class Comparer
     {
         if (user.Plane.Equals(correct.Plane))
         {
-            ObjectNameIsTrue(_featureName, _correctNodes);
+            ObjectFeatureNameIsTrue(_featureName, _correctNodes);
             _correctNodes.LastNode.Nodes.Add($"Плоскость: {user.Plane}");
         }
         else
         {
-            ObjectNameIsTrue(_featureName, _errorNodes);
+            ObjectFeatureNameIsTrue(_featureName, _errorNodes);
             _errorNodes.LastNode.Nodes.Add($"Плоскость: {user.Plane}");
         }
+
         if (user.FeatureNames.Count.Equals(correct.FeatureNames.Count))
         {
-            ObjectNameIsTrue(_featureName, _correctNodes);
+            ObjectFeatureNameIsTrue(_featureName, _correctNodes);
             _correctNodes.LastNode.Nodes.Add("Объекты");
             foreach (var name in user.FeatureNames)
                 _correctNodes.LastNode.LastNode.Nodes.Add(name);
         }
         else
         {
-            ObjectNameIsTrue(_featureName, _errorNodes);
+            ObjectFeatureNameIsTrue(_featureName, _errorNodes);
             _errorNodes.LastNode.Nodes.Add("Объекты");
             foreach (var name in user.FeatureNames)
                 _errorNodes.LastNode.LastNode.Nodes.Add(name);
@@ -512,30 +524,22 @@ public static class Comparer
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="name"></param>
     /// <param name="node"></param>
-    private static void ObjectNameIsTrue(string name, TreeNode node)
+    private static void ObjectFeatureNameIsTrue(string name, TreeNode node)
     {
         var nodeIsTrue = node.Nodes.Cast<TreeNode>().Any(nodeName => nodeName.Text.Equals(name));
-        if (!nodeIsTrue)
-        {
-            node.Nodes.Add(name);
-        }
+        if (!nodeIsTrue) node.Nodes.Add(name);
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="name"></param>
     /// <param name="node"></param>
     private static void ObjectSketchNameIsTrue(string name, TreeNode node)
     {
         var nodeIsTrue = node.LastNode.Nodes.Cast<TreeNode>().Any(nodeName => nodeName.Text.Equals(name));
-        if (!nodeIsTrue)
-        {
-            node.LastNode.Nodes.Add(name);
-        }
+        if (!nodeIsTrue) node.LastNode.Nodes.Add(name);
     }
 }

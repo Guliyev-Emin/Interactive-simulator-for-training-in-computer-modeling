@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿ using System.Collections.Generic;
 using System.Windows.Forms;
 using GraduationProject.Construction;
 using GraduationProject.ModelObjects.IObjects.ISketchObjects;
@@ -19,7 +19,6 @@ public class Controller : Connection
         var userModel = Reader.GetModel();
         var correctModel = FileController.GetModelObjectFromFile(modelVarian);
         return Comparer.ModelObjectsComparision(userModel, correctModel);
-
     }
 
     /// <summary>
