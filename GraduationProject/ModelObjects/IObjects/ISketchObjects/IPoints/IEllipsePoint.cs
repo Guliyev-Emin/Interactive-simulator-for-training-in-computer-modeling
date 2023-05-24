@@ -2,10 +2,10 @@
 
 public interface IEllipsePoint : ICenterPoint
 {
-    public double XMajor { get; set; }
-    public double YMajor { get; set; }
-    public double ZMajor { get; set; }
-    public double XMinor { get; set; }
-    public double YMinor { get; set; }
-    public double ZMinor { get; set; }
+    public decimal XMajor { get; set; }
+    public decimal YMajor { get; set; }
+    public decimal ZMajor { get; set; }
+    public decimal XMinor { get; set; }
+    public decimal YMinor { get; set; }
+    public decimal ZMinor { get; set; }
 }

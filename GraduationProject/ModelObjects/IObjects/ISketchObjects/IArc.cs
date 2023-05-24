@@ -4,6 +4,12 @@ namespace GraduationProject.ModelObjects.IObjects.ISketchObjects;
 
 public interface IArc : ICenterPoint, IPoint
 {
-    public double ArcRadius { get; set; }
+    /// <summary>
+    /// Радиус окружности
+    /// </summary>
+    public decimal ArcRadius { get; set; }
+    /// <summary>
+    /// Направление окружности
+    /// </summary>
     public short Direction { get; set; }
 }

@@ -2,7 +2,7 @@
 
 public interface ICenterPoint
 {
-    public double XCenter { get; set; }
-    public double YCenter { get; set; }
-    public double ZCenter { get; set; }
+    public decimal XCenter { get; set; }
+    public decimal YCenter { get; set; }
+    public decimal ZCenter { get; set; }
 }

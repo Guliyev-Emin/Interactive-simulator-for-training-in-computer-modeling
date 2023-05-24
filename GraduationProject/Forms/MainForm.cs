@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using GraduationProject.Construction;
 using GraduationProject.Controllers;
+using GraduationProject.SolidWorks_Algorithms;
 
 namespace GraduationProject;
 
@@ -46,19 +46,19 @@ public partial class MainForm : Form
         var modelVariant = GetModelVariantDialog(@"Отрисовка модели", @"Модель № ", @"Начертить");
         if (modelVariant is null)
             return;
-        Сonstruction.Drawing(modelVariant);
+        ConstructionModel.Drawing(modelVariant);
     }
 
     private void StepDeleteToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (Connection.ConnectionTest())
-            Remove.StepRemove();
+            RemoveModel.StepRemove();
     }
 
     private void FullDeleteToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (Connection.ConnectionTest())
-            Remove.RemoveFeature();
+            RemoveModel.RemoveFeature();
     }
 
     private void TreeReadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -93,7 +93,7 @@ public partial class MainForm : Form
 
     private void GetSolidWorksProjectTree()
     {
-        if (!Reader.GetProjectTree(ref SolidWorksProjectTree))
+        if (!ReadingModel.GetProjectTree(ref SolidWorksProjectTree))
             return;
         modelValidationButton.Visible = true;
         userModelPropertiesTextBox.Text = FileController.CreateTemplateModelProperties();

@@ -143,8 +143,8 @@ public static class Comparer
                         var lineLenghtIsTrue = false;
                         var faceIsTrue = false;
                         if (correctSketch!.LineIsTrue && userSketch!.LineIsTrue)
-                            lineLenghtIsTrue = userSketch.Lines.First().LineLength
-                                .Equals(correctSketch.Lines.First().LineLength);
+                            lineLenghtIsTrue = userSketch.Lines.First().Length
+                                .Equals(correctSketch.Lines.First().Length);
 
                         if (correctSketch.Face is not null && userSketch!.Face is not null)
                             faceIsTrue = userSketch.Face.I.Equals(correctSketch.Face.I) &&
@@ -260,7 +260,7 @@ public static class Comparer
                         GetCorrectCoordinates(userLine.Coordinate, correctLine.Coordinate);
                     else
                         GetErrorCoordinates(userLine, correctLine);
-                    CheckValues(objectType, lineObjectNumber, userLine.LineLength, correctLine.LineLength, "Длина");
+                    CheckValues(objectType, lineObjectNumber, userLine.Length, correctLine.Length, "Длина");
                     lineObjectNumber++;
                     break;
                 case "Arc":
@@ -312,7 +312,7 @@ public static class Comparer
     /// <param name="userValue"></param>
     /// <param name="correctValue"></param>
     /// <param name="valueType"></param>
-    private static void CheckValues(string objectType, int objectNumber, double userValue, double correctValue,
+    private static void CheckValues(string objectType, int objectNumber, decimal userValue, decimal correctValue,
         string valueType)
     {
         if (userValue.Equals(correctValue))

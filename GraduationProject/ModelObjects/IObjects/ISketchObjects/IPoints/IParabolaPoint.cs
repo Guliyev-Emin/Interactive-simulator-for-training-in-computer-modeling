@@ -2,10 +2,10 @@
 
 public interface IParabolaPoint : IPoint
 {
-    public double XFocus { get; set; }
-    public double YFocus { get; set; }
-    public double ZFocus { get; set; }
-    public double XApex { get; set; }
-    public double YApex { get; set; }
-    public double ZApex { get; set; }
+    public decimal XFocus { get; set; }
+    public decimal YFocus { get; set; }
+    public decimal ZFocus { get; set; }
+    public decimal XApex { get; set; }
+    public decimal YApex { get; set; }
+    public decimal ZApex { get; set; }
 }

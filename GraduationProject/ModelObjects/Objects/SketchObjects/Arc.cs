@@ -6,19 +6,19 @@ namespace GraduationProject.ModelObjects.Objects.SketchObjects;
 [Serializable]
 public record Arc : IArc
 {
-    private double _arcRadius;
+    private decimal _arcRadius;
 
-    private double _xCenter;
-    private double _xEnd;
-    private double _xStart;
-    private double _yCenter;
-    private double _yEnd;
-    private double _yStart;
-    private double _zCenter;
-    private double _zEnd;
-    private double _zStart;
+    private decimal _xCenter;
+    private decimal _xEnd;
+    private decimal _xStart;
+    private decimal _yCenter;
+    private decimal _yEnd;
+    private decimal _yStart;
+    private decimal _zCenter;
+    private decimal _zEnd;
+    private decimal _zStart;
 
-    public double ArcRadius
+    public decimal ArcRadius
     {
         get => _arcRadius;
         set => _arcRadius = value;
@@ -27,55 +27,55 @@ public record Arc : IArc
     public short Direction { get; set; }
     public string Coordinate { get; set; }
 
-    public double XStart
+    public decimal XStart
     {
         get => _xStart;
         set => _xStart = value;
     }
 
-    public double YStart
+    public decimal YStart
     {
         get => _yStart;
         set => _yStart = value;
     }
 
-    public double ZStart
+    public decimal ZStart
     {
         get => _zStart;
         set => _zStart = value;
     }
 
-    public double XEnd
+    public decimal XEnd
     {
         get => _xEnd;
         set => _xEnd = value;
     }
 
-    public double YEnd
+    public decimal YEnd
     {
         get => _yEnd;
         set => _yEnd = value;
     }
 
-    public double ZEnd
+    public decimal ZEnd
     {
         get => _zEnd;
         set => _zEnd = value;
     }
 
-    public double XCenter
+    public decimal XCenter
     {
         get => _xCenter;
         set => _xCenter = value;
     }
 
-    public double YCenter
+    public decimal YCenter
     {
         get => _yCenter;
         set => _yCenter = value;
     }
 
-    public double ZCenter
+    public decimal ZCenter
     {
         get => _zCenter;
         set => _zCenter = value;

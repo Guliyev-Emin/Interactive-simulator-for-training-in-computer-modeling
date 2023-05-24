@@ -3,8 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using GraduationProject.Construction;
+
 using GraduationProject.ModelObjects.Objects;
+using GraduationProject.SolidWorks_Algorithms;
 
 namespace GraduationProject.Controllers;
 
@@ -85,7 +86,7 @@ public static class FileController
 
         Stream saveFileStream = File.OpenWrite(path + ModelObjectsProperties);
         var serializer = new BinaryFormatter();
-        var model = Reader.GetModel();
+        var model = ReadingModel.GetModel();
         serializer.Serialize(saveFileStream, model);
         saveFileStream.Close();
     }
@@ -127,19 +128,19 @@ public static class FileController
     {
         var template = new StringBuilder();
 
-        foreach (var sketch in Reader.Sketches)
+        foreach (var sketch in ReadingModel.Sketches)
         {
             template.Append("Имя эскиза: " + sketch.SketchName + "\n");
             template.Append("Количество точек: " + sketch.UserPoints.Count + "\n");
             template.Append("Количество отрезков: " + sketch.Lines.Count + "\n");
             template.Append("Количество горизонтальных отрезков: " +
-                            sketch.Lines.Count(l => l.LineArrangement.Equals("Горизонтальный")) + "\n");
+                            sketch.Lines.Count(l => l.Arrangement.Equals("Горизонтальный")) + "\n");
             template.Append("Количество вертикальных отрезков: " +
-                            sketch.Lines.Count(l => l.LineArrangement.Equals("Вертикальный")) + "\n");
+                            sketch.Lines.Count(l => l.Arrangement.Equals("Вертикальный")) + "\n");
             template.Append("Количество наклонных отрезков: " +
-                            sketch.Lines.Count(l => l.LineArrangement.Equals("Наклонный")) + "\n");
+                            sketch.Lines.Count(l => l.Arrangement.Equals("Наклонный")) + "\n");
             template.Append("Количество вспомогательных линий: " +
-                            sketch.Lines.Select(l => l.LineType).Count(type => type == 4) +
+                            sketch.Lines.Select(l => l.Type).Count(type => type == 4) +
                             "\n");
             template.Append("Количество дуг: " + sketch.Arcs.Count + "\n");
             template.Append("Количество эллипсов: " + sketch.Ellipses.Count + "\n");
@@ -147,9 +148,9 @@ public static class FileController
             if (sketch.Lines.Count != 0)
                 foreach (var line in sketch.Lines)
                 {
-                    template.Append("Отрезок: \n\t" + "Расположение отрезка: " + line.LineArrangement +
+                    template.Append("Отрезок: \n\t" + "Расположение отрезка: " + line.Arrangement +
                                     "\n\t" + line.Coordinate.Replace("\n", "\n\t") + "\n\t");
-                    template.Append("Длина: " + line.LineLength + " м\n");
+                    template.Append("Длина: " + line.Length + " м\n");
                 }
             if (sketch.Arcs.Count != 0)
                 foreach (var arc in sketch.Arcs)

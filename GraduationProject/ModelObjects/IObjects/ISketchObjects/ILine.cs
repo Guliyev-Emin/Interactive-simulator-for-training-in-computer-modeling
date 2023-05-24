@@ -4,7 +4,16 @@ namespace GraduationProject.ModelObjects.IObjects.ISketchObjects;
 
 public interface ILine : IPoint
 {
-    public short LineType { get; set; }
-    public string LineArrangement { get; set; }
-    public double LineLength { get; set; }
+    /// <summary>
+    /// Код типа линии
+    /// </summary>
+    public short Type { get; set; }
+    /// <summary>
+    /// Расположение отрезка
+    /// </summary>
+    public string Arrangement { get; set; }
+    /// <summary>
+    /// Длина отрезка
+    /// </summary>
+    public decimal Length { get; set; }
 }

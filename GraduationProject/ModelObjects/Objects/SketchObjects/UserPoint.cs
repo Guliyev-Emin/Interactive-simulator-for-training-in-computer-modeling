@@ -7,7 +7,7 @@ namespace GraduationProject.ModelObjects.Objects.SketchObjects;
 public record UserPoint : IUserPoint
 {
     public string Coordinate { get; set; }
-    public double X { get; set; }
-    public double Y { get; set; }
-    public double Z { get; set; }
+    public decimal X { get; set; }
+    public decimal Y { get; set; }
+    public decimal Z { get; set; }
 }

@@ -10,5 +10,5 @@ public interface ITridimensionalOperation
     public string Type { get; set; }
     [CanBeNull] public Sketch Sketch { get; set; }
     [CanBeNull] public Mirror Mirror { get; set; }
-    [CanBeNull] public double Depth { get; set; }
+    [CanBeNull] public decimal Depth { get; set; }
 }

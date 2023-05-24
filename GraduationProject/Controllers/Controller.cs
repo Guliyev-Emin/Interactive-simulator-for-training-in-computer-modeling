@@ -1,8 +1,8 @@
 ﻿ using System.Collections.Generic;
 using System.Windows.Forms;
-using GraduationProject.Construction;
-using GraduationProject.ModelObjects.IObjects.ISketchObjects;
-using JetBrains.Annotations;
+ using GraduationProject.ModelObjects.IObjects.ISketchObjects;
+ using GraduationProject.SolidWorks_Algorithms;
+ using JetBrains.Annotations;
 
 namespace GraduationProject.Controllers;
 
@@ -16,7 +16,7 @@ public class Controller : Connection
     /// <returns></returns>
     public static (TreeNode CorrectNodes, TreeNode ErrorNodes)? ModelValidationController(string modelVarian)
     {
-        var userModel = Reader.GetModel();
+        var userModel = ReadingModel.GetModel();
         var correctModel = FileController.GetModelObjectFromFile(modelVarian);
         return Comparer.ModelObjectsComparision(userModel, correctModel);
     }
