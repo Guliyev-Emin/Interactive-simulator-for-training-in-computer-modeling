@@ -4,6 +4,7 @@ using GraduationProject.CheckForms;
 using GraduationProject.ModelObjects.IObjects.ICheckObjects;
 using GraduationProject.ModelObjects.Objects.CheckObjects;
 using GraduationProject.ModelObjects.Objects.SketchObjects;
+using GraduationProject.SolidWorks_Algorithms;
 
 namespace GraduationProject.Controllers.CheckControllers.Controllers;
 
@@ -28,18 +29,18 @@ public abstract class TaskController
             tasks = BaseTasks.Where(task => task.MethodName.Equals(name)).Cast<ITask>().ToList();
         if (derivedTask)
             tasks = DerivedTasks.Where(task => task.MethodName.Equals(name)).Cast<ITask>().ToList();
-        
+
         while (tasks.Count != 0 && tasks.Any(task => task.Id == id))
             id++;
         return id;
     }
-    
+
     public static List<Line> GetLinesWhereMinX(List<Line> lines)
     {
         var min = lines.Select(s => s.XStart).Min();
         return lines.Where(l => l.XStart.Equals(min) || l.XEnd.Equals(min)).ToList();
     }
-    
+
     public static List<Line> GetLinesWhereMinY(List<Line> lines)
     {
         var minStart = lines.Select(s => s.YStart).Min();
@@ -49,13 +50,13 @@ public abstract class TaskController
         var list3 = list1.Concat(list2).Distinct().ToList();
         return list3;
     }
-    
+
     public static List<Line> GetLinesWhereMaxX(List<Line> lines)
     {
         var max = lines.Select(s => s.XStart).Max();
         return lines.Where(l => l.XStart.Equals(max) || l.XEnd.Equals(max)).ToList();
     }
-    
+
     public static List<Line> GetLinesWhereMaxY(List<Line> lines)
     {
         var max = lines.Select(s => s.YStart).Max();
@@ -77,24 +78,41 @@ public abstract class TaskController
     public static List<Arc> GetArcWithMinX(List<Arc> arcs)
     {
         var minCenter = arcs.Select(a => a.XCenter).Min();
-        return arcs.Where(a => a.XCenter.Equals(minCenter)).ToList();   
+        return arcs.Where(a => a.XCenter.Equals(minCenter)).ToList();
     }
-    
+
     public static List<Arc> GetArcWithMinY(List<Arc> arcs)
     {
         var minCenter = arcs.Select(a => a.YCenter).Min();
-        return arcs.Where(a => a.YCenter.Equals(minCenter)).ToList();   
+        return arcs.Where(a => a.YCenter.Equals(minCenter)).ToList();
     }
-    
+
     public static List<Arc> GetArcWithMaxX(List<Arc> arcs)
     {
         var maxCenter = arcs.Select(a => a.XCenter).Max();
-        return arcs.Where(a => a.XCenter.Equals(maxCenter)).ToList();   
+        return arcs.Where(a => a.XCenter.Equals(maxCenter)).ToList();
     }
-    
+
     public static List<Arc> GetArcWithMaxY(List<Arc> arcs)
     {
         var maxCenter = arcs.Select(a => a.YCenter).Max();
-        return arcs.Where(a => a.YCenter.Equals(maxCenter)).ToList();   
+        return arcs.Where(a => a.YCenter.Equals(maxCenter)).ToList();
+    }
+
+    public static List<Line> GetLines(string arrangement)
+    {
+        var model = ReadingModel.GetModel();
+        try
+        {
+            var sketch = model.Sketches.Any(s => s.SketchName.Equals(CheckForm.FeatureName))
+                ? model.Sketches.First(s => s.SketchName.Equals(CheckForm.FeatureName))
+                : model.Features.First(s => s.Sketch!.SketchName.Equals(CheckForm.FeatureName)).Sketch;
+            return sketch!.Lines.Where(l => l.Arrangement.Equals(arrangement)).ToList();
+        }
+        catch
+        {
+            Message.ErrorMessage("Произошла ошибка вывода отрезков. Скорее всего отрезки отсутствуют!");
+            return null;
+        }
     }
 }

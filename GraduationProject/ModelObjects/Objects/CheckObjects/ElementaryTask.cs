@@ -1,5 +1,4 @@
-﻿using GradProj.Models;
-using GraduationProject.ModelObjects.IObjects.ICheckObjects;
+﻿using GraduationProject.ModelObjects.IObjects.ICheckObjects;
 
 namespace GraduationProject.ModelObjects.Objects.CheckObjects;
 
@@ -11,7 +10,6 @@ public class ElementaryTask : ITask
     public bool Reverse { get; set; }
     public CountTask CountTask { get; set; }
     public PointTask PointTask { get; set; }
-    public LocationPosition LocationPosition { get; set; }
     public TridimensionalOperation TridimensionalOperation { get; set; }
     public string MethodName { get; set; }
     public string Type { get; set; }

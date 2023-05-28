@@ -1,4 +1,4 @@
-﻿namespace GradProj.Models;
+﻿namespace GraduationProject.ModelObjects.Objects.CheckObjects;
 
 public class CountTask
 {

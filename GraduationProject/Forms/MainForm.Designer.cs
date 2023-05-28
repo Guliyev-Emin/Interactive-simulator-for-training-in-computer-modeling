@@ -46,7 +46,6 @@ namespace GraduationProject
             this.FullDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TreeReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ProjectTabControl = new System.Windows.Forms.TabControl();
             this.Rendering = new System.Windows.Forms.TabPage();
             this.Reading = new System.Windows.Forms.TabPage();
@@ -54,6 +53,7 @@ namespace GraduationProject
             this.saveModelButton = new System.Windows.Forms.Button();
             this.SolidWorksProjectTree = new System.Windows.Forms.TreeView();
             this.Validation = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.modelValidationButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.initialModelPropertiesGroupBox = new System.Windows.Forms.GroupBox();
@@ -79,7 +79,7 @@ namespace GraduationProject
             // 
             // menuStrip
             // 
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.FileToolStripMenuItem, this.EditorToolStripMenuItem, this.ReadToolStripMenuItem, this.testToolStripMenuItem });
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.FileToolStripMenuItem, this.EditorToolStripMenuItem, this.ReadToolStripMenuItem });
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(734, 24);
@@ -177,12 +177,6 @@ namespace GraduationProject
             this.TreeReadToolStripMenuItem.Text = "Чтение дерева";
             this.TreeReadToolStripMenuItem.Click += new System.EventHandler(this.TreeReadToolStripMenuItem_Click);
             // 
-            // testToolStripMenuItem
-            // 
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(137, 20);
-            this.testToolStripMenuItem.Text = "алгоритмы проверки";
-            // 
             // ProjectTabControl
             // 
             this.ProjectTabControl.Controls.Add(this.Rendering);
@@ -223,7 +217,7 @@ namespace GraduationProject
             // readingSolidWorksProjectButton
             // 
             this.readingSolidWorksProjectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.readingSolidWorksProjectButton.Location = new System.Drawing.Point(615, 37);
+            this.readingSolidWorksProjectButton.Location = new System.Drawing.Point(615, 6);
             this.readingSolidWorksProjectButton.Name = "readingSolidWorksProjectButton";
             this.readingSolidWorksProjectButton.Size = new System.Drawing.Size(108, 30);
             this.readingSolidWorksProjectButton.TabIndex = 2;
@@ -234,7 +228,7 @@ namespace GraduationProject
             // saveModelButton
             // 
             this.saveModelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveModelButton.Location = new System.Drawing.Point(615, 3);
+            this.saveModelButton.Location = new System.Drawing.Point(615, 42);
             this.saveModelButton.Name = "saveModelButton";
             this.saveModelButton.Size = new System.Drawing.Size(108, 28);
             this.saveModelButton.TabIndex = 1;
@@ -252,6 +246,7 @@ namespace GraduationProject
             // 
             // Validation
             // 
+            this.Validation.Controls.Add(this.button1);
             this.Validation.Controls.Add(this.modelValidationButton);
             this.Validation.Controls.Add(this.tableLayoutPanel1);
             this.Validation.Location = new System.Drawing.Point(4, 22);
@@ -261,14 +256,25 @@ namespace GraduationProject
             this.Validation.Text = "Проверка на правильность";
             this.Validation.UseVisualStyleBackColor = true;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(615, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(108, 35);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "Отдельная проверка";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // modelValidationButton
             // 
             this.modelValidationButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.modelValidationButton.Location = new System.Drawing.Point(615, 3);
+            this.modelValidationButton.Location = new System.Drawing.Point(615, 47);
             this.modelValidationButton.Name = "modelValidationButton";
-            this.modelValidationButton.Size = new System.Drawing.Size(108, 28);
+            this.modelValidationButton.Size = new System.Drawing.Size(108, 38);
             this.modelValidationButton.TabIndex = 2;
-            this.modelValidationButton.Text = "Проверка модели";
+            this.modelValidationButton.Text = "Быстрая проверка";
             this.modelValidationButton.UseVisualStyleBackColor = true;
             this.modelValidationButton.Visible = false;
             this.modelValidationButton.Click += new System.EventHandler(this.modelValidationButton_Click);
@@ -419,7 +425,7 @@ namespace GraduationProject
             this.PerformLayout();
         }
 
-        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
 
         private System.Windows.Forms.TreeView errorQualityResultTreeView;
 

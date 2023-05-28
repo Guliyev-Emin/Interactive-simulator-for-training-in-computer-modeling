@@ -46,3 +46,5 @@ F:\RiderProjects\GraduationProject\GraduationProject\bin\Debug\GraduationProject
 F:\RiderProjects\GraduationProject\GraduationProject\bin\Debug\JetBrains.Annotations.dll
 F:\RiderProjects\GraduationProject\GraduationProject\bin\Debug\JetBrains.Annotations.xml
 F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.csproj.CopyComplete
+F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.AuthorizationForm.resources
+F:\RiderProjects\GraduationProject\GraduationProject\obj\Debug\GraduationProject.CheckForms.CheckForm.resources

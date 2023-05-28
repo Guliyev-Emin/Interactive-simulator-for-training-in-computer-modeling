@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using GradProj.Models;
+using GraduationProject.ModelObjects.Objects;
 using GraduationProject.ModelObjects.Objects.CheckObjects;
 using GraduationProject.ModelObjects.Objects.SketchObjects;
 
@@ -14,8 +13,9 @@ namespace GraduationProject.Controllers;
 public class XmlController
 
 {
-    private const string ControllingPath = @"../../PropertiesOfAlgorithms/Files/Test/";
+    private const string ControllingPath = @"../../Files/PropertiesOfAlgorithms/";
     private const string ControllingTwoDOperations = "twoDOperations";
+    private const string ControllingTridimensionalOperation = "tridimensionalOperation";
     private const string ControllingDerivedTask = "derivedTask";
     private const string ControllingElementaryTask = "elementaryTask";
     private const string ControllingBaseTask = "baseTask";
@@ -41,6 +41,8 @@ public class XmlController
     private const string ControllingType = "type";
     private const string ControllingLength = "length";
     private const string ControllingRadius = "radius";
+    private const string ControllingCut = "Cut";
+    private const string ControllingExtrusioan = "Extrusion";
     private static XmlDocument _document;
 
     private static XmlElement CreateElement(string name, string text)
@@ -83,21 +85,29 @@ public class XmlController
             elementaryTaskElement.AppendChild(CreateElement(ControllingTaskObjectCount,
                 elementaryTask.CountTask.ObjectCount.ToString()));
         }
-        else if (elementaryTask.PointTask.Point is not null)
+        else if (elementaryTask.PointTask is not null)
         {
-            elementaryTaskElement.AppendChild(CreateElement(ControllingPointX,
-                elementaryTask.PointTask.Point.X.ToString(CultureInfo.InvariantCulture)));
-            elementaryTaskElement.AppendChild(CreateElement(ControllingPointY,
-                elementaryTask.PointTask.Point.Y.ToString(CultureInfo.InvariantCulture)));
-            elementaryTaskElement.AppendChild(CreateElement(ControllingPointZ,
-                elementaryTask.PointTask.Point.Z.ToString(CultureInfo.InvariantCulture)));
+            if (elementaryTask.PointTask.Point is not null)
+            {
+                elementaryTaskElement.AppendChild(CreateElement(ControllingPointX,
+                    elementaryTask.PointTask.Point.X.ToString(CultureInfo.InvariantCulture)));
+                elementaryTaskElement.AppendChild(CreateElement(ControllingPointY,
+                    elementaryTask.PointTask.Point.Y.ToString(CultureInfo.InvariantCulture)));
+                elementaryTaskElement.AppendChild(CreateElement(ControllingPointZ,
+                    elementaryTask.PointTask.Point.Z.ToString(CultureInfo.InvariantCulture)));
+            }
+        }
+        else if (elementaryTask.TridimensionalOperation is not null)
+        {
+            elementaryTaskElement.AppendChild(CreateElement(elementaryTask.Type,
+                elementaryTask.TridimensionalOperation.Depth.ToString(CultureInfo.InvariantCulture)));
         }
         else
         {
-            if (elementaryTask.PointTask.Line?.Length != null)
+            if (elementaryTask.PointTask != null && elementaryTask.PointTask.Line?.Length != null)
                 elementaryTaskElement.AppendChild(CreateElement(ControllingLength,
                     elementaryTask.PointTask.Line.Length.ToString(CultureInfo.InvariantCulture)));
-            if (elementaryTask.PointTask.Arc?.ArcRadius != null)
+            if (elementaryTask.PointTask != null && elementaryTask.PointTask.Arc?.ArcRadius != null)
                 elementaryTaskElement.AppendChild(CreateElement(ControllingRadius,
                     elementaryTask.PointTask.Arc?.ArcRadius.ToString(CultureInfo.InvariantCulture)));
         }
@@ -205,6 +215,9 @@ public class XmlController
     public static void CreateDerivedFile(string fileName, List<DerivedTask> derivedTasks)
     {
         _document = new XmlDocument();
+        if (!Directory.Exists(ControllingPath))
+            Directory.CreateDirectory(ControllingPath.Remove(ControllingPath.Length - 1));
+        
         if (File.Exists(ControllingPath + fileName + ".xml"))
             _document.Load(ControllingPath + fileName + ".xml");
         var xRoot = _document.DocumentElement;
@@ -319,6 +332,11 @@ public class XmlController
                     elementaryTask.PointTask.Arc.ArcRadius =
                         Convert.ToDecimal(elementaryTaskNode.InnerText, CultureInfo.InvariantCulture);
                     continue;
+                case ControllingCut:
+                case ControllingExtrusioan:
+                    elementaryTask.TridimensionalOperation ??= new TridimensionalOperation();
+                    elementaryTask.TridimensionalOperation.Depth =  Convert.ToDecimal(elementaryTaskNode.InnerText, CultureInfo.InvariantCulture);
+                    break;
             }
 
         return elementaryTask;

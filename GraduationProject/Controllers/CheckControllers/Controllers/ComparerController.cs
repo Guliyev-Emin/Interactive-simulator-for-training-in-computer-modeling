@@ -14,147 +14,85 @@ public class ComparerController
 {
     private static DataGridView _comparerContent;
     private static Model _model;
+
     public ComparerController(ref DataGridView dataGridView)
     {
         _comparerContent = dataGridView;
         _model = ReadingModel.GetModel();
-     
     }
 
     public bool ElementaryComparer(ElementaryTask task)
     {
         var resultBool = false;
-        uint? outData = null;
-        // switch (task.CheckType)
-        // {
-        //     case CheckForm.CountMatch:
-        //         switch (task.Type)
-        //         {
-        //             case CheckForm.Point:
-        //                 resultBool = task.CountTask.ObjectCount.Equals((uint)CheckForm..UserSketch.UserPoints.Count);
-        //                 outData = (uint?)CheckForm.UserSketch.UserPoints!.Count;
-        //                 break;
-        //             case CheckForm.Line:
-        //                 resultBool = task.CountTask.ObjectCount.Equals((uint)CheckForm.UserSketch.Lines!.Count);
-        //                 outData = (uint?)CheckForm.UserSketch.Lines!.Count;
-        //                 break;
-        //             case CheckForm.Arc:
-        //                 resultBool = task.CountTask.ObjectCount.Equals((uint)CheckForm.UserSketch.Arcs!.Count);
-        //                 outData = (uint)CheckForm.UserSketch.Arcs!.Count;
-        //                 break;
-        //             case CheckForm.Horizontal:
-        //                 var horizontalCount = CheckForm.UserSketch.Lines.Count(point =>
-        //                     point.Arrangement.Equals(CheckForm.HorizontalRussian));
-        //
-        //                 resultBool = task.CountTask.ObjectCount.Equals((uint?)horizontalCount);
-        //                 outData = (uint?)horizontalCount;
-        //                 break;
-        //             case CheckForm.Vertical:
-        //                 var verticalCount = CheckForm.UserSketch.Lines.Count(point =>
-        //                     point.Arrangement.Equals(CheckForm.VerticalRussian));
-        //                 resultBool = task.CountTask.ObjectCount.Equals((uint?)verticalCount);
-        //                 outData = (uint?)verticalCount;
-        //                 break;
-        //             case CheckForm.Sloped:
-        //                 var slopedCount = CheckForm.UserSketch.Lines.Count(point =>
-        //                     point.Arrangement.Equals(CheckForm.SlopedRussian));
-        //                 resultBool = task.CountTask.ObjectCount.Equals((uint?)slopedCount);
-        //                 outData = (uint?)slopedCount;
-        //                 break;
-        //         }
-        //         break;
-        //     case CheckForm.LocationPosition:
-        //         switch (task.Type)
-        //         {
-        //             case CheckForm.Point:
-        //                 // TODO Прописан HARD CODE, реализовать по человечески
-        //                 foreach (var point in CheckForm.UserSketch.UserPoints)
-        //                     switch (task.MethodName)
-        //                     {
-        //                         // case MainForm.TheLocationOfOnePointToTheRightOfAnotherPoint:
-        //                         //     // Правее (по оси X) другой точки 
-        //                         //     if (point.X > task.PointTask.Point.X) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.TheLocationOfOnePointToTheLeftOfAnotherPoint:
-        //                         //     // Левее (по оси X) другой точки
-        //                         //     if (point.X < task.PointTask.Point.X) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.TheLocationOfOnePointFurtherThanAnother:
-        //                         //     // Дальше (по оси Y) другой точки **
-        //                         //     if (point.Y < task.PointTask.Point.Y) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.TheLocationOfOnePointCloserThanAnother:
-        //                         //     // Ближе (по оси Y) другой точки **
-        //                         //     if (point.Y > task.PointTask.Point.Y) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.TheLocationOfOnePointBelowAnotherPoint:
-        //                         //     // Ниже (по оси Z) другой точки ***
-        //                         //     if (point.Z < task.PointTask.Point.Z) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.TheLocationOfOnePointAboveAnotherPoint:
-        //                         //     // Выше (по оси Z) другой точки ***
-        //                         //     if (point.Z > task.PointTask.Point.Z) resultBool = true;
-        //                         //     break;
-        //                     }
-        //
-        //                 break;
-        //             case CheckForm.Line:
-        //                 // TODO Прописан HARD CODE, реализовать по человечески
-        //                 foreach (var line in CheckForm.UserSketch.Lines)
-        //                     switch (task.MethodName)
-        //                     {
-        //                         // case MainForm.OfTheLocationOfOneSegmentToTheRightOfAnotherSegment:
-        //                         //     // Правее (по оси X) другой точки 
-        //                         //     if (line.StartX > task.PointTask.Line.StartX &&
-        //                         //         line.EndX > task.PointTask.Line.EndX) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.OfTheLocationOfOneSegmentToTheLeftOfAnotherSegment:
-        //                         //     // Левее (по оси X) другой точки
-        //                         //     if (line.StartX < task.PointTask.Line.StartX &&
-        //                         //         line.EndX < task.PointTask.Line.EndX) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.OfTheLocationOfOneSegmentFurtherThanAnotherSegment:
-        //                         //     // Дальше (по оси Y) другой точки **
-        //                         //     if (line.StartY < task.PointTask.Line.StartY &&
-        //                         //         line.EndY < task.PointTask.Line.EndY) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.TheLocationOfOneSegmentCloserThanAnotherSegment:
-        //                         //     // Ближе (по оси Y) другой точки **
-        //                         //     if (line.StartY > task.PointTask.Line.StartY &&
-        //                         //         line.EndY > task.PointTask.Line.EndY) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.OfTheLocationOfOneSegmentBelowAnotherSegment:
-        //                         //     // Ниже (по оси Z) другой точки ***
-        //                         //     if (line.StartZ < task.PointTask.Line.StartZ) resultBool = true;
-        //                         //     break;
-        //                         // case MainForm.OfTheLocationOfOneSegmentAboveAnotherSegment:
-        //                         //     // Выше (по оси Z) другой точки ***
-        //                         //     if (line.StartZ > task.PointTask.Line.StartZ) resultBool = true;
-        //                         //     break;
-        //                     }
-        //
-        //                 break;
-        //         }
-        //
-        //         break;
-        //     case CheckForm.PointMatch:
-        //         switch (task.Type)
-        //         {
-        //             case CheckForm.Point:
-        //                 if (CheckForm.UserSketch.UserPoints.Any(point => task.PointTask.Point.Equals(point)))
-        //                     resultBool = true;
-        //                 break;
-        //             case CheckForm.Line:
-        //                 if (task.PointTask.Line.Length != 0)
-        //                 {
-        //                     MessageBox.Show($@"Длина отрезка равен {task.PointTask.Line.Length}");
-        //                 }
-        //
-        //                 break;
-        //         }
-        //
-        //         break;
-        // }
+        double? outData = null;
+        var model = ReadingModel.GetModel();
+        Sketch sketch;
+        switch (task.CheckType)
+        {
+            case CheckForm.CountMatch:
+                sketch = model.Sketches.Any(s => s.SketchName.Equals(CheckForm.FeatureName))
+                    ? model.Sketches.First(s => s.SketchName.Equals(CheckForm.FeatureName))
+                    : model.Features.First(s => s.Sketch!.SketchName.Equals(CheckForm.FeatureName)).Sketch;
+
+                switch (task.Type)
+                {
+                    case CheckForm.Point:
+                        resultBool = task.CountTask.ObjectCount.Equals((uint)sketch!.UserPoints.Count);
+                        outData = (uint?)sketch.UserPoints!.Count;
+                        break;
+                    case CheckForm.Line:
+                        resultBool = task.CountTask.ObjectCount.Equals((uint)sketch!.Lines!.Count);
+                        outData = (uint?)sketch.Lines!.Count;
+                        break;
+                    case CheckForm.Arc:
+                        resultBool = task.CountTask.ObjectCount.Equals((uint)sketch!.Arcs!.Count);
+                        outData = (uint)sketch.Arcs!.Count;
+                        break;
+                    case CheckForm.Horizontal:
+                        var horizontalCount = sketch!.Lines.Count(point =>
+                            point.Arrangement.Equals(CheckForm.HorizontalRussian));
+
+                        resultBool = task.CountTask.ObjectCount.Equals((uint?)horizontalCount);
+                        outData = (uint?)horizontalCount;
+                        break;
+                    case CheckForm.Vertical:
+                        var verticalCount = sketch!.Lines.Count(point =>
+                            point.Arrangement.Equals(CheckForm.VerticalRussian));
+                        resultBool = task.CountTask.ObjectCount.Equals((uint?)verticalCount);
+                        outData = (uint?)verticalCount;
+                        break;
+                    case CheckForm.Sloped:
+                        var slopedCount = sketch!.Lines.Count(point =>
+                            point.Arrangement.Equals(CheckForm.SlopedRussian));
+                        resultBool = task.CountTask.ObjectCount.Equals((uint?)slopedCount);
+                        outData = (uint?)slopedCount;
+                        break;
+                }
+
+                break;
+            case CheckForm.PointMatch:
+                sketch = model.Sketches.Any(s => s.SketchName.Equals(CheckForm.FeatureName))
+                    ? model.Sketches.First(s => s.SketchName.Equals(CheckForm.FeatureName))
+                    : model.Features.First(s => s.Sketch!.SketchName.Equals(CheckForm.FeatureName)).Sketch;
+                switch (task.Type)
+                {
+                    case CheckForm.Point:
+                        if (sketch!.UserPoints.Any(point => task.PointTask.Point.Equals(point)))
+                            resultBool = true;
+                        break;
+                    case CheckForm.Line:
+                        if (task.PointTask.Line.Length != 0)
+                            MessageBox.Show($@"Длина отрезка равен {task.PointTask.Line.Length}");
+
+                        break;
+                }
+                break;
+            case CheckForm.Extrusion:
+                var tridOper = model.Features.First(f => f.Name.Equals(CheckForm.FeatureName));
+                resultBool = task.TridimensionalOperation.Depth.Equals(tridOper.Depth);
+                outData = (double?)tridOper.Depth;
+                break;
+        }
 
         string resultString;
         if (task.Reverse)
@@ -171,7 +109,8 @@ public class ComparerController
         return resultBool;
     }
 
-    private static void GetComaprerResult(ITask task, bool reverse, List<bool> comparerResults, out bool rstBool, out string rstStr)
+    private static void GetComaprerResult(ITask task, bool reverse, List<bool> comparerResults, out bool rstBool,
+        out string rstStr)
     {
         rstBool = comparerResults.Count(b => b.Equals(false)).Equals(0);
         if (reverse)
@@ -196,18 +135,18 @@ public class ComparerController
             List<Line> lines;
             switch (taskName)
             {
-                // case CheckForm.ControllingGetHorizontalArrayLine:
-                //     resultBools.Add(true);
-                //     lines = TaskController.GetLines(CheckForm.HorizontalRussian);
-                //     baseTask.Lines.AddRange(lines);
-                //     continue;
-                // case CheckForm.ControllingGetLinesWithProperties:
-                //     continue;
-                // case CheckForm.ControllingGetVerticalArrayLine:
-                //     resultBools.Add(true);
-                //     lines = TaskController.GetLines(CheckForm.VerticalRussian);
-                //     baseTask.Lines.AddRange(lines);
-                //     continue;
+                case CheckForm.ControllingGetHorizontalArrayLine:
+                    resultBools.Add(true);
+                    lines = TaskController.GetLines(CheckForm.HorizontalRussian);
+                    baseTask.Lines.AddRange(lines);
+                    continue;
+                case CheckForm.ControllingGetLinesWithProperties:
+                    continue;
+                case CheckForm.ControllingGetVerticalArrayLine:
+                    resultBools.Add(true);
+                    lines = TaskController.GetLines(CheckForm.VerticalRussian);
+                    baseTask.Lines.AddRange(lines);
+                    continue;
                 case CheckForm.ControllingGetLineWithMinX:
                     lines = TaskController.GetLinesWhereMinX(baseTask.Lines);
                     baseTask.Lines = lines;
@@ -244,7 +183,6 @@ public class ComparerController
                     continue;
                 default:
                     if (baseTask.BaseTasks is not null)
-                    {
                         try
                         {
                             var task = baseTask.BaseTasks.First(task => task.TaskName.Equals(taskName));
@@ -256,10 +194,8 @@ public class ComparerController
                         {
                             // ignored
                         }
-                    }
 
                     if (baseTask.ElementaryTasks is not null)
-                    {
                         try
                         {
                             var elemTask = baseTask.ElementaryTasks.First(task => task.TaskName.Equals(taskName));
@@ -283,10 +219,11 @@ public class ComparerController
                         {
                             //ignored
                         }
-                    }
+
                     continue;
             }
         }
+
         GetComaprerResult(baseTask, false, resultBools, out var resBool, out var resStr);
         if (add)
             resStr = text;
@@ -331,7 +268,6 @@ public class ComparerController
                 derivedTask.BaseTasks[index] = baseTask;
             }
         }
-
         return resultBools.Count(b => b.Equals(false)).Equals(0);
     }
 }

@@ -119,6 +119,12 @@
         <Compile Include="Controllers\Controller.cs" />
         <Compile Include="Controllers\FileController.cs" />
         <Compile Include="Controllers\XmlController.cs" />
+        <Compile Include="Forms\AuthorizationForm.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="Forms\AuthorizationForm.Designer.cs">
+          <DependentUpon>AuthorizationForm.cs</DependentUpon>
+        </Compile>
         <Compile Include="Forms\CheckForms\AddTasksForm.cs">
           <SubType>Form</SubType>
         </Compile>
@@ -185,11 +191,18 @@
         <Compile Include="ModelObjects\Objects\SketchObjects\Parabola.cs" />
         <Compile Include="ModelObjects\Objects\SketchObjects\Sketch.cs" />
         <Compile Include="ModelObjects\Objects\SketchObjects\UserPoint.cs" />
+        <Compile Include="ModelObjects\Objects\User.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="SolidWorks Algorithms\ConstructionModel.cs" />
         <Compile Include="SolidWorks Algorithms\ReadingModel.cs" />
         <Compile Include="SolidWorks Algorithms\RemoveModel.cs" />
+        <EmbeddedResource Include="Forms\AuthorizationForm.resx">
+          <DependentUpon>AuthorizationForm.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Forms\CheckForms\CheckForm.resx">
+          <DependentUpon>CheckForm.cs</DependentUpon>
+        </EmbeddedResource>
         <EmbeddedResource Include="Forms\MainForm.resx">
             <DependentUpon>MainForm.cs</DependentUpon>
         </EmbeddedResource>

@@ -1,0 +1,259 @@
+﻿<twoDOperations methodName="Эскиз1">
+    <derivedTask id="1" methodName="Производная задача">
+        <taskName>Проверка количества отрезков для многоугольника</taskName>
+        <taskContent>Проверка количества отрезков для многоугольника</taskContent>
+        <taskTrueResult>Построено правильное количество отрезков (10)</taskTrueResult>
+        <taskFalseResult>Построено менее или более 10-ти отрезков</taskFalseResult>
+        <sequence>Проверка количества отрезков для многоугольника , Построить 4 горизонтальных отрезка, Построить 4 вертикальных отрезка</sequence>
+        <elementaryTask id="1" methodName="Контроль количества отрезков" type="Line" checkType="CountMatch">
+            <taskName>Проверка количества отрезков для многоугольника </taskName>
+            <taskContent>Многоугольник состоящий из 10-ти отрезков</taskContent>
+            <taskTrueResult>Построено правильное количество отрезков для многоуголиника</taskTrueResult>
+            <taskFalseResult>Построено меньше или больше отрезков для многоуголиника</taskFalseResult>
+            <taskObjectCount>10</taskObjectCount>
+            <taskReversSolution>False</taskReversSolution>
+        </elementaryTask>
+        <elementaryTask id="1" methodName="Контроль количества горизонтальности отрезков" type="Horizontal" checkType="CountMatch">
+            <taskName>Построить 4 горизонтальных отрезка</taskName>
+            <taskContent>Требуется построить 4 горизонтальных отрезка</taskContent>
+            <taskTrueResult>Построено нужное количество горизонтальных отрезков</taskTrueResult>
+            <taskFalseResult>Построено менее или более 4 горизонтальных отрезков</taskFalseResult>
+            <taskObjectCount>4</taskObjectCount>
+            <taskReversSolution>False</taskReversSolution>
+        </elementaryTask>
+        <elementaryTask id="1" methodName="Контроль количества вертикальности отрезков" type="Vertical" checkType="CountMatch">
+            <taskName>Построить 4 вертикальных отрезка</taskName>
+            <taskContent>Требуется построить 4 вертикальных отрезка</taskContent>
+            <taskTrueResult>Построено 4 вертикальных отрезка</taskTrueResult>
+            <taskFalseResult>Построено менее или более 4 вертикальных отрезка</taskFalseResult>
+            <taskObjectCount>4</taskObjectCount>
+            <taskReversSolution>False</taskReversSolution>
+        </elementaryTask>
+    </derivedTask>
+    <derivedTask id="2" methodName="Производная задача">
+        <taskName>Проверка размеров отрезков</taskName>
+        <taskContent>Проверка размеров отрезков</taskContent>
+        <taskTrueResult>Размеры соответствуют условиям задачи</taskTrueResult>
+        <taskFalseResult>Размеры не соответствуют условиям задачи</taskFalseResult>
+        <sequence>Левый вертикальный отрезок, Размер левого вертикального отрезка 50 мм, Нижний горизонтальный отрезок, Проверка размера нижнего гор. отрезка</sequence>
+        <baseTask id="2" methodName="Базовая задача">
+            <taskName>Размер левого вертикального отрезка 50 мм</taskName>
+            <taskContent>Проверка размера левого вертикального отрезка</taskContent>
+            <taskTrueResult>Отрезок соответствует условиям задачи</taskTrueResult>
+            <taskFalseResult>Отрезок не соответствует условиям задачи</taskFalseResult>
+            <elementaryTask id="1" methodName="Контроль размера отрезка" type="Line" checkType="PointMatch">
+                <taskName>Длина отрезка 50 мм</taskName>
+                <taskContent>Размер отрезка 50 мм</taskContent>
+                <taskTrueResult>Длина отрезка соответствует 50 мм</taskTrueResult>
+                <taskFalseResult>Длина отрезка не соответствует 50 мм</taskFalseResult>
+                <length>50</length>
+                <taskReversSolution>False</taskReversSolution>
+            </elementaryTask>
+            <baseTask id="1" methodName="Базовая задача">
+                <taskName>Левый вертикальный отрезок</taskName>
+                <taskContent>Левый вертикальный отрезок</taskContent>
+                <taskTrueResult>Получен вертикальный отрезок с минимальным Х и Y </taskTrueResult>
+                <taskFalseResult>Отрезков нету</taskFalseResult>
+                <sequence>Получить массив вертикальных отрезков, Получить отрезок с минимальным X, Получить отрезок с минимальным Y</sequence>
+            </baseTask>
+            <sequence>Левый вертикальный отрезок, Длина отрезка 50 мм</sequence>
+        </baseTask>
+        <baseTask id="4" methodName="Базовая задача">
+            <taskName>Проверка размера нижнего гор. отрезка</taskName>
+            <taskContent>Проверка размера нижнего гор. отрезка</taskContent>
+            <taskTrueResult>Размер отрезка соответствует заданным значениям</taskTrueResult>
+            <taskFalseResult>Размер отрезка не соответствует заданным значениям</taskFalseResult>
+            <elementaryTask id="2" methodName="Контроль размера отрезка" type="Line" checkType="PointMatch">
+                <taskName>Длина горизонтального отрезка 60 мм</taskName>
+                <taskContent>Длина отрезка 60 мм</taskContent>
+                <taskTrueResult>Длина отрезка равна 60 мм</taskTrueResult>
+                <taskFalseResult>Длина отрезка не равна 60 мм</taskFalseResult>
+                <length>60</length>
+                <taskReversSolution>False</taskReversSolution>
+            </elementaryTask>
+            <baseTask id="3" methodName="Базовая задача">
+                <taskName>Нижний горизонтальный отрезок</taskName>
+                <taskContent>Получение нижнего горизонтального отрезка</taskContent>
+                <taskTrueResult>Отрезок существует</taskTrueResult>
+                <taskFalseResult>Такого отрезка не существует</taskFalseResult>
+                <sequence>Получить массив горизонтальных отрезков, Получить отрезок с минимальным Y</sequence>
+            </baseTask>
+            <sequence>Нижний горизонтальный отрезок, Длина горизонтального отрезка 60 мм</sequence>
+        </baseTask>
+    </derivedTask>
+    <derivedTask id="3" methodName="Производная задача">
+        <taskName>Проверка окружности</taskName>
+        <taskContent>Проверка окружности</taskContent>
+        <taskTrueResult>Проверка окружности выполнена правильно</taskTrueResult>
+        <taskFalseResult>При проверке окружности обнаружена ошибка</taskFalseResult>
+        <sequence>Проверка радиуса окружности</sequence>
+        <baseTask id="2" methodName="Базовая задача">
+            <taskName>Проверка радиуса окружности</taskName>
+            <taskContent>Проверка радиуса окружности</taskContent>
+            <taskTrueResult>Радиус окружности соответствует заданным значениям</taskTrueResult>
+            <taskFalseResult>Радиус окружности не соответствует заданным значениям</taskFalseResult>
+            <elementaryTask id="1" methodName="Контроль радиуса окружности" type="Arc" checkType="PointMatch">
+                <taskName>Радиус левой окружности</taskName>
+                <taskContent>Радиус левой окружности</taskContent>
+                <taskTrueResult>Радиус равен 15 мм</taskTrueResult>
+                <taskFalseResult>Радиус не равен 15 мм</taskFalseResult>
+                <radius>15</radius>
+                <taskReversSolution>False</taskReversSolution>
+            </elementaryTask>
+            <baseTask id="1" methodName="Базовая задача">
+                <taskName>Окружность</taskName>
+                <taskContent>Окружность</taskContent>
+                <taskTrueResult>Окружность найдена</taskTrueResult>
+                <taskFalseResult>Окружность не найдена</taskFalseResult>
+                <sequence>Получить окружность с минимальным радиусом</sequence>
+            </baseTask>
+            <sequence>Окружность, Радиус левой окружности</sequence>
+        </baseTask>
+    </derivedTask>
+    <derivedTask id="4" methodName="Производная задача">
+        <taskName>Проверка горизонтальных отрезков</taskName>
+        <taskContent>Проверка горизонтальных отрезков</taskContent>
+        <taskTrueResult>Проверка горизонтальных отрезков выполнена успешно</taskTrueResult>
+        <taskFalseResult>Проверка горизонтальных отрезков выполнена с ошибками</taskFalseResult>
+        <sequence>Проверка длины нижнего отрезка, Проверка длины верхнего отрезка</sequence>
+        <baseTask id="3" methodName="Базовая задача">
+            <taskName>Проверка длины нижнего отрезка</taskName>
+            <taskContent>Проверка нижнего отрезка</taskContent>
+            <taskTrueResult>Длина нижнего гор. отрезка правильный</taskTrueResult>
+            <taskFalseResult>Длина нижнего гор. отрезка не правильный</taskFalseResult>
+            <elementaryTask id="4" methodName="Контроль размера отрезка" type="Line" checkType="PointMatch">
+                <taskName>Длина отрезка 40 мм</taskName>
+                <taskContent>Длина отрезка 40 мм</taskContent>
+                <taskTrueResult>Длина отрезка равна 40 мм</taskTrueResult>
+                <taskFalseResult>Длина отрезка не равна 40 мм</taskFalseResult>
+                <length>40</length>
+                <taskReversSolution>False</taskReversSolution>
+            </elementaryTask>
+            <baseTask id="1" methodName="Базовая задача">
+                <taskName>Горизонтальный отрезок с минимальным Y</taskName>
+                <taskContent>Горизонтальный отрезок с минимальным Y</taskContent>
+                <taskTrueResult>Горизонтальный отрезок с минимальным Y найден</taskTrueResult>
+                <taskFalseResult>Горизонтальный отрезок с минимальным Y не найден</taskFalseResult>
+                <sequence>Получить массив горизонтальных отрезков, Получить отрезок с минимальным Y</sequence>
+            </baseTask>
+            <sequence>Горизонтальный отрезок с минимальным Y, Длина отрезка 40 мм</sequence>
+        </baseTask>
+        <baseTask id="6" methodName="Базовая задача">
+            <taskName>Проверка длины верхнего отрезка</taskName>
+            <taskContent>Проверка длины верхнего отрезка</taskContent>
+            <taskTrueResult>Длины верхнего отрезка правильна</taskTrueResult>
+            <taskFalseResult>Длины верхнего отрезка не правильна</taskFalseResult>
+            <elementaryTask id="4" methodName="Контроль размера отрезка" type="Line" checkType="PointMatch">
+                <taskName>Длина отрезка 40 мм</taskName>
+                <taskContent>Длина отрезка 40 мм</taskContent>
+                <taskTrueResult>Длина отрезка равна 40 мм</taskTrueResult>
+                <taskFalseResult>Длина отрезка не равна 40 мм</taskFalseResult>
+                <length>40</length>
+                <taskReversSolution>False</taskReversSolution>
+            </elementaryTask>
+            <baseTask id="5" methodName="Базовая задача">
+                <taskName>Гор. отрезок с макс. Y</taskName>
+                <taskContent>Гор. отрезок с макс. Y</taskContent>
+                <taskTrueResult>Гор. отрезок с макс. Y найден</taskTrueResult>
+                <taskFalseResult>Гор. отрезок с макс. Y не найден</taskFalseResult>
+                <sequence>Получить массив горизонтальных отрезков, Получить отрезок с максимальным Y</sequence>
+            </baseTask>
+            <sequence>Гор. отрезок с макс. Y, Длина отрезка 40 мм</sequence>
+        </baseTask>
+    </derivedTask>
+    <derivedTask id="1" methodName="Производная задача">
+        <taskName>Нижний</taskName>
+        <taskContent>Нижний</taskContent>
+        <taskTrueResult>Нижний</taskTrueResult>
+        <taskFalseResult>Нижний</taskFalseResult>
+        <sequence>Нижний горизонтальный отрезок, Длина отрезка 50 мм, Длина отрезка 150 мм</sequence>
+        <elementaryTask id="1" methodName="Контроль размера отрезка" type="Line" checkType="PointMatch">
+            <taskName>Длина отрезка 50 мм</taskName>
+            <taskContent>Длина отрезка 50 мм</taskContent>
+            <taskTrueResult>Длина отрезка равна 50 мм</taskTrueResult>
+            <taskFalseResult>Длина отрезка не равна 50 мм</taskFalseResult>
+            <length>50</length>
+            <taskReversSolution>False</taskReversSolution>
+        </elementaryTask>
+        <elementaryTask id="2" methodName="Контроль размера отрезка" type="Line" checkType="PointMatch">
+            <taskName>Длина отрезка 150 мм</taskName>
+            <taskContent>Длина отрезка 150 мм</taskContent>
+            <taskTrueResult>Длина отрезка равна 150 мм</taskTrueResult>
+            <taskFalseResult>Длина отрезка не равна 150 мм</taskFalseResult>
+            <length>150</length>
+            <taskReversSolution>False</taskReversSolution>
+        </elementaryTask>
+        <baseTask id="1" methodName="Базовая задача">
+            <taskName>Нижний горизонтальный отрезок</taskName>
+            <taskContent>Нижний горизонтальный отрезок</taskContent>
+            <taskTrueResult>Нижний горизонтальный отрезок существует</taskTrueResult>
+            <taskFalseResult>Нижний горизонтальный отрезок не существует</taskFalseResult>
+            <sequence>Получить массив горизонтальных отрезков, Получить отрезок с минимальным Y</sequence>
+        </baseTask>
+    </derivedTask>
+    <derivedTask id="5" methodName="Производная задача">
+        <taskName>Контроль проверки длин отрезков</taskName>
+        <taskContent>Контроль проверки длин отрезков</taskContent>
+        <taskTrueResult>Длины отрезков верный</taskTrueResult>
+        <taskFalseResult>Длины отрезков не верный</taskFalseResult>
+        <sequence>Контроль единственного вертикального отрезка с макс. Х, Контроль равенства длины вертикального отрезка 50 мм</sequence>
+        <baseTask id="8" methodName="Базовая задача">
+            <taskName>Контроль единственного вертикального отрезка с макс. Х</taskName>
+            <taskContent>Получить вертикальный отрезок с макс. Х</taskContent>
+            <taskTrueResult>Получен вертикальный отрезок с макс. Х</taskTrueResult>
+            <taskFalseResult>Вертикальных отрезков не существует</taskFalseResult>
+            <sequence>Получить массив вертикальных отрезков, Получить отрезок с максимальным X</sequence>
+        </baseTask>
+        <baseTask id="9" methodName="Базовая задача">
+            <taskName>Контроль равенства длины вертикального отрезка 50 мм</taskName>
+            <taskContent>Контроль равенства длины отрезка 50 мм</taskContent>
+            <taskTrueResult>Вертикальный отрезок равен 50 мм</taskTrueResult>
+            <taskFalseResult>Вертикальный отрезок не равен 50 мм</taskFalseResult>
+            <elementaryTask id="1" methodName="Контроль размера отрезка" type="Line" checkType="PointMatch">
+                <taskName>Длина отрезка 50 мм</taskName>
+                <taskContent>Размер отрезка 50 мм</taskContent>
+                <taskTrueResult>Длина отрезка соответствует 50 мм</taskTrueResult>
+                <taskFalseResult>Длина отрезка не соответствует 50 мм</taskFalseResult>
+                <length>50</length>
+                <taskReversSolution>False</taskReversSolution>
+            </elementaryTask>
+            <baseTask id="8" methodName="Базовая задача">
+                <taskName>Контроль единственного вертикального отрезка с макс. Х</taskName>
+                <taskContent>Получить вертикальный отрезок с макс. Х</taskContent>
+                <taskTrueResult>Получен вертикальный отрезок с макс. Х</taskTrueResult>
+                <taskFalseResult>Вертикальных отрезков не существует</taskFalseResult>
+                <sequence>Получить массив вертикальных отрезков, Получить отрезок с максимальным X</sequence>
+            </baseTask>
+            <sequence>Контроль единственного вертикального отрезка с макс. Х, Длина отрезка 50 мм</sequence>
+        </baseTask>
+    </derivedTask>
+    <derivedTask id="6" methodName="Производная задача">
+        <taskName>Контроль проверки 2 вертикальных отрезка</taskName>
+        <taskContent>Контроль проверки 2 вертикальных отрезка</taskContent>
+        <taskTrueResult>Вертикальные отрезки правильно построены</taskTrueResult>
+        <taskFalseResult>Вертикальные отрезки не правильно построены</taskFalseResult>
+        <sequence>Контроль равенства длины вертикального отрезка 50 мм</sequence>
+        <baseTask id="9" methodName="Базовая задача">
+            <taskName>Контроль равенства длины вертикального отрезка 50 мм</taskName>
+            <taskContent>Контроль равенства длины отрезка 50 мм</taskContent>
+            <taskTrueResult>Вертикальный отрезок равен 50 мм</taskTrueResult>
+            <taskFalseResult>Вертикальный отрезок не равен 50 мм</taskFalseResult>
+            <elementaryTask id="1" methodName="Контроль размера отрезка" type="Line" checkType="PointMatch">
+                <taskName>Длина отрезка 50 мм</taskName>
+                <taskContent>Размер отрезка 50 мм</taskContent>
+                <taskTrueResult>Длина отрезка соответствует 50 мм</taskTrueResult>
+                <taskFalseResult>Длина отрезка не соответствует 50 мм</taskFalseResult>
+                <length>50</length>
+                <taskReversSolution>False</taskReversSolution>
+            </elementaryTask>
+            <baseTask id="8" methodName="Базовая задача">
+                <taskName>Контроль единственного вертикального отрезка с макс. Х</taskName>
+                <taskContent>Получить вертикальный отрезок с макс. Х</taskContent>
+                <taskTrueResult>Получен вертикальный отрезок с макс. Х</taskTrueResult>
+                <taskFalseResult>Вертикальных отрезков не существует</taskFalseResult>
+                <sequence>Получить массив вертикальных отрезков, Получить отрезок с максимальным X</sequence>
+            </baseTask>
+            <sequence>Контроль единственного вертикального отрезка с макс. Х, Длина отрезка 50 мм</sequence>
+        </baseTask>
+    </derivedTask>
+</twoDOperations>

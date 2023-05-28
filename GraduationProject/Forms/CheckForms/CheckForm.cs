@@ -5,11 +5,9 @@ using System.Windows.Forms;
 using GraduationProject.CheckForms.FormConstructors;
 using GraduationProject.Controllers;
 using GraduationProject.Controllers.CheckControllers.Controllers;
-using GraduationProject.ModelObjects.IObjects;
 using GraduationProject.ModelObjects.IObjects.ICheckObjects;
 using GraduationProject.ModelObjects.Objects;
 using GraduationProject.ModelObjects.Objects.CheckObjects;
-using GraduationProject.ModelObjects.Objects.SketchObjects;
 using GraduationProject.SolidWorks_Algorithms;
 
 namespace GraduationProject.CheckForms;
@@ -73,10 +71,14 @@ public partial class CheckForm : Form
     private readonly ToolTip _toolTip = new();
     private readonly ViewForm _viewForm = new();
     private int _toolTipIndex;
+    private static User User => AuthorizationForm.User;
 
+    public static string FeatureName;
+    
     public CheckForm()
     {
         InitializeComponent();
+        
         checkedElementaryCheckMethods.Items.AddRange(new object[]
         {
             ControllingOfTheNumberOfPoints, ControllingOfTheNumberOfArcs, ControllingOfTheNumberOfLines,
@@ -114,6 +116,36 @@ public partial class CheckForm : Form
         _constructorForm = new ConstructorForm(ref ready_madeElementaryTasks, ref elementaryTaskForms, ref derivedTasks,
             ref ready_madeDerivedTasks, ref contextMenuStrip);
         _comparer = new ComparerController(ref dataGridView1);
+
+        if (User.Type.Equals(AuthorizationForm.Student))
+        {
+            tabControl1.SelectTab(checkingPage);
+            tasksPage.Text = "Задачи \uD83D\uDD12";
+            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
+        }
+
+        try
+        {
+            var model = ReadingModel.GetModel();
+            model.Sketches!.ForEach(s => featureNames.Items.Add(s.SketchName));
+            model.Features!.ForEach(f =>
+            {
+                featureNames.Items.Add(f.Name);
+                if (f.Sketch is not null) featureNames.Items.Add(f.Sketch.SketchName);
+            });
+            
+        }
+        catch
+        {
+            //ignore
+        }
+    }
+    
+    private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (tabControl1.SelectedTab != tabControl1.TabPages["tasksPage"]) return;
+        tabControl1.SelectTab(checkingPage);
+        MessageBox.Show(@"У Вас недостаточно прав для открытия данного окна", @"Уведомление", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     public static string GetType(string name)
@@ -409,7 +441,7 @@ public partial class CheckForm : Form
                 break;
             case "Производная задача":
                 if (DerivedTasks.Count != 0)
-                    XmlController.CreateDerivedFile("derivedTaskFile1",
+                    XmlController.CreateDerivedFile("derivedTaskFile",
                         ready_madeDerivedTasks.CheckedItems.Cast<string>().ToList().Select(taskName =>
                             DerivedTasks.First(n => n.TaskName.Equals(taskName))).ToList());
                 break;
@@ -536,13 +568,9 @@ public partial class CheckForm : Form
         }
     }
 
-    private void checkingPage_Click(object sender, EventArgs e)
-    {
-    }
-
     private void exportButton_Click(object sender, EventArgs e)
     {
-        var derivedTasksList = XmlController.ReadDerivedFile("derivedTaskFile1");
+        var derivedTasksList = XmlController.ReadDerivedFile("derivedTaskFile");
         foreach (var derivedTaskObject in derivedTasksList)
         {
             if (DerivedTasks.Any(d => d.TaskName.Equals(derivedTaskObject.TaskName)))
@@ -646,7 +674,8 @@ public partial class CheckForm : Form
             return;
         var name = taskCheckMethods.SelectedItem.ToString();
         var derivedTaskObj = DerivedTasks.First(task => task.TaskName.Equals(name));
-
+        FeatureName = featureNames.SelectedItem.ToString();
+        MessageBox.Show(FeatureName);
         foreach (string checkName in taskCheckMethods.CheckedItems)
         {
             var result = _comparer.DerivedComparer(DerivedTasks.First(task => task.TaskName.Equals(checkName)));

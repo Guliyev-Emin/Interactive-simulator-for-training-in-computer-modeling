@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using GradProj.Models;
 using GraduationProject.ModelObjects.IObjects.ICheckObjects;
 using GraduationProject.ModelObjects.Objects.SketchObjects;
 

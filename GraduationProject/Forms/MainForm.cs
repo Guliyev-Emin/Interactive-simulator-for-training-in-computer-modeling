@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GraduationProject.CheckForms;
 using GraduationProject.Controllers;
 using GraduationProject.SolidWorks_Algorithms;
 
@@ -8,11 +9,20 @@ namespace GraduationProject;
 
 public partial class MainForm : Form
 {
+    public const string Lock = " \uD83D\uDD12";
+
     public MainForm()
     {
         InitializeComponent();
-        testToolStripMenuItem.Visible = false;
-        Rendering.Visible = false;
+
+        if (AuthorizationForm.User.Type.Equals(AuthorizationForm.Student))
+        {
+            ProjectTabControl.SelectTab(Reading);
+            Rendering.Text += Lock;
+        }
+
+        saveModelButton.Text += Lock;
+        modelValidationButton.Text += Lock;
     }
 
     private void ConnectionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -91,12 +101,12 @@ public partial class MainForm : Form
         ValidationModel(modelVariant);
     }
 
-    private void GetSolidWorksProjectTree()
+    private bool GetSolidWorksProjectTree()
     {
         if (!ReadingModel.GetProjectTree(ref SolidWorksProjectTree))
-            return;
-        modelValidationButton.Visible = true;
+            return false;
         userModelPropertiesTextBox.Text = FileController.CreateTemplateModelProperties();
+        return true;
     }
 
     private static string GetModelVariantDialog(string title, string caption, string buttonCaption)
@@ -168,5 +178,11 @@ public partial class MainForm : Form
         }
         correctQualityResultTreeView.EndUpdate();
         errorQualityResultTreeView.EndUpdate();
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+        CheckForm checkForm = new CheckForm();
+        checkForm.ShowDialog();
     }
 }
