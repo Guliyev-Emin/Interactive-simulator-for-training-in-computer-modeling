@@ -75,15 +75,24 @@ public partial class MainForm : Form
     {
         ProjectTabControl.SelectTab(Reading);
         GetSolidWorksProjectTree();
+        saveModelButton.Text = @"Сохранить";
     }
 
     private void readingSolidWorksProjectButton_Click(object sender, EventArgs e)
     {
         GetSolidWorksProjectTree();
+        saveModelButton.Text = @"Сохранить";
     }
 
     private void saveModelButton_Click(object sender, EventArgs e)
     {
+        if (!Connection.ConnectionTest())
+            return;
+        if (ReadingModel.GetModel() is null)
+        {
+            Message.InformationMessage("Нет данных о модели.", "Уведомление");
+            return;
+        }
         var modelVariant = GetModelVariantDialog(@"Добавление модели", @"Модель № ", @"Сохранить");
         if (modelVariant is null)
             return;
@@ -101,7 +110,7 @@ public partial class MainForm : Form
         ValidationModel(modelVariant);
     }
 
-    private bool GetSolidWorksProjectTree()
+    public bool GetSolidWorksProjectTree()
     {
         if (!ReadingModel.GetProjectTree(ref SolidWorksProjectTree))
             return false;

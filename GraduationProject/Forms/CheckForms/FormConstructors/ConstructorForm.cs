@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using GraduationProject.Controllers.CheckControllers.Controllers;
@@ -161,49 +162,6 @@ public class ConstructorForm:FormElements
         return groupBox;
     }
 
-    public GroupBox LineDistanceForm(string text, bool add)
-    {
-        // var distanceLabel = CreateLabel("Расстояние (мм)");
-        // var distanceInput = CreateNumericUpDown("Distance", true);
-        // var gb = CreateGroupBox("editBaseTask", text);
-        // var mainLayout = CreateTableLayoutPanel("mainLayout", 2, 2);
-        // var taskContentLayout = CreateTableLayoutPanel("contentLayout", 2, 4);
-        // var buttonsLayout = CreateTableLayoutPanel("buttonsLayout", 2, 1);
-        // var lstBox = new ListBox
-        // {
-        //     Name = "tasksForDerivedTask",
-        //     Dock = DockStyle.Fill,
-        //     ContextMenuStrip = _contextMenu,
-        //     HorizontalScrollbar = true
-        // };
-        //
-        // StandartLabelForm(ref taskContentLayout);
-        // StandartInnerForm(ref taskContentLayout);
-        // mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
-        // mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
-        // mainLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        // mainLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        // buttonsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-        // buttonsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-        // buttonsLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        // buttonsLayout.Controls.Add(new Button() {Text = "Добавить"});
-        // buttonsLayout.Controls.Add(new Button() {Text = "Закрыть"});
-        // mainLayout.Controls.Add(taskContentLayout, 0, 0);
-        // mainLayout.Controls.Add(lstBox, 1, 0);
-        // mainLayout.Controls.Add(buttonsLayout, 1, 1);
-        // gb.Controls.Add(mainLayout);
-        // return gb;
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        // return groupBox;
-        return new GroupBox();
-    }
-
     public GroupBox BaseTaskEdit(BaseTask task)
     {
         var gb = CreateGroupBox("editBaseTask", task.TaskName);
@@ -232,8 +190,6 @@ public class ConstructorForm:FormElements
         editButton.Click += (sender, args) => 
         
         buttonsLayout.Controls.Add(new Button() {Text = "Изменить"});
-        
-        
         
         buttonsLayout.Controls.Add(new Button() {Text = "Закрыть"});
         mainLayout.Controls.Add(taskContentLayout, 0, 0);
@@ -371,7 +327,6 @@ public class ConstructorForm:FormElements
     {
         panel.Controls.Add(CreateLabel("Название задачи"), 0, 0);
         panel.Controls.Add(CreateLabel("Содержание задачи"), 0, 1);
-        panel.Controls.Add(CreateLabel("Количество объектов"), 0, 2);
         panel.Controls.Add(CreateLabel("Правильный ответ"), 0, 3);
         panel.Controls.Add(CreateLabel("Неправильный ответ"), 0, 4);
     }
@@ -381,13 +336,39 @@ public class ConstructorForm:FormElements
         var groupBox = CreateGroupBox("createElementaryTaskGroupBox", task.TaskName);
         var layoutPanel = CreateMainTableLayotPanel("createElementaryTaskTableLayoutPanel", 2, 6);
         AddingCountLabel(ref layoutPanel);
-        layoutPanel.Controls.Add(CreateTextBox(TaskName, task.TaskName));
-        layoutPanel.Controls.Add(CreateTextBox(TaskContent, task.TaskContent));
-        layoutPanel.Controls.Add(CreateTextBox(TaskObjectCount, task.CountTask.ObjectCount.ToString()));
-        layoutPanel.Controls.Add(CreateTextBox(TaskTrueResult, task.TaskTrueResult));
-        layoutPanel.Controls.Add(CreateTextBox(TaskFalseResult, task.TaskFalseResult));
-        layoutPanel.Controls.Add(CreateLabel("Обратное решение"));
-        layoutPanel.Controls.Add(CreateTextBox("Reverse", task.Reverse.ToString()));
+        layoutPanel.Controls.Add(CreateTextBox(TaskName, task.TaskName), 1, 0);
+        layoutPanel.Controls.Add(CreateTextBox(TaskContent, task.TaskContent), 1, 1); 
+        switch (task.CheckType)
+        {
+            case CheckForm.ControllingOfTheNumberOfPoints:
+            case CheckForm.ControllingOfTheNumberOfLines:
+            case CheckForm.ControllingOfTheNumberOfArcs:
+            case CheckForm.ControllingTheAmountOfHorizontalOfSegments:
+            case CheckForm.ControllingTheAmountOfVerticalityOfSegments:
+                layoutPanel.Controls.Add(CreateLabel("Количество объектов"), 0, 2);
+                layoutPanel.Controls.Add(CreateTextBox(TaskObjectCount, task.CountTask!.ObjectCount.ToString()), 1, 2);
+                break;
+            case CheckForm.ControllingLineSize:
+                layoutPanel.Controls.Add(CreateLabel("Длина отрезка (мм)"), 0, 2);
+                layoutPanel.Controls.Add(CreateTextBox(LineSize, task.PointTask.Line.Length.ToString(CultureInfo.InvariantCulture)), 1, 2);
+                break;
+            case CheckForm.ControllingSetRadiusArc:
+                layoutPanel.Controls.Add(CreateLabel("Радиус дуги (мм)"), 0, 2);
+                layoutPanel.Controls.Add(CreateTextBox(ArcRadius, task.PointTask.Arc.ArcRadius.ToString(CultureInfo.InvariantCulture)), 1, 2);
+                break;
+            case CheckForm.ControllingSizeExtrusion:
+                layoutPanel.Controls.Add(CreateLabel("Длина выдавливания (мм)"), 0, 2);
+                layoutPanel.Controls.Add(CreateTextBox(ExtrusionSize, task.TridimensionalOperation.Depth.ToString(CultureInfo.InvariantCulture)), 1, 2);
+                break;
+            case CheckForm.ControllingSizeCut:
+                layoutPanel.Controls.Add(CreateLabel("Длина выреза (мм)"), 0, 2);
+                layoutPanel.Controls.Add(CreateTextBox(CutSize, task.TridimensionalOperation.Depth.ToString(CultureInfo.InvariantCulture)), 1, 2);
+                break;
+        }
+        layoutPanel.Controls.Add(CreateTextBox(TaskTrueResult, task.TaskTrueResult), 1, 3);
+        layoutPanel.Controls.Add(CreateTextBox(TaskFalseResult, task.TaskFalseResult), 1, 4);
+        layoutPanel.Controls.Add(CreateLabel("Обратное решение"), 0, 5);
+        layoutPanel.Controls.Add(CreateTextBox("Reverse", task.Reverse.ToString()), 1, 5);
         groupBox.Controls.Add(layoutPanel);
         return groupBox;
     }

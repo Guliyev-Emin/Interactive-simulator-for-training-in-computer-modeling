@@ -44,6 +44,8 @@ public class ReadingModel : Connection
     private static string _frontWord = string.Empty;
     private static string _rightWord = string.Empty;
     private static List<Sketch> _sketches;
+    private static bool _sketchElements;
+    private static bool _tridimenstionalElement;
 
     /// <summary>
     ///     Функция возвращающая параметры модель
@@ -52,6 +54,32 @@ public class ReadingModel : Connection
     public static Model GetModel()
     {
         return _model;
+    }
+
+    private static void AddElement(string element)
+    {
+        if (_swProjectTree.LastNode is not null && _sketchElements)
+        {
+            if (_swProjectTree.LastNode.LastNode is not null && _sketchElements && _tridimenstionalElement)
+            {
+                _swProjectTree.LastNode.LastNode.Nodes.Add(element);
+                return;
+            }
+            _swProjectTree.LastNode.Nodes.Add(element);
+        }
+    }
+
+    private static void AddProperties(string element)
+    {
+        if (_swProjectTree.LastNode.LastNode is not null && _sketchElements)
+        {
+            if (_swProjectTree.LastNode.LastNode.LastNode is not null && _sketchElements && _tridimenstionalElement)
+            {
+                _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(element);
+                return;
+            }
+            _swProjectTree.LastNode.LastNode?.Nodes.Add(element);
+        }
     }
 
     /// <summary>
@@ -102,6 +130,7 @@ public class ReadingModel : Connection
     private static TreeNode ProjectReading(ITreeControlItem rootNode)
     {
         var nodeObjectType = rootNode.ObjectType;
+        _tridimenstionalElement = false;
         var nodeObject = rootNode.Object;
         var nodeType = "";
         var nodeName = "";
@@ -119,8 +148,8 @@ public class ReadingModel : Connection
             if (_checkChild & !nodeType.Equals("DetailCabinet") & !nodeType.Equals("MaterialFolder") &
                 !nodeType.Equals("HistoryFolder") & !nodeType.Equals("SensorFolder"))
             {
+                _tridimenstionalElement = true;
                 _swProjectTree.LastNode.Nodes.Add(nodeName);
-                
             }
             else
                 switch (nodeType)
@@ -205,6 +234,7 @@ public class ReadingModel : Connection
     /// <param name="sketchName">Название эскиза</param>
     private static void SketchListener(string sketchName)
     {
+        _sketchElements = true;
         var selectedSketch = (SolidWorks.Interop.sldworks.Sketch)_swFeature.GetSpecificFeature2();
         var parentFeature = _swFeature.GetOwnerFeature();
         var lineCount = selectedSketch.GetLineCount();
@@ -253,6 +283,7 @@ public class ReadingModel : Connection
         };
         Sketches.Add(sketch);
         _features.Add(FeatureListener(parentFeature, sketch, null));
+        _sketchElements = false;
     }
 
     /// <summary>
@@ -271,7 +302,8 @@ public class ReadingModel : Connection
         if (points is null) return;
         for (var index = 0; index < pointCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Точка");
+            AddElement("Точка");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Точка");
             if (index == pointCount) continue;
             var x = (decimal)points[pointArrayLength * index + xPoint];
             var y = (decimal)points[pointArrayLength * index + yPoint];
@@ -285,7 +317,8 @@ public class ReadingModel : Connection
                 Coordinate = pointCoordinate
             };
             _userPoints.Add(point);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(pointCoordinate);
+            AddProperties(pointCoordinate);
+            //_swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(pointCoordinate);
         }
     }
 
@@ -307,7 +340,8 @@ public class ReadingModel : Connection
         var j = 0;
         for (var index = 0; index < lineCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Отрезок");
+            AddElement("Отрезок");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Отрезок");
 
             if (index == lineCount) continue;
             var lineStyle = (short)lineArrayInfo[lineArrayLength * index + lineStyleIndex];
@@ -342,10 +376,16 @@ public class ReadingModel : Connection
             };
             line.Arrangement = Controller.GetLineArrangement(line);
             _lines.Add(line);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Длина: {lineLength} {_units}");
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Расположение: {line.Arrangement}");
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
+            
+            AddProperties($"Длина: {lineLength} м");
+            AddProperties($"Расположение: {line.Arrangement}");
+            AddProperties(start);
+            AddProperties(end);
+            
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Длина: {lineLength} {_units}");
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Расположение: {line.Arrangement}");
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
         }
     }
 
@@ -365,7 +405,8 @@ public class ReadingModel : Connection
         var j = 0;
         for (var index = 0; index < arcCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Дуга");
+            AddElement("Дуга");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Дуга");
             if (index == arcCount) continue;
             var xStart = (decimal)arcs[arcArrayLength * index + XStartIndex];
             var yStart = (decimal)arcs[arcArrayLength * index + YStartIndex];
@@ -407,10 +448,16 @@ public class ReadingModel : Connection
                 Coordinate = start + "\n" + end + "\n" + center
             };
             _arcs.Add(arc);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(center);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Радиус: {radius} {_units}");
+            
+            AddProperties(center);
+            AddProperties(start);
+            AddProperties(end);
+            AddProperties($"Радиус: {radius} м");
+            
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(center);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add($"Радиус: {radius} {_units}");
             
         }
     }
@@ -433,7 +480,8 @@ public class ReadingModel : Connection
         if (parabolas is null) return;
         for (var index = 0; index < parabolaCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Парабола");
+            AddElement("Парабола");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Парабола");
             if (index == parabolaCount) continue;
             var xStart = (decimal)parabolas[parabolaArrayLength * index + XStartIndex];
             var yStart = (decimal)parabolas[parabolaArrayLength * index + YStartIndex];
@@ -467,10 +515,15 @@ public class ReadingModel : Connection
                 ZApex = zApex,
                 Coordinate = start + "\n" + end + "\n" + focusPoint + "\n" + apexPoint
             };
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(focusPoint);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(apexPoint);
+            
+            AddProperties(start);
+            AddProperties(end);
+            AddProperties(focusPoint);
+            AddProperties(apexPoint);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(focusPoint);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(apexPoint);
             _parabolas.Add(parabola);
         }
     }
@@ -494,7 +547,8 @@ public class ReadingModel : Connection
         if (ellipses is null) return;
         for (var index = 0; index < ellipseCount; index++)
         {
-            _swProjectTree.LastNode.LastNode.Nodes.Add("Эллипс");
+            AddElement("Эллипс");
+            //_swProjectTree.LastNode.LastNode.Nodes.Add("Эллипс");
             if (index == ellipseCount) continue;
             var xStart = ellipses[ellipseArrayLength * index + XStartIndex];
             var yStart = ellipses[ellipseArrayLength * index + YStartIndex];
@@ -532,11 +586,18 @@ public class ReadingModel : Connection
                 ZMajor = (decimal)zMajor,
                 Coordinate = start + "\n" + end + "\n" + center + "\n" + majorPoint + "\n" + minorPoint
             };
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(center);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(majorPoint);
-            _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(minorPoint);
+            
+            AddProperties(center);
+            AddProperties(start);
+            AddProperties(end);
+            AddProperties(majorPoint);
+            AddProperties(minorPoint);
+            
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(center);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(start);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(end);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(majorPoint);
+            // _swProjectTree.LastNode.LastNode.LastNode.Nodes.Add(minorPoint);
             _ellipses.Add(ellipse);
         }
     }
@@ -555,7 +616,7 @@ public class ReadingModel : Connection
     {
         var depth = (decimal)GetDepth(feature);
         var operation = feature.GetTypeName().Equals("Cut") ? "Вырез" : "Выдавливание";
-        _swProjectTree.LastNode.Nodes.Insert(0, $"{operation}: {depth} {_units}");
+        _swProjectTree.LastNode.Nodes.Insert(0, $"{operation}: {depth} м");
         return depth;
     }
 

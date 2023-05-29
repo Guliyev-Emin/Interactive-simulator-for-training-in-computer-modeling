@@ -43,6 +43,7 @@ public class XmlController
     private const string ControllingRadius = "radius";
     private const string ControllingCut = "Cut";
     private const string ControllingExtrusioan = "Extrusion";
+    private const string ControllingDepth = "depth";
     private static XmlDocument _document;
 
     private static XmlElement CreateElement(string name, string text)
@@ -99,7 +100,7 @@ public class XmlController
         }
         else if (elementaryTask.TridimensionalOperation is not null)
         {
-            elementaryTaskElement.AppendChild(CreateElement(elementaryTask.Type,
+            elementaryTaskElement.AppendChild(CreateElement(ControllingDepth,
                 elementaryTask.TridimensionalOperation.Depth.ToString(CultureInfo.InvariantCulture)));
         }
         else
@@ -332,8 +333,7 @@ public class XmlController
                     elementaryTask.PointTask.Arc.ArcRadius =
                         Convert.ToDecimal(elementaryTaskNode.InnerText, CultureInfo.InvariantCulture);
                     continue;
-                case ControllingCut:
-                case ControllingExtrusioan:
+                case ControllingDepth:
                     elementaryTask.TridimensionalOperation ??= new TridimensionalOperation();
                     elementaryTask.TridimensionalOperation.Depth =  Convert.ToDecimal(elementaryTaskNode.InnerText, CultureInfo.InvariantCulture);
                     break;

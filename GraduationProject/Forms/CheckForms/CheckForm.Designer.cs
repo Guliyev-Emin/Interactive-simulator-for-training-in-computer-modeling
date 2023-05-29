@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace GraduationProject.CheckForms;
 
@@ -104,6 +105,7 @@ partial class CheckForm
         this.checkingPage = new System.Windows.Forms.TabPage();
         this.checkingTasksPanel = new System.Windows.Forms.TableLayoutPanel();
         this.dataGridView1 = new System.Windows.Forms.DataGridView();
+        this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
         this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
         this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
         this.Column3 = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -116,7 +118,6 @@ partial class CheckForm
         this.viewButtonInCheckingWindow = new System.Windows.Forms.Button();
         this.exportButton = new System.Windows.Forms.Button();
         this.comparer = new System.Windows.Forms.Button();
-        this.read = new System.Windows.Forms.Button();
         this.connect = new System.Windows.Forms.Button();
         this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
         this.deleteStripItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1039,12 +1040,20 @@ partial class CheckForm
         dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
         this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
         this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.Column1, this.Column2, this.Column3, this.Column5, this.Column4 });
+        this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.Column6, this.Column1, this.Column2, this.Column3, this.Column5, this.Column4 });
         this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
         this.dataGridView1.Location = new System.Drawing.Point(261, 3);
         this.dataGridView1.Name = "dataGridView1";
         this.dataGridView1.Size = new System.Drawing.Size(613, 412);
         this.dataGridView1.TabIndex = 22;
+        // 
+        // Column6
+        // 
+        this.Column6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+        this.Column6.HeaderText = "Объект проверки";
+        this.Column6.Name = "Column6";
+        this.Column6.ReadOnly = true;
+        this.Column6.Width = 135;
         // 
         // Column1
         // 
@@ -1118,7 +1127,6 @@ partial class CheckForm
         this.panel2.Controls.Add(this.viewButtonInCheckingWindow);
         this.panel2.Controls.Add(this.exportButton);
         this.panel2.Controls.Add(this.comparer);
-        this.panel2.Controls.Add(this.read);
         this.panel2.Controls.Add(this.connect);
         this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
         this.panel2.Location = new System.Drawing.Point(880, 3);
@@ -1139,12 +1147,13 @@ partial class CheckForm
         // viewButtonInCheckingWindow
         // 
         this.viewButtonInCheckingWindow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-        this.viewButtonInCheckingWindow.Location = new System.Drawing.Point(3, 151);
+        this.viewButtonInCheckingWindow.Location = new System.Drawing.Point(3, 114);
         this.viewButtonInCheckingWindow.Name = "viewButtonInCheckingWindow";
         this.viewButtonInCheckingWindow.Size = new System.Drawing.Size(144, 31);
         this.viewButtonInCheckingWindow.TabIndex = 28;
         this.viewButtonInCheckingWindow.Text = "Просмотр";
         this.viewButtonInCheckingWindow.UseVisualStyleBackColor = true;
+        this.viewButtonInCheckingWindow.Click += new EventHandler(this.viewButtonInCheckingWindow_Click);
         // 
         // exportButton
         // 
@@ -1160,24 +1169,13 @@ partial class CheckForm
         // comparer
         // 
         this.comparer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-        this.comparer.Location = new System.Drawing.Point(3, 114);
+        this.comparer.Location = new System.Drawing.Point(3, 77);
         this.comparer.Name = "comparer";
         this.comparer.Size = new System.Drawing.Size(144, 31);
         this.comparer.TabIndex = 26;
         this.comparer.Text = "Проверить";
         this.comparer.UseVisualStyleBackColor = true;
         this.comparer.Click += new System.EventHandler(this.comparer_Click);
-        // 
-        // read
-        // 
-        this.read.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-        this.read.Location = new System.Drawing.Point(3, 77);
-        this.read.Name = "read";
-        this.read.Size = new System.Drawing.Size(144, 31);
-        this.read.TabIndex = 25;
-        this.read.Text = "Чтение";
-        this.read.UseVisualStyleBackColor = true;
-        this.read.Click += new System.EventHandler(this.read_Click);
         // 
         // connect
         // 
@@ -1188,6 +1186,7 @@ partial class CheckForm
         this.connect.TabIndex = 24;
         this.connect.Text = "Подключиться\r\n";
         this.connect.UseVisualStyleBackColor = true;
+        this.connect.Click += new System.EventHandler(this.connect_Click);
         // 
         // contextMenuStrip
         // 
@@ -1257,12 +1256,13 @@ partial class CheckForm
         this.ResumeLayout(false);
     }
 
-        private System.Windows.Forms.ComboBox featureNames;
+    private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
+
+    private System.Windows.Forms.ComboBox featureNames;
 
         private System.Windows.Forms.Button viewButtonInCheckingWindow;
         private System.Windows.Forms.Button exportButton;
         private System.Windows.Forms.Button comparer;
-        private System.Windows.Forms.Button read;
         private System.Windows.Forms.Button connect;
         private System.Windows.Forms.Panel panel2;
 

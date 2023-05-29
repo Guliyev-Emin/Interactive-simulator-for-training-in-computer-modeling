@@ -29,19 +29,15 @@ public partial class CheckForm : Form
     public const string ControllingGetLineWithMaxX = "Получить отрезок с максимальным X";
     public const string ControllingGetLineWithMinY = "Получить отрезок с минимальным Y";
     public const string ControllingGetLineWithMaxY = "Получить отрезок с максимальным Y";
-
     public const string ControllingGetArcWithMinX = "Получить окружность с минимальным X";
     public const string ControllingGetArcWithMaxX = "Получить окружность с максимальным X";
     public const string ControllingGetArcWithMinY = "Получить окружность с минимальным Y";
     public const string ControllingGetArcWithMaxY = "Получить окружность с максимальным Y";
     public const string ControllingGetArcWithMinRadius = "Получить окружность с минимальным радиусом";
     public const string ControllingGetArcWithMaxRadius = "Получить окружность с максимальным радиусом";
-
     public const string ControllingCheckingTheClosedLoops = "Контроль связанности узлов";
-
     public const string ControllingSizeExtrusion = "Контроль длины выдавливания";
     public const string ControllingSizeCut = "Контроль длины выреза";
-
     public const string ControllingDistanceBetweenLines = "Контроль расстояния первого отрезка до второго отрезка";
     public const string ControllingLineSize = "Контроль размера отрезка";
     public const string ControllingSetRadiusArc = "Контроль радиуса окружности";
@@ -64,7 +60,6 @@ public partial class CheckForm : Form
     public static List<DerivedTask> DerivedTasks;
     public static List<BaseTask> BaseTasks;
     public static TridimensionalOperation TridimensionalOperation;
-
     public static string AddFormName;
     private readonly ComparerController _comparer;
     private readonly ConstructorForm _constructorForm;
@@ -72,7 +67,6 @@ public partial class CheckForm : Form
     private readonly ViewForm _viewForm = new();
     private int _toolTipIndex;
     private static User User => AuthorizationForm.User;
-
     public static string FeatureName;
     
     public CheckForm()
@@ -651,23 +645,6 @@ public partial class CheckForm : Form
         }
     }
 
-    private void read_Click(object sender, EventArgs e)
-    {
-        if (Connection.ConnectionTest() == false)
-            return;
-        var model = ReadingModel.GetModel();
-        
-        model.Features.ForEach(feature =>
-        {
-            featureNames.Items.Add(feature.Name);
-            if (feature.Sketch != null) featureNames.Items.Add(feature.Sketch.SketchName);
-        });
-        model.Sketches!.ForEach(sketch => featureNames.Items.Add(sketch.SketchName));
-
-        MessageBox.Show(@"Чтение модели было выполнено успешно!", @"Чтение модели", MessageBoxButtons.OKCancel,
-            MessageBoxIcon.Information);
-    }
-
     private void comparer_Click(object sender, EventArgs e)
     {
         if (Connection.ConnectionTest() == false)
@@ -679,7 +656,7 @@ public partial class CheckForm : Form
         foreach (string checkName in taskCheckMethods.CheckedItems)
         {
             var result = _comparer.DerivedComparer(DerivedTasks.First(task => task.TaskName.Equals(checkName)));
-            dataGridView1.Rows.Add(derivedTaskObj.MethodName, derivedTaskObj.TaskName, result,
+            dataGridView1.Rows.Add(CheckForm.FeatureName, derivedTaskObj.MethodName, derivedTaskObj.TaskName, result,
                 result ? derivedTaskObj.TaskTrueResult : derivedTaskObj.TaskFalseResult, "NULL");
         }
 
@@ -690,7 +667,10 @@ public partial class CheckForm : Form
     private void viewButtonInCheckingWindow_Click(object sender, EventArgs e)
     {
         foreach (string derivedTaskObj in taskCheckMethods.CheckedItems)
-            _viewForm.AddDerivedTask(DerivedTasks.First(task => task.MethodName.Equals(derivedTaskObj)));
+        {
+            var derTask = DerivedTasks.First(task => task.TaskName.Equals(derivedTaskObj));
+            _viewForm.AddDerivedTask(derTask);
+        }
         _viewForm.ShowDialog();
     }
 

@@ -105,7 +105,7 @@ public class ComparerController
             resultString = resultBool ? task.TaskTrueResult : task.TaskFalseResult;
         }
 
-        _comparerContent.Rows.Add(task.MethodName, task.TaskName, resultBool, resultString, outData);
+        _comparerContent.Rows.Add(CheckForm.FeatureName, task.MethodName, task.TaskName, resultBool, resultString, outData);
         return resultBool;
     }
 
@@ -227,7 +227,7 @@ public class ComparerController
         GetComaprerResult(baseTask, false, resultBools, out var resBool, out var resStr);
         if (add)
             resStr = text;
-        _comparerContent.Rows.Add(baseTask.MethodName, baseTask.TaskName, resBool, resStr);
+        _comparerContent.Rows.Add(CheckForm.FeatureName, baseTask.MethodName, baseTask.TaskName, resBool, resStr);
         return resultBools.Count(b => b.Equals(false)).Equals(0);
     }
 

@@ -276,7 +276,6 @@ namespace GraduationProject
             this.modelValidationButton.TabIndex = 2;
             this.modelValidationButton.Text = "Быстрая проверка";
             this.modelValidationButton.UseVisualStyleBackColor = true;
-            this.modelValidationButton.Visible = false;
             this.modelValidationButton.Click += new System.EventHandler(this.modelValidationButton_Click);
             // 
             // tableLayoutPanel1
