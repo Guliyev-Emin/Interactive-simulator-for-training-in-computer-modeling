@@ -58,7 +58,8 @@ public class ConstructorForm:FormElements
         AddingCountLabel(ref mainTableLayotPanel);
         mainTableLayotPanel.Controls.Add(CreateTextBox(TaskName));
         mainTableLayotPanel.Controls.Add(CreateTextBox(TaskContent));
-        mainTableLayotPanel.Controls.Add(CreateNumericUpDown(TaskObjectCount, false));
+        mainTableLayotPanel.Controls.Add(CreateLabel("Количество объеков"), 0, 2);
+        mainTableLayotPanel.Controls.Add(CreateNumericUpDown(TaskObjectCount, false), 1, 2);
         mainTableLayotPanel.Controls.Add(CreateTextBox(TaskTrueResult));
         mainTableLayotPanel.Controls.Add(CreateTextBox(TaskFalseResult));
         mainTableLayotPanel.Controls.Add(CreateTaskButtonsPanel(text, mainTableLayotPanel.Controls, create), 1, 5);

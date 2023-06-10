@@ -72,7 +72,7 @@ public partial class CheckForm : Form
     public CheckForm()
     {
         InitializeComponent();
-        
+        Text = @"Контроль построенных моделей";   
         checkedElementaryCheckMethods.Items.AddRange(new object[]
         {
             ControllingOfTheNumberOfPoints, ControllingOfTheNumberOfArcs, ControllingOfTheNumberOfLines,
@@ -133,6 +133,7 @@ public partial class CheckForm : Form
         {
             //ignore
         }
+       
     }
     
     private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)

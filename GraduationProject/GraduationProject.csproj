@@ -106,9 +106,6 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Connection.cs" />
-        <Compile Include="Construction\Reader.cs" />
-        <Compile Include="Construction\Remove.cs" />
-        <Compile Include="Construction\Сonstruction.cs" />
         <Compile Include="Controllers\CheckControllers\Controllers\AxisController.cs" />
         <Compile Include="Controllers\CheckControllers\Controllers\BaseTaskController.cs" />
         <Compile Include="Controllers\CheckControllers\Controllers\ButtonController.cs" />

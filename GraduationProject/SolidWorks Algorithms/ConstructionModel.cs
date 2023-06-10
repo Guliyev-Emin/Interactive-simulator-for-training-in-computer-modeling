@@ -2,7 +2,6 @@
 using System.Linq;
 using GraduationProject.Controllers;
 using GraduationProject.ModelObjects.IObjects;
-using GraduationProject.ModelObjects.IObjects.ISketchObjects.IPoints;
 using JetBrains.Annotations;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
@@ -18,9 +17,9 @@ public class ConstructionModel : Connection
     private static Entity _entity;
 
     /// <summary>
-    /// 
+    ///     Конструирование модели
     /// </summary>
-    /// <param name="feature"></param>
+    /// <param name="feature">Информация об модели</param>
     private static void Draw(ITridimensionalOperation feature)
     {
         var sketch = feature.Sketch;
@@ -33,11 +32,11 @@ public class ConstructionModel : Connection
 
             var addToDbOrig = SwSketchManager.AddToDB;
             SwSketchManager.AddToDB = true;
-            
+
             if (sketch.UserPoints.Count != 0)
                 foreach (var userPoint in sketch.UserPoints!)
                     SwSketchManager.CreatePoint((double)userPoint.X, (double)userPoint.Y, (double)userPoint.Z);
-            
+
             if (sketch.Lines.Count != 0)
                 foreach (var line in sketch.Lines!)
                 {
@@ -52,10 +51,9 @@ public class ConstructionModel : Connection
                     SwSketchManager.CreateConstructionGeometry();
                 }
 
-            
+
             if (sketch.Arcs.Count != 0)
                 foreach (var arc in sketch.Arcs!)
-                {
                     SwSketchManager.CreateArc((double)arc.XCenter,
                         (double)arc.YCenter,
                         (double)arc.ZCenter, (double)arc.XStart,
@@ -63,7 +61,6 @@ public class ConstructionModel : Connection
                         (double)arc.ZStart, (double)arc.XEnd,
                         (double)arc.YEnd, (double)arc.ZEnd,
                         arc.Direction);
-                }
 
             SwSketchManager.AddToDB = addToDbOrig;
         }
@@ -97,51 +94,47 @@ public class ConstructionModel : Connection
     }
 
     /// <summary>
-    /// 
+    ///     Процедура конструирвоания модели
     /// </summary>
-    /// <param name="model"></param>
-    public static void StepDrawing(IModel model)
-    {
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="modelVariant"></param>
+    /// <param name="modelVariant">Вариант модели</param>
     public static void Drawing(string modelVariant)
     {
         _features = new List<Feature>();
         IModel model = FileController.GetModelObjectFromFile(modelVariant);
         foreach (var feature in model.Features) Draw(feature);
     }
+    
+    
 
     /// <summary>
-    /// 
+    ///     Метод для выдавливания эскиза
     /// </summary>
-    /// <param name="deepth"></param>
-    /// <param name="sd"></param>
-    /// <param name="dir"></param>
-    /// <returns></returns>
+    /// <param name="deepth">Длина выдавливания, м</param>
+    /// <param name="sd">Bool-параметр для выдавливания в одну сторону или в обе стороны</param>
+    /// <param name="dir">Направление выдавливания</param>
+    /// <returns>Трехмерная операция</returns>
     private static Feature Extrusion(double deepth, bool sd = true, bool dir = false)
     {
         // если Sd = true, то вытягивание в одну сторону, если ложь, тогда в обе стороны!
         if (sd)
             return SwModel.FeatureManager.FeatureExtrusion2(true, false, dir,
                 (int)swEndConditions_e.swEndCondBlind, (int)swEndConditions_e.swEndCondBlind,
-                deepth, 0, false, false, false, false, 0, 0, false, false, false, false, true,
+                deepth, 0, false, false, false, false, 0, 0, false,
+                false, false, false, true,
                 true, true, 0, 0, false);
         return SwModel.FeatureManager.FeatureExtrusion2(false, false, dir,
             (int)swEndConditions_e.swEndCondBlind, (int)swEndConditions_e.swEndCondBlind,
-            deepth, deepth, false, false, false, false, 0, 0, false, false, false, false, true,
+            deepth, deepth, false, false, false, false, 0, 0, false,
+            false, false, false, true,
             true, true, 0, 0, false);
     }
-    
+
     /// <summary>
-    /// 
+    ///     Метод для выреза
     /// </summary>
-    /// <param name="deepth"></param>
-    /// <param name="flip"></param>
-    /// <param name="mode"></param>
+    /// <param name="deepth">Длина выдавливания, м</param>
+    /// <param name="flip">Направление выреза</param>
+    /// <param name="mode">Тип выреза</param>
     /// <returns></returns>
     private static Feature Cut(double deepth, bool flip = false,
         swEndConditions_e mode = swEndConditions_e.swEndCondBlind)
@@ -152,9 +145,9 @@ public class ConstructionModel : Connection
     }
 
     /// <summary>
-    /// 
+    ///     Метод по созданию ребра
     /// </summary>
-    /// <param name="depth"></param>
+    /// <param name="depth">Глубина выдавливания</param>
     private static void Rib(double depth)
     {
         SwModel.FeatureManager.InsertRib(false, true, depth,
@@ -163,10 +156,10 @@ public class ConstructionModel : Connection
     }
 
     /// <summary>
-    /// 
+    ///     Метод создания зеркального отражения
     /// </summary>
-    /// <param name="mirror"></param>
-    /// <returns></returns>
+    /// <param name="mirror">Информация об зеркальном отражении</param>
+    /// <returns>Трехмерную операцию</returns>
     private static Feature Mirror(IMirror mirror)
     {
         foreach (var featureName in mirror.FeatureNames)
@@ -177,15 +170,10 @@ public class ConstructionModel : Connection
         return feature;
     }
 
-    private static void Fillet()
-    {
-        //SwFeatureManager.Fillet
-    }
-
     /// <summary>
-    /// 
+    ///     Метод выбора грани
     /// </summary>
-    /// <param name="face"></param>
+    /// <param name="face">Информация об грани</param>
     private static void SelectFace(IFace face)
     {
         var feature = _features.First(f => f.Name.Equals(face?.FeatureName));
@@ -206,10 +194,10 @@ public class ConstructionModel : Connection
     }
 
     /// <summary>
-    /// 
+    ///     Метод по выборе плоскости
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="obj"></param>
+    /// <param name="name">Наименование плоскости</param>
+    /// <param name="obj">Объект плоскости</param>
     private static void SelectPlane(string name, string obj = "PLANE")
     {
         SwModel.Extension.SelectByID2(name, obj, 0, 0, 0, false, 0, null, 0);

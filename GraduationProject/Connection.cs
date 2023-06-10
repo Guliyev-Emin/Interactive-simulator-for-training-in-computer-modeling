@@ -18,7 +18,6 @@ public class Connection
     {
         SwApp = null;
         SwModel = null;
-
         try
         {
             SwApp = (SldWorks)Marshal.GetActiveObject("SldWorks.Application");
@@ -78,7 +77,8 @@ public class Connection
     public static bool ConnectionTest()
     {
         if (SwModel is not null) return true;
-        Message.InformationMessage("Документ не найден!\nВыполните подключение к документу!", @"Подключение к модели");
+        Message.InformationMessage("Документ не найден!\nВыполните подключение к документу!",
+            @"Подключение к модели");
         return false;
     }
 }

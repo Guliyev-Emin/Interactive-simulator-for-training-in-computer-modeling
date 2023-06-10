@@ -7,7 +7,8 @@ namespace GraduationProject;
 public partial class AuthorizationForm : Form
 {
     public const string Teacher = "Teacher";
-    private const string TeacherPassword = "!TeacheR@2023";
+    //private const string TeacherPassword = "!TeacheR@2023";
+    private const string TeacherPassword = "1";
     public const string Student = "Student";
     //private const string StudentPassword = "student@1397";
     private const string StudentPassword = "1";
